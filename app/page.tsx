@@ -67,7 +67,7 @@ export default function Page() {
           <a href="#reprise" onClick={() => setMenuOpen(false)}>Reprise</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
-        <div className="nav-actions"><span className="stock-count"><span className="status-dot" /> Stock disponible</span><a className="nav-cta" href="#contact">Parlons de votre projet <ArrowRight size={16} /></a></div>
+        <div className="nav-actions"><a className="nav-cta" href="#contact">Parlons de votre projet <ArrowRight size={16} /></a></div>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Ouvrir le menu">{menuOpen ? <X /> : <Menu />}</button>
       </header>
 
