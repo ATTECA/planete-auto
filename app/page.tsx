@@ -13,10 +13,10 @@ import {
   Search,
   ShieldCheck,
   SlidersHorizontal,
-  Sparkles,
   Tag,
   X,
 } from 'lucide-react'
+import { ServiceCard } from '@/components/site-pages'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20principale%20%283%29-KVWe2Eco22lDkGQ3c9VtJwIsvDy7vp.png'
 
@@ -63,11 +63,9 @@ export default function Page() {
         <a href="#top" className="brand"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20icon%20%282%29-lUSZ827J3zw81sV0WZTkV5kTx2WUjP.png" alt="" /><span>Planète <b>Auto</b></span></a>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Navigation principale">
           <a href="#stock" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Nos services</a>
-          <a href="/reprise" onClick={() => setMenuOpen(false)}>Reprise</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
-        <div className="nav-actions"><a className="nav-cta" href="#contact">Vendre mon véhicule <ArrowRight size={16} /></a></div>
+        <div className="nav-actions"><a className="nav-cta" href="/reprise">Vendre mon véhicule <ArrowRight size={16} /></a></div>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Ouvrir le menu">{menuOpen ? <X /> : <Menu />}</button>
       </header>
 
@@ -82,7 +80,7 @@ export default function Page() {
 
       {selectedVehicle && <section className="vehicle-detail" id="vehicle-detail"><div className="detail-gallery"><img src={selectedVehicle.image} alt={`${selectedVehicle.name} ${selectedVehicle.meta}`} /><div className="detail-gallery-strip"><img src={selectedVehicle.image} alt="" /><img src={selectedVehicle.image} alt="" /></div></div><div className="detail-copy"><button className="detail-close" onClick={() => setSelectedVehicle(null)}><X size={17} /> Fermer</button><span className="card-kicker">{selectedVehicle.status}</span><h2>{selectedVehicle.name}</h2><p className="detail-meta">{selectedVehicle.meta}</p><strong className="detail-price">{selectedVehicle.price} <small>TTC</small></strong><p className="detail-tax">Prix professionnel HT sur demande · TVA récupérable selon véhicule</p><div className="detail-specs"><span><b>Année</b>{selectedVehicle.year}</span><span><b>Kilométrage</b>{selectedVehicle.km}</span><span><b>Carburant</b>{selectedVehicle.fuel}</span><span><b>Boîte</b>{selectedVehicle.gearbox}</span></div><div className="detail-warranty"><ShieldCheck size={19} /><span><b>Garantie Planète Auto</b><br />Véhicule contrôlé et préparé avant livraison.</span></div><div className="detail-actions"><a className="button button-red" href="#contact">Demander un essai <CalendarDays size={17} /></a><a className="button button-ghost" href="#contact">Financer ce véhicule <ArrowRight size={17} /></a></div></div></section>}
 
-      <section className="dark-band" id="services"><div className="section dark-inner"><div className="dark-intro"><div className="eyebrow light"><span className="eyebrow-line" /> L'expérience Planète Auto</div><h2>Bien plus qu'une<br /><em>voiture.</em></h2><p>De la première rencontre jusqu'à la remise des clés, nous faisons de chaque étape un moment simple et serein.</p><a className="button button-light" href="/services">Découvrir nos services <ArrowRight size={17} /></a></div><div className="service-list"><div className="service-item"><span>01</span><div><CarFront size={24} /><h3>Achat & vente</h3><p>Des véhicules sélectionnés avec soin, pour rouler l'esprit léger.</p></div></div><div className="service-item"><span>02</span><div><Sparkles size={24} /><h3>Financement sur mesure</h3><p>Un accompagnement clair pour trouver la solution adaptée.</p></div></div><div className="service-item"><span>03</span><div><ShieldCheck size={24} /><h3>Garantie & sérénité</h3><p>Des contrôles rigoureux et une garantie pour chaque départ.</p></div></div></div></div></section>
+      <section className="page-section service-grid homepage-services" id="services"><ServiceCard number="01" icon={<CarFront />} title="Achat & vente" text="Des véhicules sélectionnés avec soin, contrôlés et préparés pour prendre la route." /><ServiceCard number="02" icon={<ShieldCheck />} title="Garantie 3 mois" text="Une garantie boîte et moteur, jusqu'à 5 000 km, pour démarrer en confiance." /><ServiceCard number="03" icon={<CarFront />} title="Reprise" text="Nous étudions votre véhicule et vous accompagnons vers votre prochain projet." /><ServiceCard number="04" icon={<ShieldCheck />} title="Financement" text="Des solutions claires et adaptées à votre budget, sans parcours compliqué." /></section>
 
       <section className="section journey-section" id="reprise"><div className="section-heading centered"><div><div className="eyebrow"><span className="eyebrow-line" /> Votre projet, simplement</div><h2>Trois étapes vers<br /><em>votre prochaine route.</em></h2></div></div><div className="journey-grid"><div className="journey-step"><span className="step-number">01</span><CalendarDays size={25} /><h3>On échange</h3><p>Parlez-nous de vos envies, de votre budget ou de votre véhicule à reprendre.</p></div><div className="journey-step"><span className="step-number">02</span><Search size={25} /><h3>On vous conseille</h3><p>Notre équipe vous accompagne avec une sélection qui vous correspond vraiment.</p></div><div className="journey-step"><span className="step-number">03</span><Check size={25} /><h3>Vous prenez la route</h3><p>Un véhicule contrôlé, préparé et livré dans les meilleures conditions.</p></div></div></section>
 
