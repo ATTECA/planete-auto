@@ -2,10 +2,10 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-:root { --red: #ed1b2f; --black: #11110f; --gray: #898b91; --paper: #f7f7f5; --line: #dededb; color-scheme: light; }
+:root { --red: #e61e32; --black: #14120d; --gray: #85888f; --paper: #ffffff; --line: #dfe1e4; color-scheme: light; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--black); font-family: Arial, Helvetica, sans-serif; }
+body { margin: 0; background: var(--paper); color: var(--black); font-family: 'BC Alphapipe', Arial, Helvetica, sans-serif; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; }
 .site-shell { overflow: hidden; }
@@ -23,7 +23,7 @@ button, input, textarea { font: inherit; }
 .hero-copy { padding:82px 5vw 60px; display:flex; flex-direction:column; justify-content:center; }
 .eyebrow { display:flex; align-items:center; gap:11px; color:var(--red); font-weight:700; font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
 .eyebrow-line { width:29px; height:2px; background:currentColor; }
-.hero h1,.section-heading h2,.dark-intro h2,.contact-copy h2 { margin:20px 0 22px; font-family:Georgia, 'Times New Roman', serif; font-size:clamp(45px,5vw,76px); font-weight:400; letter-spacing:-.055em; line-height:.95; }
+.hero h1,.section-heading h2,.dark-intro h2,.contact-copy h2 { margin:20px 0 22px; font-family:'Futura PT', Futura, Arial, sans-serif; font-size:clamp(45px,5vw,76px); font-weight:400; letter-spacing:-.055em; line-height:.95; }
 em { color:var(--red); font-style:normal; }
 .hero-copy > p { max-width:405px; color:#66676b; font-size:15px; line-height:1.7; }
 .hero-buttons { display:flex; gap:12px; margin-top:22px; }
