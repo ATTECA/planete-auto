@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import {
   ArrowRight,
   CalendarDays,
@@ -33,12 +33,24 @@ export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [favorites, setFavorites] = useState<number[]>([])
   const [formSent, setFormSent] = useState(false)
+  const [search, setSearch] = useState({ model: '', budget: '', fuel: '' })
+  const [submittedSearch, setSubmittedSearch] = useState({ model: '', budget: '', fuel: '' })
 
   const visibleVehicles = useMemo(() => {
-    if (activeFilter === filters[1]) return vehicles.filter((v) => Number(v.price.replace(/\D/g, '')) < 20000)
-    if (activeFilter === filters[2]) return vehicles.filter((v) => Number(v.km.replace(/\D/g, '')) < 50000)
-    return vehicles
-  }, [activeFilter])
+    let result = vehicles
+    if (activeFilter === filters[1]) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) < 20000)
+    if (activeFilter === filters[2]) result = result.filter((v) => Number(v.km.replace(/\D/g, '')) < 50000)
+    if (submittedSearch.model) result = result.filter((v) => `${v.name} ${v.meta}`.toLowerCase().includes(submittedSearch.model.toLowerCase()))
+    if (submittedSearch.budget) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) <= Number(submittedSearch.budget))
+    if (submittedSearch.fuel) result = result.filter((v) => v.fuel === submittedSearch.fuel)
+    return result
+  }, [activeFilter, submittedSearch])
+
+  const runSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSubmittedSearch(search)
+    document.querySelector('#stock')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const toggleFavorite = (id: number) => setFavorites((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id])
 
@@ -62,7 +74,7 @@ export default function Page() {
         <div className="hero-visual"><div className="hero-backdrop" /><img className="hero-car" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1800&q=90" alt="Véhicule premium gris stationné" /><div className="hero-card"><span className="card-kicker">À la une</span><strong>Mercedes-Benz<br />Classe A</strong><span className="card-price">à partir de 28 990 €</span><a href="#stock">Découvrir <ArrowRight size={15} /></a></div><div className="hero-index">01 <span>/</span> 03</div></div>
       </section>
 
-      <section className="quick-search" aria-label="Recherche de véhicule"><div className="search-label"><Search size={20} /><span>Je recherche</span></div><div className="search-select">Une marque ou un modèle <ChevronDown size={16} /></div><div className="search-select">Budget maximum <ChevronDown size={16} /></div><div className="search-select">Type de carburant <ChevronDown size={16} /></div><button className="search-submit"><Search size={18} /> Rechercher</button></section>
+      <form className="quick-search" aria-label="Recherche de véhicule" onSubmit={runSearch}><div className="search-label"><Search size={20} /><span>Je recherche</span></div><label className="search-select"><span className="sr-only">Marque ou modèle</span><input value={search.model} onChange={(event) => setSearch({ ...search, model: event.target.value })} placeholder="Une marque ou un modèle" /></label><label className="search-select"><span className="sr-only">Budget maximum</span><select value={search.budget} onChange={(event) => setSearch({ ...search, budget: event.target.value })}><option value="">Budget maximum</option><option value="16000">Moins de 16 000 €</option><option value="22000">Moins de 22 000 €</option><option value="30000">Moins de 30 000 €</option></select><ChevronDown size={16} /></label><label className="search-select"><span className="sr-only">Type de carburant</span><select value={search.fuel} onChange={(event) => setSearch({ ...search, fuel: event.target.value })}><option value="">Type de carburant</option><option value="Essence">Essence</option><option value="Diesel">Diesel</option></select><ChevronDown size={16} /></label><button className="search-submit" type="submit"><Search size={18} /> Rechercher</button></form>
 
       <section className="section stock-section" id="stock"><div className="section-heading"><div><div className="eyebrow"><span className="eyebrow-line" /> Sélection Planète Auto</div><h2>Des véhicules qui<br /><em>vous ressemblent.</em></h2></div><a className="text-link" href="#stock">Voir tout le stock <ArrowRight size={17} /></a></div><div className="filter-bar"><div className="filter-tabs">{filters.map((filter) => <button key={filter} className={activeFilter === filter ? 'filter-tab active' : 'filter-tab'} onClick={() => setActiveFilter(filter)}>{filter}</button>)}</div><button className="filter-more"><SlidersHorizontal size={16} /> Plus de filtres</button></div><div className="vehicle-grid">{visibleVehicles.map((vehicle) => <article className="vehicle-card" key={vehicle.id}><div className="vehicle-image"><img src={vehicle.image} alt={`${vehicle.name} ${vehicle.meta}`} /><span className="vehicle-tag">{vehicle.tag}</span><button className={favorites.includes(vehicle.id) ? 'favorite is-favorite' : 'favorite'} onClick={() => toggleFavorite(vehicle.id)} aria-label="Ajouter aux favoris"><Heart size={18} fill={favorites.includes(vehicle.id) ? 'currentColor' : 'none'} /></button></div><div className="vehicle-body"><div className="vehicle-title"><div><h3>{vehicle.name}</h3><p>{vehicle.meta}</p></div><strong>{vehicle.price}</strong></div><div className="vehicle-specs"><span>{vehicle.year}</span><span>{vehicle.km}</span><span>{vehicle.fuel}</span></div><a className="vehicle-link" href="#contact">Voir le véhicule <ArrowRight size={16} /></a></div></article>)}</div></section>
 
