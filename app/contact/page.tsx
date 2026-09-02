@@ -1,0 +1,2 @@
+import { ContactInfo, ContactForm, PageShell } from '@/components/site-pages'
+export default function ContactPage() { return <PageShell eyebrow="Parlons automobile" title={<>Un projet ?<br /><em>On en parle.</em></>} intro="Notre équipe est à votre écoute pour vous aider à trouver le véhicule qui vous ressemble."><section className="contact-page-grid"><ContactInfo /><ContactForm /></section></PageShell> }
