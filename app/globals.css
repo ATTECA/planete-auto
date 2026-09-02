@@ -11,7 +11,7 @@ button, input, textarea { font: inherit; }
 .site-shell { overflow: hidden; }
 .topline { height: 32px; padding: 0 5vw; display:flex; align-items:center; justify-content:space-between; background:var(--black); color:#fff; font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
 .navbar { height:82px; display:flex; align-items:center; gap:44px; padding:0 5vw; background:var(--paper); border-bottom:1px solid var(--line); position:relative; z-index:5; }
-.brand { display:flex; align-items:center; gap:8px; font-family:Georgia,serif; font-size:19px; letter-spacing:-.05em; }.brand img { width:25px; height:32px; object-fit:cover; object-position:center; }.brand b { color:var(--red); font-weight:400; }
+.brand { display:flex; align-items:center; gap:10px; font-family:Georgia,serif; font-size:23px; letter-spacing:-.06em; }.brand img { width:32px; height:42px; object-fit:cover; object-position:center; }.brand b { color:var(--red); font-weight:400; }
 .nav-links { display:flex; gap:30px; margin-right:auto; font-size:12px; font-weight:700; }
 .nav-links a:hover,.text-link:hover,.vehicle-link:hover { color:var(--red); }
 .nav-actions { display:flex; align-items:center; gap:22px; font-size:11px; }
