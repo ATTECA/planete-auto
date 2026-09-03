@@ -128,12 +128,7 @@ export default function Page() {
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                 </svg>
               </a>
-              <a href="#" aria-label="Facebook">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" fill="currentColor" />
-                  <path d="M13.4 19v-6h2l.3-2.3h-2.3V9.2c0-.7.2-1.1 1.2-1.1h1.2V6.05c-.4-.06-1-.1-1.7-.1-2 0-3.4 1.2-3.4 3.5v1.25H8.5V13h2.2v6h2.7Z" fill="#181815" />
-                </svg>
-              </a>
+              <a href="#" aria-label="Facebook" className="facebook-mark">f</a>
             </div>
           </div>
 
