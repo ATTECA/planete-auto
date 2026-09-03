@@ -2,6 +2,12 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
+@font-face { font-family:'BC Alphapipe'; src:url('/fonts/BCAlphapipe-Regular.otf') format('opentype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'BC Alphapipe'; src:url('/fonts/BCAlphapipe-SemiBold.otf') format('opentype'); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Futura PT'; src:url('/fonts/Futura-Book.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Futura PT'; src:url('/fonts/Futura-Demi.ttf') format('truetype'); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Futura PT'; src:url('/fonts/Futura-Bold.ttf') format('truetype'); font-weight:700; font-style:normal; font-display:swap; }
+
 :root { --red: #e61e32; --black: #14120d; --gray: #85888f; --paper: #ffffff; --line: #dfe1e4; color-scheme: light; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
