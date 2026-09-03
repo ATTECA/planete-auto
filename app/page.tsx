@@ -68,7 +68,7 @@ export default function Page() {
     <main className="site-shell">
       <div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div>
       <header className="navbar">
-        <a href="#top" className="brand"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Plan%20de%20travail%203%20copie%2014%40300x-Me5k7LkvVCXvKMvmnLOd4IEzsw2IcD.png" alt="" /><span>Planète <b>Auto</b></span></a>
+        <a href="#top" className="brand"><img src="/planete-auto-logo.png" alt="" /><span>Planète <b>Auto</b></span></a>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Navigation principale">
           <a href="#stock" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
           <a href="/financement" onClick={() => setMenuOpen(false)}>Financement</a>
@@ -107,7 +107,7 @@ export default function Page() {
           <div className="footer-identity">
             <a href="#top" className="footer-brand">
               <img 
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Plan%20de%20travail%203%20copie%2014%40300x-Me5k7LkvVCXvKMvmnLOd4IEzsw2IcD.png" 
+                src="/planete-auto-logo.png" 
                 alt="Planète Auto logo" 
               />
               <span>Planète <b>Auto</b></span>
@@ -199,7 +199,7 @@ export default function Page() {
         {/* Bottom Bar */}
         <div className="footer-bottom">
           <img 
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Plan%20de%20travail%203%20copie%2014%40300x-Me5k7LkvVCXvKMvmnLOd4IEzsw2IcD.png" 
+            src="/planete-auto-logo.png" 
             alt="Planète Auto logo" 
           />
           <span>Planète Auto © 2026 · SIRET 799 787 262 00010</span>
