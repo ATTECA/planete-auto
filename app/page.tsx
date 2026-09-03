@@ -70,7 +70,7 @@ export default function Page() {
       <header className="navbar">
         <a href="#top" className="brand"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20icon%20%282%29-lUSZ827J3zw81sV0WZTkV5kTx2WUjP.png" alt="" /><span>Planète <b>Auto</b></span></a>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Navigation principale">
-          <a href="#stock" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
+          <a href="/vehicules" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
           <a href="/reprise" onClick={() => setMenuOpen(false)}>Reprise</a>
           <a href="/a-propos" onClick={() => setMenuOpen(false)}>À propos</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
@@ -142,8 +142,7 @@ export default function Page() {
           <div className="footer-column">
             <h3>Navigation</h3>
             <a href="#top">Accueil</a>
-            <a href="#stock">Nos véhicules</a>
-            <a href="/services">Services</a>
+            <a href="/vehicules">Nos véhicules</a>
             <a href="/reprise">Vendre mon véhicule</a>
           </div>
 
