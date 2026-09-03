@@ -6,7 +6,7 @@ import { ArrowRight, CarFront, Check, Clock3, Mail, MapPin, Phone, ShieldCheck }
 const iconLogo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20icon%20%282%29-lUSZ827J3zw81sV0WZTkV5kTx2WUjP.png'
 
 export function SiteHeader() {
-  return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/services">Services</a><a href="/reprise">Reprise</a><a href="/financement">Financement</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>
+  return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/services">Services</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>
 }
 
 export function SiteFooter() {
@@ -29,5 +29,9 @@ export function ContactInfo() {
 }
 
 export function ServiceCard({ number, icon, title, text }: { number: string; icon: ReactNode; title: string; text: string }) { return <article className="service-card"><span className="service-number">{number}</span>{icon}<h3>{title}</h3><p>{text}</p></article> }
+
+export function AboutPageContent() {
+  return <><PageShell eyebrow="À propos de Planète Auto" title={<>L'automobile,<br /><em>autrement.</em></>} intro="Une sélection exigeante, un conseil transparent et une relation de confiance pour chaque projet automobile."><section className="page-section split-page"><div className="copy-block"><div className="eyebrow"><span className="eyebrow-line" /> Notre histoire</div><h2>Une autre idée<br /><em>de l'occasion.</em></h2></div><div className="copy-block"><p>Planète Auto est un professionnel indépendant spécialisé dans la sélection et la vente de véhicules d'occasion à Saint-Jean-de-Védas.</p><p>Chaque véhicule est choisi avec soin, contrôlé et préparé avant sa mise en vente. Notre priorité : vous accompagner avec des informations claires et un conseil réellement personnalisé.</p><ul><li>Véhicules sélectionnés avec exigence</li><li>Accompagnement du premier échange à la remise des clés</li><li>Garantie et transparence à chaque étape</li></ul></div></section><section className="dark-callout"><div><div className="eyebrow light"><span className="eyebrow-line" /> Notre engagement</div><h2>Le conseil avant<br /><em>la transaction.</em></h2></div><p>Parce qu'un achat automobile mérite du temps, de l'écoute et de la confiance.</p></section></PageShell></>
+}
 
 export { CarFront, ShieldCheck }

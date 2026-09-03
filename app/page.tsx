@@ -71,7 +71,8 @@ export default function Page() {
         <a href="#top" className="brand"><img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20icon%20%282%29-lUSZ827J3zw81sV0WZTkV5kTx2WUjP.png" alt="" /><span>Planète <b>Auto</b></span></a>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Navigation principale">
           <a href="#stock" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
-          <a href="/financement" onClick={() => setMenuOpen(false)}>Financement</a>
+          <a href="/reprise" onClick={() => setMenuOpen(false)}>Reprise</a>
+          <a href="/a-propos" onClick={() => setMenuOpen(false)}>À propos</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
         <div className="nav-actions"><a className="nav-cta" href="/reprise">Vendre mon véhicule <ArrowRight size={16} /></a></div>
@@ -129,11 +130,8 @@ export default function Page() {
               </a>
               <a href="#" aria-label="Facebook">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path 
-                    d="M14.2 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H8v3h2.8v8h3.4Z" 
-                    fill="currentColor" 
-                    stroke="none" 
-                  />
+                  <circle cx="12" cy="12" r="9" fill="currentColor" />
+                  <path d="M13.4 19v-6h2l.3-2.3h-2.3V9.2c0-.7.2-1.1 1.2-1.1h1.2V6.05c-.4-.06-1-.1-1.7-.1-2 0-3.4 1.2-3.4 3.5v1.25H8.5V13h2.2v6h2.7Z" fill="#181815" />
                 </svg>
               </a>
             </div>
