@@ -120,11 +120,11 @@ export default function Page() {
             
             {/* Social Links */}
             <nav className="socials" aria-label="Réseaux sociaux">
-              <a href="#" aria-label="Instagram" className="social-link social-instagram">
-                <span className="social-glyph" aria-hidden="true">◎</span>
+              <a href="#" aria-label="Instagram" className="social-link">
+                <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/instagram/light.svg" alt="" aria-hidden="true" />
               </a>
-              <a href="#" aria-label="Facebook" className="social-link social-facebook">
-                <span className="social-glyph social-facebook-glyph" aria-hidden="true">f</span>
+              <a href="#" aria-label="Facebook" className="social-link">
+                <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/facebook/light.svg" alt="" aria-hidden="true" />
               </a>
             </nav>
           </div>
