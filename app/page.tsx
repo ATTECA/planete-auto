@@ -128,8 +128,8 @@ export default function Page() {
             <h3>Navigation</h3>
             <a href="#top">Accueil</a>
             <a href="#stock">Nos véhicules</a>
-            <a href="/services">Services</a>
-            <a href="/reprise">Parlons de votre projet</a>
+            <a href="/reprise">Reprise</a>
+            <a href="/contact">Parlons de votre projet</a>
           </div>
 
           {/* Find Us Section */}
