@@ -9,8 +9,6 @@ import {
   ChevronDown,
   Clock3,
   Heart,
-  MapPin,
-  Mail,
   Phone,
   Menu,
   Search,
@@ -19,7 +17,7 @@ import {
   Tag,
   X,
 } from 'lucide-react'
-import { ServiceCard } from '@/components/site-pages'
+import { ServiceCard, SiteFooter } from '@/components/site-pages'
 import { vehicles } from '@/lib/vehicles'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20principale%20%283%29-KVWe2Eco22lDkGQ3c9VtJwIsvDy7vp.png'
@@ -95,101 +93,7 @@ export default function Page() {
 
 
       
-      <footer className="site-footer">
-        <div className="footer-grid">
-          {/* Identity Section */}
-          <div className="footer-identity">
-            <a href="#top" className="footer-brand">
-              <img 
-                src="/planete-auto-logo.png" 
-                alt="Planète Auto logo" 
-              />
-              <span>Planète <b>Auto</b></span>
-            </a>
-            <p>Véhicules d'occasion sélectionnés avec exigence.</p>
-            <span>
-              SIREN : 799 787 262<br />
-              SIRET : 799 787 262 00010
-            </span>
-            
-            {/* Social Links */}
-            <nav className="socials" aria-label="Réseaux sociaux">
-              <a href="#" aria-label="Instagram" className="social-link social-instagram">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.35" cy="6.65" r="1" className="social-dot" /></svg>
-              </a>
-              <a href="#" aria-label="Facebook" className="social-link social-facebook">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.7 20v-7h2.35l.35-2.75h-2.7V8.5c0-.8.23-1.35 1.4-1.35h1.45V4.7c-.25-.04-1.08-.1-2.08-.1-2.07 0-3.47 1.26-3.47 3.58v2.07H8.65V13H11v7h2.7Z" /></svg>
-              </a>
-            </nav>
-          </div>
-
-          {/* Navigation Section */}
-          <div className="footer-column">
-            <h3>Navigation</h3>
-            <a href="#top">Accueil</a>
-            <a href="#stock">Nos véhicules</a>
-            <a href="/services">Services</a>
-            <a href="/reprise">Parlons de votre projet</a>
-          </div>
-
-          {/* Find Us Section */}
-          <div className="footer-column footer-find">
-            <h3>Nous trouver</h3>
-            <span>
-              <MapPin size={15} />
-              2371 Route de Lavérune<br />
-              34430 Saint-Jean-de-Védas
-            </span>
-            <a href="tel:+33467825412">
-              <Phone size={15} />04 67 82 54 12
-            </a>
-            <a href="mailto:planeteauto34@gmail.com">
-              <Mail size={15} />planeteauto34@gmail.com
-            </a>
-            <a 
-              className="footer-map-link" 
-              href="https://www.google.com/maps/place/Plan%C3%A8te+autos/@43.5926281,3.8321068,18z" 
-              target="_blank" 
-              rel="noreferrer"
-            >
-              Ouvrir dans Google Maps <ArrowRight size={14} />
-            </a>
-          </div>
-
-          {/* Hours Section */}
-          <div className="footer-column footer-hours">
-            <h3>Horaires</h3>
-            <span>
-              <strong>Lundi–vendredi</strong><br />
-              09h00–12h30 · 14h00–18h00
-            </span>
-            <span>
-              <strong>Samedi</strong><br />
-              10h00–17h00
-            </span>
-            <span>Dimanche : fermé</span>
-            
-            {/* Map Frame */}
-            <div className="footer-map-frame">
-              <iframe 
-                title="Planète Auto sur Google Maps" 
-                src="https://www.google.com/maps?q=43.5931637,3.8320012&z=16&output=embed" 
-                loading="lazy" 
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="footer-bottom">
-          <img 
-            src="/planete-auto-logo.png" 
-            alt="Planète Auto logo" 
-          />
-          <span>Planète Auto © 2026 · SIRET 799 787 262 00010</span>
-          <a href="/mentions-legales">Mentions légales</a>
-        </div>
-      </footer>               
+<SiteFooter />
     </main>
   )
 }
