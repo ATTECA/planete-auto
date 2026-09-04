@@ -119,14 +119,14 @@ export default function Page() {
             </span>
             
             {/* Social Links */}
-            <div className="socials" aria-label="Réseaux sociaux">
+            <nav className="socials" aria-label="Réseaux sociaux">
               <a href="#" aria-label="Instagram" className="social-link social-instagram">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" /><circle cx="12" cy="12" r="4.1" /><circle cx="17.45" cy="6.55" r="1" className="social-dot" /></svg>
+                <span className="social-glyph" aria-hidden="true">◎</span>
               </a>
               <a href="#" aria-label="Facebook" className="social-link social-facebook">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.65 20v-7h2.35l.35-2.75h-2.7V8.5c0-.8.22-1.35 1.38-1.35h1.47V4.7c-.25-.04-1.1-.1-2.08-.1-2.06 0-3.47 1.26-3.47 3.58v2.07H8.62V13h2.33v7h2.7Z" /></svg>
+                <span className="social-glyph social-facebook-glyph" aria-hidden="true">f</span>
               </a>
-            </div>
+            </nav>
           </div>
 
           {/* Navigation Section */}
