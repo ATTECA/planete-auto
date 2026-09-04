@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Planète Auto | L’automobile autrement',
-  description: 'Véhicules d’occasion sélectionnés, reprise, financement et accompagnement automobile à Saint-Jean-de-Védas.',
+  description: 'Véhicules d’occasion sélectionnés, reprise et accompagnement automobile à Saint-Jean-de-Védas.',
   generator: 'v0.app',
   icons: {
     icon: [
