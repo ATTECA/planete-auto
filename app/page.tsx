@@ -24,7 +24,7 @@ import { vehicles } from '@/lib/vehicles'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20principale%20%283%29-KVWe2Eco22lDkGQ3c9VtJwIsvDy7vp.png'
 
-const filters = ['Tous les véhicules', 'Moins de 20 000 €', 'Moins de 50 000 km']
+const filters = ['Tous les véhicules', 'Moins de 10 000 €', 'Moins de 50 000 km']
 const brands = [
   ['Peugeot', 'peugeot'], ['Renault', 'renault'], ['Citroën', 'citroen'], ['Volkswagen', 'volkswagen'],
   ['Audi', 'audi'], ['BMW', 'bmw'], ['Mercedes-Benz', 'mercedes-benz'], ['Nissan', 'nissan'],
@@ -42,7 +42,7 @@ export default function Page() {
  
   const visibleVehicles = useMemo(() => {
     let result = vehicles
-    if (activeFilter === filters[1]) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) < 20000)
+    if (activeFilter === filters[1]) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) < 10000)
     if (activeFilter === filters[2]) result = result.filter((v) => Number(v.km.replace(/\D/g, '')) < 50000)
     if (submittedSearch.model) result = result.filter((v) => `${v.name} ${v.meta}`.toLowerCase().includes(submittedSearch.model.toLowerCase()))
     if (submittedSearch.budget) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) <= Number(submittedSearch.budget))
