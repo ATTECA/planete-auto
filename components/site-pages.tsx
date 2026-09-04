@@ -3,7 +3,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { ArrowRight, CarFront, Check, Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react'
 
-const iconLogo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20icon%20%282%29-lUSZ827J3zw81sV0WZTkV5kTx2WUjP.png'
+const iconLogo = '/planete-auto-logo.png'
 
 export function SiteHeader() {
   return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/services">Services</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>

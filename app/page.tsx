@@ -70,8 +70,9 @@ export default function Page() {
       <header className="navbar">
         <a href="#top" className="brand"><img src="/planete-auto-logo.png" alt="" /><span>Planète <b>Auto</b></span></a>
         <nav className={menuOpen ? 'nav-links is-open' : 'nav-links'} aria-label="Navigation principale">
-          <a href="#stock" onClick={() => setMenuOpen(false)}>Nos véhicules</a>
-          <a href="/financement" onClick={() => setMenuOpen(false)}>Financement</a>
+          <a href="/vehicules" onClick={() => setMenuOpen(false)}>Véhicules</a>
+          <a href="/reprise" onClick={() => setMenuOpen(false)}>Reprise</a>
+          <a href="/a-propos" onClick={() => setMenuOpen(false)}>À propos</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
         <div className="nav-actions"><a className="nav-cta" href="/reprise">Vendre mon véhicule <ArrowRight size={16} /></a></div>
