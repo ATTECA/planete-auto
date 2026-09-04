@@ -120,21 +120,11 @@ export default function Page() {
             
             {/* Social Links */}
             <div className="socials" aria-label="Réseaux sociaux">
-              <a href="#" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="3" y="3" width="18" height="18" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                </svg>
+              <a href="#" aria-label="Instagram" className="social-link social-instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" /><circle cx="12" cy="12" r="4.1" /><circle cx="17.45" cy="6.55" r="1" className="social-dot" /></svg>
               </a>
-              <a href="#" aria-label="Facebook">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path 
-                    d="M14.2 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H8v3h2.8v8h3.4Z" 
-                    fill="currentColor" 
-                    stroke="none" 
-                  />
-                </svg>
+              <a href="#" aria-label="Facebook" className="social-link social-facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.65 20v-7h2.35l.35-2.75h-2.7V8.5c0-.8.22-1.35 1.38-1.35h1.47V4.7c-.25-.04-1.1-.1-2.08-.1-2.06 0-3.47 1.26-3.47 3.58v2.07H8.62V13h2.33v7h2.7Z" /></svg>
               </a>
             </div>
           </div>
