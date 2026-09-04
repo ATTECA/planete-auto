@@ -6,7 +6,7 @@ import { ArrowRight, CarFront, Check, Clock3, Mail, MapPin, Phone, ShieldCheck }
 const iconLogo = '/planete-auto-logo.png'
 
 export function SiteHeader() {
-  return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/services">Services</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>
+  return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>
 }
 
 export function SiteFooter() {
