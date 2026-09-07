@@ -1,9 +1,19 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { ArrowLeft, ArrowUpRight, Check, Clock3, ShieldCheck } from 'lucide-react'
 import Link from 'next/link'
 import { getVehicle } from '@/lib/vehicles'
 import { SiteFooter, SiteHeader } from '@/components/site-pages'
 import { VehicleGallery } from '@/components/vehicle-gallery'
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const vehicle = getVehicle((await params).id)
+  if (!vehicle) return { title: 'Véhicule introuvable' }
+  return {
+    title: `${vehicle.name} ${vehicle.meta}`,
+    description: `${vehicle.name} ${vehicle.meta}, ${vehicle.year}, ${vehicle.km}, ${vehicle.fuel} et ${vehicle.gearbox}. Consultez la fiche et contactez Planète Auto à Saint-Jean-de-Védas.`,
+  }
+}
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const vehicle = getVehicle((await params).id)

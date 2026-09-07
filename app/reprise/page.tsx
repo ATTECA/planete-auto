@@ -1,2 +1,9 @@
+import type { Metadata } from 'next'
 import { PageShell, ContactForm } from '@/components/site-pages'
+
+export const metadata: Metadata = {
+	title: 'Reprise de voiture à Saint-Jean-de-Védas',
+	description: 'Faites étudier votre véhicule par Planète Auto et préparez votre prochaine voiture avec une estimation simple et personnalisée.',
+}
+
 export default function ReprisePage() { return <PageShell eyebrow="Votre véhicule a une histoire" title={<>Vendez-le au<br /><em>bon moment.</em></>} intro="Décrivez-nous votre véhicule. Notre équipe vous recontactera pour étudier votre reprise."><section className="page-section split-page"><div className="copy-block"><span className="card-kicker">Une estimation simple</span><h2>Votre prochaine route commence par <em>la vôtre</em></h2><p>Préparez les informations principales de votre voiture et ajoutez quelques photos si vous le souhaitez.</p><ul><li>Étude personnalisée</li><li>Réponse rapide</li><li>Accompagnement professionnel</li></ul></div><ContactForm subject="votre reprise" /></section></PageShell> }
