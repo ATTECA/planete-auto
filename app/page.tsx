@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Clock3,
   Heart,
+  Mail,
   Phone,
   Menu,
   Search,
@@ -18,7 +19,7 @@ import {
   X,
 } from 'lucide-react'
 import { ServiceCard, SiteFooter } from '@/components/site-pages'
-import { vehicles } from '@/lib/vehicles'
+import { vehicles, type Vehicle } from '@/lib/vehicles'
 
 const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20principale%20%283%29-KVWe2Eco22lDkGQ3c9VtJwIsvDy7vp.png'
 
@@ -39,7 +40,7 @@ export default function Page() {
   const [sortOrder, setSortOrder] = useState('recent')
 
   const visibleVehicles = useMemo(() => {
-    let result = vehicles
+    let result: Vehicle[] = [...vehicles]
     if (activeFilter === filters[1]) result = result.filter((v) => Number(v.price.replace(/\D/g, '')) < 10000)
     if (activeFilter === filters[2]) result = result.filter((v) => Number(v.km.replace(/\D/g, '')) < 50000)
     if (submittedSearch.model) result = result.filter((v) => `${v.name} ${v.meta}`.toLowerCase().includes(submittedSearch.model.toLowerCase()))
