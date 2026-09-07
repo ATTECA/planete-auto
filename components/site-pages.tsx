@@ -6,7 +6,7 @@ import { ArrowRight, CarFront, Check, Clock3, Mail, MapPin, Phone, ShieldCheck }
 const iconLogo = '/planete-auto-logo.png'
 
 export function SiteHeader() {
-  return <><div className="topline"><span>Planète Auto</span><span>Votre mobilité, notre exigence.</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Parlons de votre projet <ArrowRight size={16} /></a></header></>
+  return <><div className="topline"><span>Planète Auto</span><span>Achat · vente · reprise toutes marques</span><span>Saint-Jean-de-Védas · Occitanie</span></div><header className="navbar"><a href="/" className="brand"><img src={iconLogo} alt="" /><span>Planète <b>Auto</b></span></a><nav className="nav-links" aria-label="Navigation principale"><a href="/vehicules">Véhicules</a><a href="/reprise">Reprise</a><a href="/a-propos">À propos</a><a href="/contact">Contact</a></nav><a className="nav-cta" href="/contact">Nous contacter <ArrowRight size={16} /></a></header></>
 }
 
 export function SiteFooter() {
@@ -14,14 +14,14 @@ export function SiteFooter() {
     <div className="footer-grid">
       <div className="footer-identity">
         <a href="/" className="footer-brand"><img src={iconLogo} alt="Planète Auto logo" /><span>Planète <b>Auto</b></span></a>
-        <p>Véhicules d'occasion sélectionnés avec exigence.</p>
+        <p>Véhicules d’occasion toutes marques, achat, vente et reprise.</p>
         <span>SIREN : 799 787 262<br />SIRET : 799 787 262 00010</span>
         <nav className="socials" aria-label="Réseaux sociaux">
           <a href="#" aria-label="Instagram" className="social-link social-instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.35" cy="6.65" r="1" className="social-dot" /></svg></a>
           <a href="#" aria-label="Facebook" className="social-link social-facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.7 20v-7h2.35l.35-2.75h-2.7V8.5c0-.8.23-1.35 1.4-1.35h1.45V4.7c-.25-.04-1.08-.1-2.08-.1-2.07 0-3.47 1.26-3.47 3.58v2.07H8.65V13H11v7h2.7Z" /></svg></a>
         </nav>
       </div>
-      <div className="footer-column"><h3>Navigation</h3><a href="/">Accueil</a><a href="/vehicules">Nos véhicules</a><a href="/reprise">Reprise</a><a href="/contact">Parlons de votre projet</a></div>
+      <div className="footer-column"><h3>Navigation</h3><a href="/">Accueil</a><a href="/vehicules">Nos véhicules</a><a href="/reprise">Reprise</a><a href="/contact">Nous contacter</a></div>
       <div className="footer-column footer-find"><h3>Nous trouver</h3><span><MapPin size={15} />2371 Route de Lavérune<br />34430 Saint-Jean-de-Védas</span><a href="tel:+33467825412"><Phone size={15} />04 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={15} />planeteauto34@gmail.com</a><a className="footer-map-link" href="https://www.google.com/maps/place/Plan%C3%A8te+autos/@43.5926281,3.8321068,18z" target="_blank" rel="noreferrer">Ouvrir dans Google Maps <ArrowRight size={14} /></a></div>
       <div className="footer-column footer-hours"><h3>Horaires</h3><span><strong>Lundi–vendredi</strong><br />09h00–12h30 · 14h00–18h00</span><span><strong>Samedi</strong><br />10h00–17h00</span><span>Dimanche : fermé</span><div className="footer-map-frame"><iframe title="Planète Auto sur Google Maps" src="https://www.google.com/maps?q=43.5931637,3.8320012&z=16&output=embed" loading="lazy" /></div></div>
     </div>
@@ -47,7 +47,7 @@ export function ContactInfo() {
 export function ServiceCard({ number, icon, title, text }: { number: string; icon: ReactNode; title: string; text: string }) { return <article className="service-card"><span className="service-number">{number}</span>{icon}<h3>{title}</h3><p>{text}</p></article> }
 
 export function AboutPageContent() {
-  return <><PageShell eyebrow="À propos de Planète Auto" title={<>L'automobile,<br /><em>autrement.</em></>} intro="Une sélection exigeante, un conseil transparent et une relation de confiance pour chaque projet automobile."><section className="page-section split-page"><div className="copy-block"><div className="eyebrow"><span className="eyebrow-line" /> Notre histoire</div><h2>Une autre idée<br /><em>de l'occasion.</em></h2></div><div className="copy-block"><p>Planète Auto est un professionnel indépendant spécialisé dans la sélection et la vente de véhicules d'occasion à Saint-Jean-de-Védas.</p><p>Chaque véhicule est choisi avec soin, contrôlé et préparé avant sa mise en vente. Notre priorité : vous accompagner avec des informations claires et un conseil réellement personnalisé.</p><ul><li>Véhicules sélectionnés avec exigence</li><li>Accompagnement du premier échange à la remise des clés</li><li>Garantie et transparence à chaque étape</li></ul></div></section><section className="dark-callout"><div><div className="eyebrow light"><span className="eyebrow-line" /> Notre engagement</div><h2>Le conseil avant<br /><em>la transaction.</em></h2></div><p>Parce qu'un achat automobile mérite du temps, de l'écoute et de la confiance.</p></section></PageShell></>
+  return <><PageShell eyebrow="À propos de Planète Auto" title={<>L’occasion,<br /><em>en toute simplicité.</em></>} intro="Planète Auto vous accompagne pour l’achat, la vente et la reprise de véhicules d’occasion toutes marques à Saint-Jean-de-Védas."><section className="page-section split-page"><div className="copy-block"><div className="eyebrow"><span className="eyebrow-line" /> Notre activité</div><h2>Une voiture d’occasion<br /><em>sans complication.</em></h2></div><div className="copy-block"><p>Planète Auto est un professionnel indépendant de l’achat, de la vente et de la reprise de véhicules d’occasion toutes marques.</p><p>Nous vous accompagnons également pour le financement, les garanties et les démarches administratives, de la première visite à la remise des clés.</p><ul><li>Véhicules toutes marques</li><li>Reprise de votre ancien véhicule</li><li>Financement et garanties</li><li>Démarches administratives prises en charge</li></ul></div></section><section className="dark-callout"><div><div className="eyebrow light"><span className="eyebrow-line" /> Notre engagement</div><h2>Acheter une voiture<br /><em>sans mauvaise surprise.</em></h2></div><p>Des informations claires, un accompagnement direct et des solutions adaptées à votre projet.</p></section></PageShell></>
 }
 
 export { CarFront, ShieldCheck }
