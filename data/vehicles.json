@@ -30,6 +30,14 @@
       ["Couleur", "Gris"],
       ["Puissance DIN", "245 Ch"],
       ["Référence", "1147"]
+    ],
+    "equipment": [
+      { "category": "Audio - Télécommunications", "items": ["Kit mains-libres Bluetooth", "GPS Cartographique", "Prise USB"] },
+      { "category": "Conduite", "items": ["Régulateur de vitesse", "Palettes changement vitesses au volant"] },
+      { "category": "Extérieur", "items": ["Jantes Alu", "Rétroviseurs électriques", "Feux de jour à LED"] },
+      { "category": "Intérieur", "items": ["Clim automatique bi-zones", "Volant cuir", "Sièges avant chauffants", "Ordinateur de bord"] },
+      { "category": "Sécurité", "items": ["ABS", "ESP", "Airbags latéraux avant", "Antipatinage"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Contrôle technique fait", "Extension de garantie possible", "Reprise possible sur votre ancien véhicule"] }
     ]
   },
   {
@@ -65,6 +73,14 @@
       ["Couleur", "Marron"],
       ["Puissance DIN", "90 Ch"],
       ["Référence", "1226"]
+    ],
+    "equipment": [
+      { "category": "Audio - Télécommunications", "items": ["Kit mains-libres Bluetooth", "Lecteur CD", "Prise auxiliaire de connexion audio"] },
+      { "category": "Conduite", "items": ["Arrêt et redémarrage auto. du moteur"] },
+      { "category": "Extérieur", "items": ["Feux de jour", "Rétroviseurs électriques"] },
+      { "category": "Intérieur", "items": ["Clim automatique", "Volant cuir", "Vitres avant électriques"] },
+      { "category": "Sécurité", "items": ["ABS", "ESP", "Airbags frontaux", "Antidémarrage électronique"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Bien entretenue", "Contrôle technique fait", "Reprise possible sur votre ancien véhicule"] }
     ]
   },
   {
@@ -98,6 +114,14 @@
       ["Couleur", "Blanc"],
       ["Puissance DIN", "150 Ch"],
       ["Référence", "1226"]
+    ],
+    "equipment": [
+      { "category": "Audio - Télécommunications", "items": ["Kit mains-libres Bluetooth", "Ecran tactile", "Commandes du système audio au volant"] },
+      { "category": "Conduite", "items": ["Régulateur de vitesse", "Aide au démarrage en côte"] },
+      { "category": "Extérieur", "items": ["Jantes Alu", "Radar de stationnement AV et AR", "Rétroviseurs rabattables électriquement"] },
+      { "category": "Intérieur", "items": ["Clim automatique bi-zones", "Ordinateur de bord", "Volant cuir", "Sièges avant chauffants"] },
+      { "category": "Sécurité", "items": ["ABS", "ESP", "Antipatinage", "Airbags rideaux AV et AR"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Contrôle technique fait", "Extension de garantie possible", "Reprise possible sur votre ancien véhicule"] }
     ]
   },
   {
@@ -132,6 +156,14 @@
       ["Couleur", "Gris"],
       ["Puissance DIN", "120 Ch"],
       ["Référence", "1226"]
+    ],
+    "equipment": [
+      { "category": "Audio - Télécommunications", "items": ["Kit mains-libres Bluetooth", "Ecran multifonction couleur", "Prise USB"] },
+      { "category": "Conduite", "items": ["Régulateur de vitesse", "Aide au démarrage en côte"] },
+      { "category": "Extérieur", "items": ["Jantes Alu", "Radar de recul", "Rétroviseurs électriques"] },
+      { "category": "Intérieur", "items": ["Clim automatique", "Ordinateur de bord", "Vitres avant électriques"] },
+      { "category": "Sécurité", "items": ["ABS", "ESP", "Airbags latéraux avant", "Antipatinage"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Contrôle technique fait", "Reprise possible sur votre ancien véhicule"] }
     ]
   },
   {
@@ -168,6 +200,14 @@
       ["Couleur", "Gris"],
       ["Puissance DIN", "115 Ch"],
       ["Référence", "1149"]
+    ],
+    "equipment": [
+      { "category": "Audio - Télécommunications", "items": ["Kit mains-libres Bluetooth", "Ecran tactile", "GPS Cartographique"] },
+      { "category": "Conduite", "items": ["Régulateur de vitesse et de distance", "Aide au démarrage en côte", "Démarrage sans clé"] },
+      { "category": "Extérieur", "items": ["Jantes Alu", "Radar de stationnement AV et AR", "Feux de jour à LED"] },
+      { "category": "Intérieur", "items": ["Clim automatique bi-zones", "Ordinateur de bord", "Volant cuir", "Sièges avant chauffants"] },
+      { "category": "Sécurité", "items": ["ABS", "ESP", "Antipatinage", "Airbags rideaux AV et AR"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Contrôle technique fait", "Extension de garantie possible", "Reprise possible sur votre ancien véhicule"] }
     ]
   },
   {
@@ -204,6 +244,13 @@
       ["Couleur", "Blanc"],
       ["Puissance DIN", "140 Ch"],
       ["Référence", "1118"]
+    ],
+    "equipment": [
+      { "category": "Conduite", "items": ["Aide au démarrage en côte", "Arrêt et redémarrage auto. du moteur", "Blocage électronique du différentiel", "Régulateur de vitesse"] },
+      { "category": "Extérieur", "items": ["Radar de recul", "Rétroviseurs électriques"] },
+      { "category": "Intérieur", "items": ["Clim automatique bi-zones", "Direction assistée électrique", "Ordinateur de bord", "Siège conducteur réglable en hauteur", "Vitres arrière électriques", "Vitres avant électriques", "Volant cuir", "Volant réglable en profondeur et hauteur"] },
+      { "category": "Sécurité", "items": ["ABS", "Airbags frontaux", "Airbags latéraux avant", "Airbags rideaux", "Antipatinage", "ESP"] },
+      { "category": "Autres équipements et informations", "items": ["Véhicule propre", "Bien entretenue", "Factures d'entretien fournies", "Contrôle technique fait", "Travaux réalisés sur le véhicule", "Kit distribution remplacé à 182 444 km", "Kit courroie d'accessoire remplacé à 182 444 km", "Pompe à eau remplacée à 182 444 km", "Vidange huile moteur", "Filtre à huile", "Extension de garantie possible", "Reprise possible sur votre ancien véhicule"] }
     ]
   }
 ]

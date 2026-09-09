@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
-import { ArrowRight, Calendar, CarFront, Check, Clock3, Fuel, Gauge, ImagePlus, Mail, MapPin, MessageSquare, Palette, Phone, Repeat, Settings2, ShieldCheck, Sparkles, Tag, User, X } from 'lucide-react'
+import { ArrowRight, Calendar, CarFront, Check, Clock3, Fuel, Gauge, ImagePlus, Mail, MapPin, MessageSquare, Palette, Phone, Repeat, Settings2, ShieldCheck, Share2, Sparkles, Tag, User, X } from 'lucide-react'
 
 const iconLogo = '/planete-auto-logo.png'
 
@@ -179,6 +179,67 @@ export function TradeInForm() {
     )}
     </div>
   </div>
+}
+
+export function VehicleOfferForm({ vehicleName, vehiclePrice }: { vehicleName: string; vehiclePrice: string }) {
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+  const [offer, setOffer] = useState('')
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+  const [sending, setSending] = useState(false)
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError('')
+    setSending(true)
+    try {
+      const response = await fetch('/api/offer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email, offer, vehicleName, vehiclePrice }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error)
+      setSent(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'L’envoi a échoué. Veuillez réessayer.')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  if (sent) return <div className="vehicle-offer vehicle-offer-success"><Check size={26} /><h3>Offre envoyée.</h3><p>Nous revenons vers vous rapidement au sujet de {vehicleName}.</p></div>
+
+  return <form className="vehicle-offer" onSubmit={submit}>
+    <h3>Faire une offre</h3>
+    <label>Nom complet<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Prénom Nom" /></label>
+    <label>Téléphone<input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="04 00 00 00 00" /></label>
+    <label>Prix proposé<input required type="number" min={0} inputMode="numeric" value={offer} onChange={(event) => setOffer(event.target.value)} placeholder={`Prix affiché : ${vehiclePrice}`} /></label>
+    <label>E-mail (facultatif)<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="vous@exemple.fr" /></label>
+    {error && <p className="form-error" role="alert">{error}</p>}
+    <button className="button button-red" type="submit" disabled={sending}>{sending ? 'Envoi en cours...' : 'Envoyer une offre'} <ArrowRight size={17} /></button>
+  </form>
+}
+
+export function VehicleShareButton({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const share = async () => {
+    const url = window.location.href
+    if (navigator.share) {
+      try { await navigator.share({ title, url }) } catch { /* user cancelled */ }
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* clipboard unavailable */ }
+  }
+
+  return <button type="button" className="vehicle-share" onClick={share}><Share2 size={15} />{copied ? 'Lien copié' : 'Partager'}</button>
 }
 
 export function ContactInfo() {

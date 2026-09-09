@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { ArrowLeft, ArrowUpRight, Check, Clock3, ShieldCheck } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { ArrowLeft, ArrowUpRight, Armchair, Calendar, CarFront, Check, ClipboardList, Clock3, Fuel, Gauge, Mail, Phone, Radio, Settings2, ShieldCheck, Sparkles, SunMedium } from 'lucide-react'
 import Link from 'next/link'
-import { getVehicle } from '@/lib/vehicles'
-import { SiteFooter, SiteHeader } from '@/components/site-pages'
+import { getVehicle, groupVehicleFacts } from '@/lib/vehicles'
+import { SiteFooter, SiteHeader, VehicleOfferForm, VehicleShareButton } from '@/components/site-pages'
 import { VehicleGallery } from '@/components/vehicle-gallery'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  const vehicle = getVehicle((await params).id)
+  const vehicle = await getVehicle((await params).id)
   if (!vehicle) return { title: 'Véhicule introuvable' }
   return {
     title: `${vehicle.name} ${vehicle.meta}`,
@@ -15,14 +16,84 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
+const FACT_GROUP_ICONS: Record<string, ReactNode> = {
+  'Identité': <CarFront size={18} />,
+  'Année & kilométrage': <Calendar size={18} />,
+  'Moteur & performances': <Settings2 size={18} />,
+  'Confort & dimensions': <Sparkles size={18} />,
+  'Autres informations': <ClipboardList size={18} />,
+}
+
+const EQUIPMENT_ICONS: Record<string, ReactNode> = {
+  'Audio - Télécommunications': <Radio size={17} />,
+  'Conduite': <Gauge size={17} />,
+  'Extérieur': <SunMedium size={17} />,
+  'Intérieur': <Armchair size={17} />,
+  'Sécurité': <ShieldCheck size={17} />,
+  'Autres équipements et informations': <ClipboardList size={17} />,
+}
+
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const vehicle = getVehicle((await params).id)
+  const vehicle = await getVehicle((await params).id)
   if (!vehicle) notFound()
   const gallery = vehicle.gallery.length ? vehicle.gallery : [vehicle.image]
-  return <main className="vehicle-detail-page"><SiteHeader /><div className="vehicle-detail-shell">
-    <div className="vehicle-breadcrumb"><Link href="/vehicules"><ArrowLeft /> Retour au stock</Link><span>Planète Auto <b>/</b> {vehicle.name} <b>/</b> Réf. {vehicle.details?.find(([label]) => label === 'Référence')?.[1] ?? vehicle.id}</span></div>
-    <div className="vehicle-detail-layout"><VehicleGallery name={vehicle.name} meta={vehicle.meta} images={gallery} /><aside className="vehicle-purchase"><div className="vehicle-purchase-top"><span className="vehicle-status">{vehicle.status}</span><span className="vehicle-ref">Réf. {vehicle.details?.find(([label]) => label === 'Référence')?.[1] ?? vehicle.id}</span></div><p className="vehicle-detail-eyebrow">{vehicle.year} · {vehicle.fuel} · {vehicle.gearbox}</p><h1>{vehicle.name}</h1><p className="vehicle-version">{vehicle.meta}</p><div className="purchase-rule" /><strong className="showroom-price">{vehicle.price}</strong><div className="vehicle-summary"><span>{vehicle.km}</span><span>{vehicle.fuel}</span><span>{vehicle.gearbox}</span></div><Link className="button button-red showroom-cta" href="/contact">Parler de ce véhicule <ArrowUpRight /></Link><div className="showroom-trust"><ShieldCheck /><span>Véhicule contrôlé et préparé par Planète Auto</span></div><div className="vehicle-finance"><Clock3 /><span>Une question ? Notre équipe vous répond au <a href="tel:+33467825412">04 67 82 54 12</a></span></div></aside></div>
-    <section className="vehicle-facts"><div className="vehicle-facts-heading"><span className="eyebrow"><span className="eyebrow-line" /> Fiche technique</span></div><div className="facts-grid">{vehicle.details?.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div></section>
-    <section className="vehicle-description"><div><span className="eyebrow"><span className="eyebrow-line" /> Description du véhicule</span></div><div><p className="vehicle-description-copy">{vehicle.description ?? `${vehicle.name} ${vehicle.meta}, disponible chez Planète Auto à Saint-Jean-de-Védas. Contactez-nous pour connaître les détails du véhicule, organiser une visite ou étudier une reprise.`}</p><Link className="text-link" href="/contact">Poser une question sur ce véhicule <ArrowUpRight /></Link></div></section>
-  </div><SiteFooter /></main>
+  const reference = vehicle.details?.find(([label]) => label === 'Référence')?.[1] ?? vehicle.id
+  const factGroups = groupVehicleFacts(vehicle.details ?? [])
+
+  return <main className="vehicle-detail-page"><SiteHeader />
+    <div className="vehicle-detail-shell">
+      <div className="vehicle-breadcrumb"><Link href="/vehicules"><ArrowLeft /> Retour au stock</Link><span>Planète Auto <b>/</b> {vehicle.name} <b>/</b> Réf. {reference}</span></div>
+
+      <div className="vehicle-detail-layout">
+        <VehicleGallery name={vehicle.name} meta={vehicle.meta} images={gallery} />
+        <aside className="vehicle-aside">
+          <div className="vehicle-purchase">
+            <div className="vehicle-purchase-top"><span className="vehicle-status">{vehicle.status}</span><div className="vehicle-purchase-top-right"><span className="vehicle-ref">Réf. {reference}</span><VehicleShareButton title={`${vehicle.name} — ${vehicle.price}`} /></div></div>
+            <h1>{vehicle.name}</h1>
+            <p className="vehicle-version">{vehicle.meta}</p>
+            <div className="purchase-rule" />
+            <strong className="showroom-price">{vehicle.price}</strong>
+            <div className="vehicle-summary"><span><Calendar size={14} /> {vehicle.year}</span><span><Gauge size={14} /> {vehicle.km}</span><span><Fuel size={14} /> {vehicle.fuel}</span><span><Settings2 size={14} /> {vehicle.gearbox}</span></div>
+            <a className="button button-red showroom-cta" href="#offre">Parler de ce véhicule <ArrowUpRight /></a>
+            <div className="showroom-trust"><ShieldCheck /><span>Véhicule contrôlé et préparé par Planète Auto</span></div>
+            <div className="vehicle-finance"><Clock3 /><span>Une question ? Notre équipe vous répond au <a href="tel:+33467825412">04 67 82 54 12</a></span></div>
+          </div>
+        </aside>
+      </div>
+
+      <section className="vehicle-facts">
+        <div className="vehicle-section-heading"><span className="eyebrow"><span className="eyebrow-line" /> Fiche technique</span></div>
+        <div className="facts-groups">
+          {factGroups.map((group) => (
+            <div className="facts-group" key={group.title}>
+              <h3>{FACT_GROUP_ICONS[group.title]}{group.title}</h3>
+              <div className="facts-grid">{group.facts.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="vehicle-description"><div><span className="eyebrow"><span className="eyebrow-line" /> Description du véhicule</span></div><div><p className="vehicle-description-copy">{vehicle.description ?? `${vehicle.name} ${vehicle.meta}, disponible chez Planète Auto à Saint-Jean-de-Védas.`}</p></div></section>
+
+      {vehicle.equipment && vehicle.equipment.length > 0 && (
+        <section className="vehicle-equipment">
+          <div className="vehicle-section-heading"><span className="eyebrow"><span className="eyebrow-line" /> Équipements</span></div>
+          <div className="equipment-groups">
+            {vehicle.equipment.map((group) => (
+              <div className="equipment-group" key={group.category}>
+                <h3>{EQUIPMENT_ICONS[group.category] ?? <ClipboardList size={17} />}{group.category}</h3>
+                <ul>{group.items.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="vehicle-closing">
+        <div><h2>Intéressé par ce véhicule ?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> 04 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
+        <div id="offre"><VehicleOfferForm vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
+      </section>
+    </div>
+    <SiteFooter />
+  </main>
 }
