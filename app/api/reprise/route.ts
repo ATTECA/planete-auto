@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { renderEmailHtml } from '@/lib/email-template'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -47,9 +48,10 @@ export async function POST(request: Request) {
     }
 
     const attachments = await Promise.all(
-      photos.map(async (photo) => ({
-        filename: photo.name || 'photo.jpg',
+      photos.map(async (photo, index) => ({
+        filename: photo.name || `photo-${index + 1}.jpg`,
         content: Buffer.from(await photo.arrayBuffer()),
+        cid: `photo-${index}`,
       }))
     )
 
@@ -83,6 +85,24 @@ export async function POST(request: Request) {
         condition && `État: ${condition}`,
         message && `\nMessage:\n${message}`,
       ].filter(Boolean).join('\n'),
+      html: renderEmailHtml({
+        heading: `${intent} — ${brand} ${model}`,
+        subheading: `Nouvelle demande via le site`,
+        rows: [
+          { label: 'Nom', value: name },
+          { label: 'E-mail', value: email },
+          ...(phone ? [{ label: 'Téléphone', value: phone }] : []),
+          { label: 'Véhicule', value: `${brand} ${model}` },
+          ...(year ? [{ label: 'Année', value: year }] : []),
+          ...(mileage ? [{ label: 'Kilométrage', value: `${mileage} km` }] : []),
+          ...(gearbox ? [{ label: 'Boîte', value: gearbox }] : []),
+          ...(fuel ? [{ label: 'Carburant', value: fuel }] : []),
+          ...(color ? [{ label: 'Couleur', value: color }] : []),
+          ...(condition ? [{ label: 'État', value: condition }] : []),
+        ],
+        message: message || undefined,
+        photoCids: attachments.map((a) => a.cid),
+      }),
       attachments,
     })
 
