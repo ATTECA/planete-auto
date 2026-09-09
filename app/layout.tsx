@@ -6,8 +6,11 @@ export const metadata: Metadata = {
   title: 'Planète Auto | Achat, vente et reprise de véhicules d’occasion',
   description: 'Achat, vente et reprise de véhicules d’occasion toutes marques à Saint-Jean-de-Védas. Financement, garanties et démarches administratives.',
   icons: {
-    icon: [{ url: '/Plan de travail 3 copie 12@300x.png', type: 'image/png', sizes: 'any' }],
-    apple: '/Plan de travail 3 copie 12@300x.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: 'any' },
+    ],
+    apple: '/favicon.png',
   },
 }
 
