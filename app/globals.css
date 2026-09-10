@@ -2066,7 +2066,7 @@ em {
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 52px;
+  margin-bottom: 32px;
 }
 .inventory-heading-row .inventory-kicker-dark {
   font-size: 12px;
@@ -2075,11 +2075,11 @@ em {
 .inventory-heading-row h1 {
   margin: 0;
   font-family: "BC Alphapipe";
-  font-size: clamp(46px, 6vw, 88px);
+  font-size: clamp(32px, 3.6vw, 50px);
   font-weight: 400;
-  -webkit-text-stroke: 0.6px currentColor;
-  letter-spacing: -0.07em;
-  line-height: 0.92;
+  -webkit-text-stroke: 0.5px currentColor;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
 }
 .inventory-toolbar {
   display: flex;
@@ -2379,6 +2379,91 @@ em {
 }
 .inventory-card:hover .inventory-card-cta {
   background: var(--red);
+}
+.inventory-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.inventory-active-filters button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--black);
+  background: #fff;
+  color: var(--black);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.inventory-active-filters button:not(.inventory-active-clear):hover {
+  background: var(--black);
+  color: #fff;
+}
+.inventory-active-clear {
+  border-color: transparent !important;
+  background: none !important;
+  color: #85888f !important;
+  text-decoration: underline;
+}
+.inventory-card-skeleton {
+  height: 430px;
+  border-radius: 14px;
+  background: linear-gradient(100deg, var(--gray) 30%, #8b8e93 50%, var(--gray) 70%);
+  background-size: 200% 100%;
+  animation: inventory-skeleton-pulse 1.3s ease-in-out infinite;
+}
+@keyframes inventory-skeleton-pulse {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+.inventory-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.inventory-pagination button {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 6px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--black);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+.inventory-pagination button:hover:not(:disabled) {
+  border-color: var(--black);
+}
+.inventory-pagination button.is-active {
+  border-color: var(--black);
+  background: var(--black);
+  color: #fff;
+}
+.inventory-pagination button:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 .inventory-empty {
   padding: 60px 20px;
