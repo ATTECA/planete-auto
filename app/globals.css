@@ -153,19 +153,20 @@ textarea {
 }
 .brand {
   display: flex;
-  align-items: center;
+ align-items: baseline;
   gap: 10px;
   font-family: "BC Alphapipe";
-  font-size: 22px;
+  font-size: 45px;
   font-weight: 400;
+  line-height: 1;
   letter-spacing: -0.06em;
   -webkit-text-stroke: 0.5px currentColor;
 }
 .brand img {
-  width: 36px;
-  height: 42px;
-  object-fit: cover;
-  object-position: center;
+  display: block;
+  height: 33px;
+  width: auto;
+  object-fit: contain;
 }
 .brand b {
   color: var(--red);
@@ -173,10 +174,14 @@ textarea {
 }
 .nav-links {
   display: flex;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   gap: 30px;
-  margin-right: auto;
   font-size: 14px;
   font-weight: 700;
+  white-space: nowrap;
 }
 .nav-links a:hover,
 .text-link:hover,
@@ -205,12 +210,14 @@ textarea {
 .nav-cta {
   display: flex;
   align-items: center;
+  margin-left: auto;
   gap: 10px;
   padding: 13px 17px;
   background: var(--black);
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
+  white-space: nowrap;
 }
 .nav-cta:hover,
 .nav-cta:focus-visible {
@@ -1100,39 +1107,6 @@ em {
   color: #777;
   font-size: 13px;
 }
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 5vw;
-  background: var(--black);
-  color: #888;
-  font-size: 14px;
-}
-footer .footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: "BC Alphapipe", serif;
-  font-size: 16px;
-  color: #fff;
-}
-footer .footer-brand img {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  object-position: center;
-}
-footer .footer-brand b {
-  color: var(--red);
-  font-weight: 400;
-}
-footer a:last-child {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-}
 .inner-shell {
   min-height: 100vh;
   background: var(--paper);
@@ -1764,22 +1738,16 @@ footer a:last-child {
   color: #fff;
   text-decoration: none;
   font-family: "BC Alphapipe";
-  font-size: 25px;
+  font-size: 39px;
+  font-weight: 400;
   letter-spacing: -0.06em;
-}
-.footer-brand {
-  display: flex !important;
-  align-items: center !important;
-  gap: 16px !important;
-  font-size: 34px !important;
-  line-height: 1 !important;
+  -webkit-text-stroke: 0.5px currentColor;
 }
 .footer-brand img {
-  display: block !important;
-  width: 64px !important;
-  height: 64px !important;
-  object-fit: cover;
-  object-position: center;
+  display: block;
+  height: 56px;
+  width: auto;
+  object-fit: contain;
 }
 .footer-brand b {
   color: var(--red);
@@ -1919,9 +1887,9 @@ footer a:last-child {
   font-size: 14px;
 }
 .footer-bottom img {
-  width: 22px;
   height: 22px;
-  object-fit: cover;
+  width: auto;
+  object-fit: contain;
   filter: grayscale(1) brightness(0) invert(1);
 }
 .footer-bottom span {
@@ -3184,6 +3152,7 @@ footer a:last-child {
     left: 0;
     right: 0;
     top: 70px;
+    transform: none;
     padding: 22px 5vw;
     background: var(--paper);
     flex-direction: column;
@@ -3323,12 +3292,11 @@ footer a:last-child {
     justify-self: auto;
   }
   .footer-brand {
-    font-size: 30px !important;
-    gap: 13px !important;
+    font-size: 30px;
+    gap: 10px;
   }
   .footer-brand img {
-    width: 58px !important;
-    height: 58px !important;
+    height: 48px;
   }
   .service-card {
     min-height: auto;

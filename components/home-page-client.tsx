@@ -106,9 +106,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       <header className="navbar">
         <a href="#top" className="brand">
           <img src="/planete-auto-logo.png" alt="" />
-          <span>
-            Planète <b>Auto</b>
-          </span>
+          Planète <b>Auto</b>
         </a>
         <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navigation principale">
           <a href="/" onClick={() => setMenuOpen(false)}>
@@ -127,11 +125,9 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
             Contact
           </a>
         </nav>
-        <div className="nav-actions">
-          <a className="nav-cta" href="tel:+33467825412">
-            <Phone size={16} /> Nous appeler maintenant
-          </a>
-        </div>
+        <a className="nav-cta" href="tel:+33467825412">
+          <Phone size={16} /> Nous appeler maintenant
+        </a>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Ouvrir le menu">
           {menuOpen ? <X /> : <Menu />}
         </button>

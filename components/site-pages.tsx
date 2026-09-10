@@ -38,9 +38,7 @@ export function SiteHeader() {
       <header className="navbar">
         <a href="/" className="brand">
           <img src={iconLogo} alt="" />
-          <span>
-            Planète <b>Auto</b>
-          </span>
+          Planète <b>Auto</b>
         </a>
         <nav className="nav-links" aria-label="Navigation principale">
           <a href="/">Accueil</a>
@@ -65,9 +63,7 @@ export function SiteFooter() {
         <div className="footer-identity">
           <a href="/" className="footer-brand">
             <img src={iconLogo} alt="Planète Auto logo" />
-            <span>
-              Planète <b>Auto</b>
-            </span>
+            Planète <b>Auto</b>
           </a>
           <p>Véhicules d’occasion toutes marques, achat, vente et reprise.</p>
           <span>
