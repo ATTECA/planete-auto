@@ -111,8 +111,11 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           </span>
         </a>
         <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navigation principale">
+          <a href="/" onClick={() => setMenuOpen(false)}>
+            Accueil
+          </a>
           <a href="/vehicules" onClick={() => setMenuOpen(false)}>
-            Véhicules
+            Stock
           </a>
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise

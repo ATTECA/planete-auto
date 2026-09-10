@@ -43,7 +43,8 @@ export function SiteHeader() {
           </span>
         </a>
         <nav className="nav-links" aria-label="Navigation principale">
-          <a href="/vehicules">Véhicules</a>
+          <a href="/">Accueil</a>
+          <a href="/vehicules">Stock</a>
           <a href="/reprise">Vente & reprise</a>
           <a href="/a-propos">À propos</a>
           <a href="/contact">Contact</a>
@@ -171,9 +172,31 @@ export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string
 
 export function ContactForm({ subject = "votre projet" }: { subject?: string }) {
   const [sent, setSent] = useState(false);
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSent(true);
+    setError("");
+    setSending(true);
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.get("name"),
+          email: form.get("email"),
+          message: [form.get("phone") && `Téléphone : ${form.get("phone")}`, form.get("message")].filter(Boolean).join("\n\n"),
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
+    } finally {
+      setSending(false);
+    }
   };
   if (sent)
     return (
@@ -191,25 +214,30 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
       </div>
       <label>
         Votre nom
-        <input required placeholder="Prénom Nom" />
-      </label>
-      <label>
-        Votre adresse e-mail
-        <input required type="email" placeholder="vous@exemple.fr" />
+        <input name="name" required placeholder="Prénom Nom" />
       </label>
       <label>
         Votre téléphone
-        <input placeholder="04 00 00 00 00" />
+        <input name="phone" placeholder="04 00 00 00 00" />
+      </label>
+      <label>
+        Votre adresse e-mail
+        <input name="email" required type="email" placeholder="vous@exemple.fr" />
       </label>
       <label>
         Votre message
-        <textarea required rows={4} placeholder="Écrivez votre demande..." />
+        <textarea name="message" required rows={4} placeholder="Écrivez votre demande..." />
       </label>
       <label className="consent">
         <input type="checkbox" required /> J'accepte d'être recontacté au sujet de ma demande.
       </label>
-      <button className="button button-red" type="submit">
-        Envoyer ma demande <ArrowRight size={17} />
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button className="button button-red" type="submit" disabled={sending}>
+        {sending ? "Envoi en cours..." : "Envoyer ma demande"} <ArrowRight size={17} />
       </button>
     </form>
   );
@@ -650,13 +678,6 @@ export function ContactInfo() {
             10h00–17h00
           </span>
         </div>
-      </div>
-      <div className="map-frame">
-        <iframe
-          title="Localisation Planète Auto"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=3.828%2C43.588%2C3.836%2C43.598&layer=mapnik&marker=43.5931637%2C3.8320012"
-          loading="lazy"
-        />
       </div>
     </div>
   );
