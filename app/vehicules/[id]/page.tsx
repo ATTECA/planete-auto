@@ -45,7 +45,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       <div className="vehicle-breadcrumb"><Link href="/vehicules"><ArrowLeft /> Retour au stock</Link><span>Planète Auto <b>/</b> {vehicle.name} <b>/</b> Réf. {reference}</span></div>
 
       <div className="vehicle-detail-layout">
-        <VehicleGallery name={vehicle.name} meta={vehicle.meta} images={gallery} />
+        <VehicleGallery name={vehicle.name} meta={vehicle.meta} images={gallery} showWarranty />
         <aside className="vehicle-aside">
           <div className="vehicle-purchase">
             <div className="vehicle-purchase-top"><span className="vehicle-status">{vehicle.status}</span><div className="vehicle-purchase-top-right"><span className="vehicle-ref">Réf. {reference}</span><VehicleShareButton title={`${vehicle.name} — ${vehicle.price}`} /></div></div>
@@ -53,10 +53,13 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             <p className="vehicle-version">{vehicle.meta}</p>
             <div className="purchase-rule" />
             <strong className="showroom-price">{vehicle.price}</strong>
-            <div className="vehicle-summary"><span><Calendar size={14} /> {vehicle.year}</span><span><Gauge size={14} /> {vehicle.km}</span><span><Fuel size={14} /> {vehicle.fuel}</span><span><Settings2 size={14} /> {vehicle.gearbox}</span></div>
-            <a className="button button-red showroom-cta" href="#offre">Parler de ce véhicule <ArrowUpRight /></a>
+            <div className="vehicle-summary"><span><Calendar size={19} /> {vehicle.year}</span><span><Gauge size={19} /> {vehicle.km}</span><span><Fuel size={19} /> {vehicle.fuel}</span><span><Settings2 size={19} /> {vehicle.gearbox}</span></div>
+            <div className="showroom-actions">
+              <a className="button button-red showroom-cta" href="tel:+33467825412">Réserver ce véhicule <ArrowUpRight /></a>
+              <a className="button button-black showroom-cta" href="#offre">Faire une offre <ArrowUpRight /></a>
+            </div>
             <div className="showroom-trust"><ShieldCheck /><span>Véhicule contrôlé et préparé par Planète Auto</span></div>
-            <div className="vehicle-finance"><Clock3 /><span>Une question ? Notre équipe vous répond au <a href="tel:+33467825412">04 67 82 54 12</a></span></div>
+            <div className="vehicle-finance"><Clock3 /><span>Une question ? Notre équipe vous répond au <a href="tel:+33467825412">+33 4 67 82 54 12</a></span></div>
           </div>
         </aside>
       </div>
@@ -73,7 +76,16 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
         </div>
       </section>
 
-      <section className="vehicle-description"><div><span className="eyebrow"><span className="eyebrow-line" /> Description du véhicule</span></div><div><p className="vehicle-description-copy">{vehicle.description ?? `${vehicle.name} ${vehicle.meta}, disponible chez Planète Auto à Saint-Jean-de-Védas.`}</p></div></section>
+      <section className="vehicle-description">
+        <div>
+          <span className="eyebrow"><span className="eyebrow-line" /> Description</span>
+        </div>
+        <div>
+          <p className="vehicle-description-copy">
+            {(vehicle.description ?? `${vehicle.name} ${vehicle.meta}, disponible chez Planète Auto à Saint-Jean-de-Védas.`).trim().replace(/\n{3,}/g, '\n\n')}
+          </p>
+        </div>
+      </section>
 
       {vehicle.equipment && vehicle.equipment.length > 0 && (
         <section className="vehicle-equipment">
@@ -90,7 +102,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       )}
 
       <section className="vehicle-closing">
-        <div><h2>Intéressé par ce véhicule ?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> 04 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
+        <div><h2>Intéressé par ce véhicule ?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> +33 4 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
         <div id="offre"><VehicleOfferForm vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
       </section>
     </div>
