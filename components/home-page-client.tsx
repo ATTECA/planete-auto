@@ -1,30 +1,46 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  ArrowUpRight,
   CalendarDays,
   CarFront,
   Check,
-  ChevronDown,
-  Clock3,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   Mail,
   Phone,
   Menu,
   Search,
   ShieldCheck,
-  SlidersHorizontal,
   Tag,
   X,
 } from "lucide-react";
 import { ServiceCard, SiteFooter } from "@/components/site-pages";
+import { useFavorites } from "@/lib/use-favorites";
+import { getFeatureIcons } from "@/lib/vehicle-features";
 import type { Vehicle } from "@/lib/vehicles";
 
-const logo =
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Variation%20logo%20principale%20%283%29-KVWe2Eco22lDkGQ3c9VtJwIsvDy7vp.png";
+const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
+const ARRIVALS_PAGE_SIZE = 4;
+const ARRIVALS_PAGE_COUNT = 2;
 
-const filters = ["Dernières arrivées", "Notre sélection"];
+const bodyTypes = [
+  ["SUV", "suv"],
+  ["Berline", "berline"],
+  ["Citadine", "citadine"],
+  ["Break", "break"],
+  ["Monospace / Van", "monospace"],
+  ["Coupé", "coupe"],
+  ["Cabriolet", "cabriolet"],
+  ["Pickup", "pickup"],
+];
+
 const brands = [
   ["Peugeot", "peugeot"],
   ["Renault", "renault"],
@@ -41,39 +57,62 @@ const brands = [
 ];
 
 export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
-  const heroVehicle = useMemo(() => [...vehicles].sort((a, b) => b.id - a.id)[0], [vehicles]);
-  const [activeFilter, setActiveFilter] = useState(filters[0]);
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const [formSent, setFormSent] = useState(false);
   const [formError, setFormError] = useState("");
   const [formSending, setFormSending] = useState(false);
-  const [search, setSearch] = useState({ model: "", budget: "", fuel: "" });
-  const [submittedSearch, setSubmittedSearch] = useState({ model: "", budget: "", fuel: "" });
+  const [heroBrand, setHeroBrand] = useState("");
+  const [heroModel, setHeroModel] = useState("");
+  const [heroBudget, setHeroBudget] = useState("");
 
-  const visibleVehicles = useMemo(() => {
-    let result: Vehicle[] =
-      activeFilter === filters[1]
-        ? [...vehicles]
-            .filter((vehicle) => vehicle.featured)
-            .sort((a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99))
-            .slice(0, 3)
-        : [...vehicles].sort((a, b) => b.id - a.id).slice(0, 3);
-    if (submittedSearch.model)
-      result = result.filter((v) => `${v.name} ${v.meta}`.toLowerCase().includes(submittedSearch.model.toLowerCase()));
-    if (submittedSearch.budget) result = result.filter((v) => Number(v.price.replace(/\D/g, "")) <= Number(submittedSearch.budget));
-    if (submittedSearch.fuel) result = result.filter((v) => v.fuel === submittedSearch.fuel);
-    return result;
-  }, [vehicles, activeFilter, submittedSearch]);
+  const { isFavorite, toggle: toggleFavorite } = useFavorites();
+  const [arrivalsPage, setArrivalsPage] = useState(0);
+  const [arrivalsPaused, setArrivalsPaused] = useState(false);
+  const arrivalsPauseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const runSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmittedSearch(search);
-    document.querySelector("#stock")?.scrollIntoView({ behavior: "smooth" });
+  const arrivals = useMemo(() => [...vehicles].sort((a, b) => b.id - a.id).slice(0, ARRIVALS_PAGE_SIZE * ARRIVALS_PAGE_COUNT), [vehicles]);
+  const arrivalsPages = useMemo(() => {
+    const pages: Vehicle[][] = [];
+    for (let i = 0; i < arrivals.length; i += ARRIVALS_PAGE_SIZE) pages.push(arrivals.slice(i, i + ARRIVALS_PAGE_SIZE));
+    return pages;
+  }, [arrivals]);
+
+  useEffect(() => {
+    if (arrivalsPaused || arrivalsPages.length < 2) return;
+    const interval = setInterval(() => setArrivalsPage((page) => (page + 1) % arrivalsPages.length), 5000);
+    return () => clearInterval(interval);
+  }, [arrivalsPaused, arrivalsPages.length]);
+
+  const goToArrivalsPage = (page: number) => {
+    setArrivalsPage(page);
+    setArrivalsPaused(true);
+    if (arrivalsPauseTimeout.current) clearTimeout(arrivalsPauseTimeout.current);
+    arrivalsPauseTimeout.current = setTimeout(() => setArrivalsPaused(false), 8000);
   };
 
-  const toggleFavorite = (id: number) =>
-    setFavorites((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+  const heroBrandOptions = useMemo(() => [...new Set(vehicles.map((vehicle) => getDetail(vehicle, "Marque")))].filter(Boolean), [vehicles]);
+  const heroModelOptions = useMemo(
+    () =>
+      [...new Set(vehicles.filter((vehicle) => !heroBrand || getDetail(vehicle, "Marque") === heroBrand).map((vehicle) => getDetail(vehicle, "Modèle")))].filter(
+        Boolean
+      ),
+    [vehicles, heroBrand]
+  );
+
+  const selectHeroBrand = (value: string) => {
+    setHeroBrand(value);
+    setHeroModel("");
+  };
+
+  const runHeroSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params = new URLSearchParams();
+    if (heroBrand) params.set("marque", heroBrand);
+    if (heroModel) params.set("modele", heroModel);
+    if (heroBudget) params.set("prixMax", heroBudget);
+    router.push(`/vehicules${params.toString() ? `?${params.toString()}` : ""}`);
+  };
 
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -133,108 +172,209 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         </button>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="eyebrow-line" /> Achat · vente · reprise
-          </div>
-          <h1>
-            Une voiture d’occasion,
-            <br />
-            <em>en toute confiance.</em>
-          </h1>
-          <p>
-            Découvrez nos véhicules toutes marques et bénéficiez d’un accompagnement simple pour l’achat, la reprise, le financement et les
-            démarches administratives.
-          </p>
-          <div className="hero-buttons">
-            <a className="button button-red" href="#stock">
-              Voir nos véhicules <ArrowRight size={18} />
-            </a>
-            <a className="button button-ghost" href="/reprise">
-              Faire reprendre ma voiture <Tag size={17} />
-            </a>
-          </div>
-          <div className="trust-row">
-            <div>
-              <strong>Toutes marques</strong>
-              <span>achat & vente</span>
-            </div>
-            <div>
-              <strong>Reprise</strong>
-              <span>de votre véhicule</span>
-            </div>
-            <div>
-              <strong>Garantie</strong>
-              <span>et financement</span>
-            </div>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <div className="hero-backdrop" />
-          <img
-            className="hero-car"
-            src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1800&q=90"
-            alt="Véhicule d’occasion exposé"
-          />
-          {heroVehicle && (
-            <div className="hero-card">
-              <span className="card-kicker">Nouveauté</span>
-              <strong>{heroVehicle.name}</strong>
-              <span className="card-price">{heroVehicle.price}</span>
-              <a href={`/vehicules/${heroVehicle.id}`}>
-                Voir le véhicule <ArrowRight size={15} />
+      <section className="hero hero-photo" id="top">
+        <div className="hero-bg" style={{ backgroundImage: "url('/hero-pic.jpg')" }} />
+        <div className="hero-photo-inner">
+        <div className="hero-photo-content">
+          <div className="hero-photo-card">
+            <h1>
+              Une voiture d’occasion,
+              <br />
+              <em>en toute confiance.</em>
+            </h1>
+            <form className="hero-search-box" onSubmit={runHeroSearch} aria-label="Recherche rapide de véhicule">
+              <div className="hero-search-box-fields">
+                <label>
+                  <span>Marque</span>
+                  <select value={heroBrand} onChange={(event) => selectHeroBrand(event.target.value)}>
+                    <option value="">Toutes les marques</option>
+                    {heroBrandOptions.map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>Modèle</span>
+                  <select value={heroModel} onChange={(event) => setHeroModel(event.target.value)} disabled={heroModelOptions.length === 0}>
+                    <option value="">Tous les modèles</option>
+                    {heroModelOptions.map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span>Budget maximum</span>
+                  <select value={heroBudget} onChange={(event) => setHeroBudget(event.target.value)}>
+                    <option value="">Tous les budgets</option>
+                    <option value="10000">Moins de 10 000 €</option>
+                    <option value="16000">Moins de 16 000 €</option>
+                    <option value="22000">Moins de 22 000 €</option>
+                    <option value="30000">Moins de 30 000 €</option>
+                  </select>
+                </label>
+                <button type="submit">
+                  <Search size={17} /> Rechercher
+                </button>
+              </div>
+              <a className="hero-search-advanced" href="/vehicules">
+                Recherche avancée
               </a>
-            </div>
-          )}
+            </form>
+          </div>
+          <a className="hero-sell-cta" href="/reprise">
+            <Tag size={17} /> Vendre ma voiture <ArrowRight size={15} />
+          </a>
+        </div>
+        <p className="hero-photo-intro">
+          Découvrez nos véhicules toutes marques et bénéficiez d’un accompagnement simple pour l’achat, la reprise, le financement et les
+          démarches administratives.
+        </p>
         </div>
       </section>
 
-      <form className="vehicle-search-panel" aria-label="Recherche de véhicule" onSubmit={runSearch}>
-        <div className="search-panel-heading">
+      <section className="carrosserie-section" aria-label="Recherchez par type de carrosserie">
+        <div className="section-heading">
           <div>
-            <span className="eyebrow">
-              <span className="eyebrow-line" /> Recherche véhicule
-            </span>
-            <h2>
-              Trouvez le véhicule
-              <br />
-              <em>qui vous correspond.</em>
-            </h2>
+            <div className="eyebrow">
+              <span className="eyebrow-line" /> Recherchez Par type de carrosserie
+            </div>
           </div>
-          <Search size={28} />
+          <a className="text-link" href="/vehicules">
+            Toutes les voitures <ArrowRight size={17} />
+          </a>
         </div>
-        <div className="search-fields">
-          <label>
-            <span>Marque ou modèle</span>
-            <input
-              value={search.model}
-              onChange={(event) => setSearch({ ...search, model: event.target.value })}
-              placeholder="Ex. Peugeot 3008"
-            />
-          </label>
-          <label>
-            <span>Budget maximum</span>
-            <select value={search.budget} onChange={(event) => setSearch({ ...search, budget: event.target.value })}>
-              <option value="">Tous les budgets</option>
-              <option value="16000">Moins de 16 000 €</option>
-              <option value="22000">Moins de 22 000 €</option>
-              <option value="30000">Moins de 30 000 €</option>
-            </select>
-          </label>
-          <label>
-            <span>Carburant</span>
-            <select value={search.fuel} onChange={(event) => setSearch({ ...search, fuel: event.target.value })}>
-              <option value="">Tous les carburants</option>
-              <option value="Essence">Essence</option>
-              <option value="Diesel">Diesel</option>
-            </select>
-          </label>
+        <div className="carrosserie-grid">
+          {bodyTypes.map(([label, slug]) => (
+            <button
+              className="carrosserie-tile"
+              key={slug}
+              onClick={() => router.push(`/vehicules?carrosserie=${encodeURIComponent(label)}`)}
+            >
+              <img src={`/carrosserie/${slug}.png`} alt="" />
+              <span>{label}</span>
+            </button>
+          ))}
         </div>
-        <button className="search-submit" type="submit">
-          <Search size={18} /> Rechercher dans le stock
-        </button>
-      </form>
+      </section>
+
+      <section className="arrivals-section" aria-labelledby="arrivals-title">
+        <div className="section-heading">
+          <div>
+            <h2 id="arrivals-title">
+              Nouveaux
+              <br />
+              <em>arrivages</em>
+            </h2>
+            <p>Découvrez nos nouveaux arrivages de véhicules d’occasion disponibles chez Planète Auto.</p>
+          </div>
+          <Link className="text-link" href="/vehicules">
+            Voir tout le stock <ArrowRight size={17} />
+          </Link>
+        </div>
+        <div className="arrivals-carousel" onMouseEnter={() => setArrivalsPaused(true)} onMouseLeave={() => setArrivalsPaused(false)}>
+          <div className="arrivals-viewport">
+          <div className="arrivals-track" style={{ transform: `translateX(-${arrivalsPage * 100}%)` }}>
+            {arrivalsPages.map((page, pageIndex) => (
+              <div className="inventory-grid arrivals-page" key={pageIndex}>
+                {page.map((vehicle, index) => {
+                  const favorite = isFavorite(vehicle.id);
+                  const icons = getFeatureIcons(vehicle);
+                  const visibleIcons = icons.slice(0, 6);
+                  const extraCount = icons.length - visibleIcons.length;
+                  return (
+                    <article className="inventory-card" key={vehicle.id}>
+                      <Link href={`/vehicules/${vehicle.id}`} className="inventory-card-image">
+                        <Image
+                          src={vehicle.image}
+                          alt={`${vehicle.name} ${vehicle.meta}`}
+                          fill
+                          sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 25vw"
+                          priority={pageIndex === 0 && index < 2}
+                        />
+                        <span className={`inventory-card-tag ${/bon plan|baisse|promo/i.test(vehicle.tag) ? "is-deal" : ""}`}>{vehicle.tag}</span>
+                        <button
+                          type="button"
+                          className={`inventory-favorite ${favorite ? "is-favorite" : ""}`}
+                          aria-label={`${favorite ? "Retirer" : "Ajouter"} ${vehicle.name} des favoris`}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            toggleFavorite(vehicle.id);
+                          }}
+                        >
+                          <Heart fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
+                        </button>
+                      </Link>
+                      <div className="inventory-card-body">
+                        <p className="inventory-card-year">
+                          {vehicle.year} · {vehicle.km}
+                        </p>
+                        <div className="inventory-card-top">
+                          <div>
+                            <h3>{vehicle.name}</h3>
+                            <p>{vehicle.meta}</p>
+                          </div>
+                          <strong>{vehicle.price}</strong>
+                        </div>
+                        {visibleIcons.length > 0 && (
+                          <div className="inventory-card-icons">
+                            {visibleIcons.map(({ key, label, icon: Icon }) => (
+                              <span key={key} title={label} aria-label={label}>
+                                <Icon size={16} aria-hidden />
+                              </span>
+                            ))}
+                            {extraCount > 0 && <span className="inventory-card-icons-more">+{extraCount}</span>}
+                          </div>
+                        )}
+                        <div className="inventory-card-bottom">
+                          <span>{vehicle.fuel}</span>
+                          <span>{vehicle.gearbox}</span>
+                        </div>
+                      </div>
+                      <Link href={`/vehicules/${vehicle.id}`} className="inventory-card-cta">
+                        Voir le véhicule <ArrowUpRight aria-hidden="true" />
+                      </Link>
+                    </article>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+          </div>
+          {arrivalsPages.length > 1 && (
+            <>
+              <button
+                type="button"
+                className="arrivals-arrow arrivals-arrow-prev"
+                aria-label="Page précédente"
+                disabled={arrivalsPage === 0}
+                onClick={() => goToArrivalsPage(Math.max(0, arrivalsPage - 1))}
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                type="button"
+                className="arrivals-arrow arrivals-arrow-next"
+                aria-label="Page suivante"
+                disabled={arrivalsPage === arrivalsPages.length - 1}
+                onClick={() => goToArrivalsPage(Math.min(arrivalsPages.length - 1, arrivalsPage + 1))}
+              >
+                <ChevronRight />
+              </button>
+              <div className="arrivals-dots">
+                {arrivalsPages.map((_, pageIndex) => (
+                  <button
+                    type="button"
+                    key={pageIndex}
+                    className={pageIndex === arrivalsPage ? "is-active" : ""}
+                    aria-label={`Page ${pageIndex + 1}`}
+                    onClick={() => goToArrivalsPage(pageIndex)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
 
       <section className="brands-section" aria-labelledby="brands-title">
         <div className="section-heading centered">
@@ -251,121 +391,13 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
         <div className="brands-grid">
           {brands.map(([name, slug]) => (
-            <button
-              className="brand-tile"
-              key={slug}
-              onClick={() => {
-                const nextSearch = { ...search, model: name };
-                setSearch(nextSearch);
-                setSubmittedSearch(nextSearch);
-                document.querySelector("#stock")?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
+            <button className="brand-tile" key={slug} onClick={() => router.push(`/vehicules?marque=${encodeURIComponent(name)}`)}>
               <img src={`https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/${slug}/default.svg`} alt="" />
               <span>{name}</span>
               <ArrowRight size={15} />
             </button>
           ))}
         </div>
-      </section>
-
-      <section className="section stock-section" id="stock">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> Sélection Planète Auto
-            </div>
-            <h2>
-              Des véhicules qui
-              <br />
-              <em>vous ressemblent</em>
-            </h2>
-          </div>
-        </div>
-        <div className="filter-bar">
-          <div className="filter-tabs">
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                className={activeFilter === filter ? "filter-tab active" : "filter-tab"}
-                onClick={() => setActiveFilter(filter)}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-          <a className="text-link" href="#stock">
-            Voir tout le stock <ArrowRight size={17} />
-          </a>
-        </div>
-        <div className="catalogue-result">
-          {visibleVehicles.length} véhicule{visibleVehicles.length > 1 ? "s" : ""} correspondant{visibleVehicles.length > 1 ? "s" : ""}
-        </div>
-        {visibleVehicles.length === 0 ? (
-          <div className="empty-state">
-            <Search size={24} />
-            <h3>Aucun véhicule ne correspond</h3>
-            <p>Essayez une autre marque, un budget différent ou réinitialisez votre recherche.</p>
-            <button
-              className="button button-ghost"
-              onClick={() => {
-                setSearch({ model: "", budget: "", fuel: "" });
-                setSubmittedSearch({ model: "", budget: "", fuel: "" });
-                setActiveFilter(filters[0]);
-              }}
-            >
-              Réinitialiser la recherche
-            </button>
-          </div>
-        ) : (
-          <div className="vehicle-grid">
-            {visibleVehicles.map((vehicle) => (
-              <article className="vehicle-card" key={vehicle.id}>
-                <div className="vehicle-image">
-                  <img src={vehicle.image} alt={`${vehicle.name} ${vehicle.meta}`} />
-                  <span className="vehicle-tag">{vehicle.tag}</span>
-                  <button
-                    className={favorites.includes(vehicle.id) ? "favorite is-favorite" : "favorite"}
-                    onClick={() => toggleFavorite(vehicle.id)}
-                    aria-label="Ajouter aux favoris"
-                  >
-                    <Heart size={18} fill={favorites.includes(vehicle.id) ? "currentColor" : "none"} />
-                  </button>
-                </div>
-                <div className="vehicle-body">
-                  <div className="vehicle-title">
-                    <div>
-                      <h3>{vehicle.name}</h3>
-                      <p>{vehicle.meta}</p>
-                    </div>
-                    <strong>{vehicle.price}</strong>
-                  </div>
-                  <div className="vehicle-specs">
-                    <span>{vehicle.year}</span>
-                    <span>{vehicle.km}</span>
-                    <span>{vehicle.fuel}</span>
-                    <span>{vehicle.gearbox}</span>
-                  </div>
-                  <span className="vehicle-status">
-                    <span className="status-dot" />
-                    {vehicle.status}
-                  </span>
-                  <a
-                    className="vehicle-link"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      window.location.assign(`/vehicules/${vehicle.id}`);
-                      requestAnimationFrame(() => document.querySelector("#vehicle-detail")?.scrollIntoView({ behavior: "smooth" }));
-                    }}
-                    href="#contact"
-                  >
-                    Voir le véhicule <ArrowRight size={16} />
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
       </section>
 
       <section id="services">

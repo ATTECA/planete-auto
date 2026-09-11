@@ -2,35 +2,21 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowUpRight, Bluetooth, ChevronDown, ChevronLeft, ChevronRight, CircleDot, Flame, Gauge, Heart, KeyRound, Navigation, ParkingCircle, Search, ShieldCheck, Snowflake, Tablet, Usb, X } from 'lucide-react'
-import type { ComponentType } from 'react'
+import { ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, Heart, Search, X } from 'lucide-react'
 import { SiteFooter, SiteHeader } from '@/components/site-pages'
 import { useFavorites } from '@/lib/use-favorites'
+import { getFeatureIcons } from '@/lib/vehicle-features'
 import type { Vehicle } from '@/lib/vehicles'
 
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? ''
 
-const FEATURE_ICONS: { key: string; label: string; icon: ComponentType<{ size?: number; 'aria-hidden'?: boolean }>; match: RegExp }[] = [
-  { key: 'clim', label: 'Climatisation', icon: Snowflake, match: /clim/i },
-  { key: 'gps', label: 'GPS', icon: Navigation, match: /gps|cartograph|navigation/i },
-  { key: 'bluetooth', label: 'Bluetooth', icon: Bluetooth, match: /bluetooth|mains-libres/i },
-  { key: 'regulateur', label: 'Régulateur de vitesse', icon: Gauge, match: /régulateur|regulateur/i },
-  { key: 'radar', label: 'Radar de stationnement', icon: ParkingCircle, match: /radar|stationnement/i },
-  { key: 'chauffants', label: 'Sièges chauffants', icon: Flame, match: /chauffant/i },
-  { key: 'ecran', label: 'Écran tactile', icon: Tablet, match: /écran|ecran|tactile/i },
-  { key: 'usb', label: 'Prise USB', icon: Usb, match: /usb/i },
-  { key: 'sans-cle', label: 'Démarrage sans clé', icon: KeyRound, match: /sans clé|sans cle|démarrage sans/i },
-  { key: 'jantes', label: 'Jantes alu', icon: CircleDot, match: /jantes/i },
-  { key: 'securite', label: 'ABS / ESP / Airbags', icon: ShieldCheck, match: /abs|esp|airbag|antipatinage/i },
-]
-
-const getFeatureIcons = (vehicle: Vehicle) => {
-  const items = (vehicle.equipment ?? []).flatMap((group) => group.items)
-  return FEATURE_ICONS.filter((def) => items.some((item) => def.match.test(item)))
-}
-
 export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }) {
+  const searchParams = useSearchParams()
+  const initialBrand = searchParams.get('marque') ?? ''
+  const initialMaxPrice = searchParams.get('prixMax')
+
   const prices = useMemo(() => vehicles.map((vehicle) => Number(vehicle.price.replace(/\D/g, ''))), [vehicles])
   const years = useMemo(() => vehicles.map((vehicle) => Number(vehicle.year)), [vehicles])
   const mileages = useMemo(() => vehicles.map((vehicle) => Number(vehicle.km.replace(/\D/g, ''))), [vehicles])
@@ -42,12 +28,12 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
     colors: [...new Set(vehicles.map((vehicle) => getDetail(vehicle, 'Couleur')))],
   }), [vehicles])
 
-  const [brand, setBrand] = useState('')
+  const [brand, setBrand] = useState(() => (filterOptions.brands.includes(initialBrand) ? initialBrand : ''))
   const [model, setModel] = useState('')
   const [fuel, setFuel] = useState('')
   const [gearbox, setGearbox] = useState('')
   const [color, setColor] = useState('')
-  const [maxPrice, setMaxPrice] = useState(() => Math.max(...prices))
+  const [maxPrice, setMaxPrice] = useState(() => (initialMaxPrice ? Math.min(Number(initialMaxPrice), Math.max(...prices)) : Math.max(...prices)))
   const [yearFrom, setYearFrom] = useState(() => Math.min(...years))
   const [maxMileage, setMaxMileage] = useState(() => Math.max(...mileages))
   const [sort, setSort] = useState('Recommandés')

@@ -13,7 +13,7 @@ export default function ReprisePage() {
 			<section className="tradein-hero">
 				<div className="tradein-hero-glow" />
 				<div className="tradein-hero-copy">
-					<h1>Vendez ou faites reprendre<br /><em>votre voiture.</em></h1>
+					<h1>Vendez ou faites reprendre<br /><em>votre voiture</em></h1>
 					<p>Que vous souhaitiez vendre votre véhicule directement ou le faire reprendre en échange d'un prochain achat, décrivez-le-nous en quelques informations.</p>
 					<div className="trust-row light"><div><strong>48h</strong><span>de réponse</span></div><div><strong>Toutes marques</strong><span>tous kilométrages</span></div><div><strong>0 frais</strong><span>d'estimation</span></div></div>
 				</div>
