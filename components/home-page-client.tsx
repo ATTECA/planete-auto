@@ -63,6 +63,13 @@ const brands = [
   ["Fiat", "fiat"],
 ];
 
+const brandLogoSize: Record<string, number> = {
+  ford: 68,
+  opel: 68,
+  nissan: 55,
+  audi: 68,
+};
+
 const googleReviews = [
   {
     name: "David Samblanet",
@@ -388,21 +395,21 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
 
       <section className="brands-section" aria-labelledby="brands-title">
         <div className="brands-section-inner">
-          <div className="section-heading centered">
-            <div>
-              <h2 id="brands-title">
-                Les marques
-                <br />
-                <em>que nous proposons</em>
-              </h2>
-            </div>
-          </div>
+          <h2 id="brands-title" className="brands-heading">
+            Les marques
+            <br />
+            <em>que nous proposons</em>
+          </h2>
           <div className="brands-card">
             <div className="brands-grid">
               {brands.map(([name, slug]) => (
                 <button className="brand-tile" key={slug} onClick={() => router.push(`/vehicules?marque=${encodeURIComponent(name)}`)}>
                   <span className="brand-tile-icon">
-                    <img src={`/brands/${slug}.svg`} alt="" />
+                    <img
+                      src={`/brands/${slug}.webp`}
+                      alt=""
+                      style={brandLogoSize[slug] ? { width: brandLogoSize[slug], height: brandLogoSize[slug] } : undefined}
+                    />
                   </span>
                   <span className="brand-tile-name">{name}</span>
                 </button>

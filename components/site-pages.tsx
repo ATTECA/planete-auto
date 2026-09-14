@@ -141,7 +141,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="footer-bottom">
-        <img src={iconLogo} alt="Planète Auto logo" />
+        <img src="/footer-bottom-icon.png" alt="Planète Auto logo" />
         <span>Planète Auto © 2026 · SIRET 799 787 262 00010</span>
         <a href="/mentions-legales">Mentions légales</a>
       </div>
