@@ -149,14 +149,16 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: ReactNode; intro: string; children: ReactNode }) {
+export function PageShell({ eyebrow, title, intro, children }: { eyebrow?: string; title: ReactNode; intro: string; children: ReactNode }) {
   return (
     <main className="inner-shell">
       <SiteHeader />
       <section className="page-hero">
-        <div className="eyebrow">
-          <span className="eyebrow-line" /> {eyebrow}
-        </div>
+        {eyebrow && (
+          <div className="eyebrow">
+            <span className="eyebrow-line" /> {eyebrow}
+          </div>
+        )}
         <h1>{title}</h1>
         <p>{intro}</p>
       </section>

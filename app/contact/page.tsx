@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 }
 
 export default function ContactPage() {
-	return <PageShell eyebrow="Contact" title={<>Une question ?<br /><em>Écrivez-nous.</em></>} intro="Notre équipe vous répond pour toute question sur l'achat, la vente ou la reprise de votre véhicule.">
+	return <PageShell title={<>Une question ?<br /><em>Écrivez-nous.</em></>} intro="Notre équipe vous répond pour toute question sur l'achat, la vente ou la reprise de votre véhicule.">
 		<section className="contact-page-grid">
 			<ContactForm subject="votre projet" />
 			<ContactInfo />

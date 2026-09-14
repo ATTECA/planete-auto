@@ -68,6 +68,7 @@ const brandLogoSize: Record<string, number> = {
   opel: 68,
   nissan: 55,
   audi: 68,
+  toyota: 60,
 };
 
 const googleReviews = [
@@ -177,7 +178,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           <a href="/a-propos" onClick={() => setMenuOpen(false)}>
             À propos
           </a>
-          <a href="#footer" onClick={() => setMenuOpen(false)}>
+          <a href="/contact" onClick={() => setMenuOpen(false)}>
             Contact
           </a>
         </nav>
