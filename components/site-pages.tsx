@@ -57,7 +57,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" id="footer">
       <img className="footer-tracks" src="/car-tracks.png" alt="" aria-hidden="true" />
       <div className="footer-grid">
         <div className="footer-identity">
@@ -712,7 +712,7 @@ export function AboutPageContent() {
             <h2>
               Une voiture d’occasion
               <br />
-              <em>sans complication.</em>
+              <em>sans complication</em>
             </h2>
           </div>
           <div className="copy-block">

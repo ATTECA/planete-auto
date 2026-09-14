@@ -6,22 +6,29 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  ArrowUp,
   ArrowUpRight,
   CalendarDays,
   CarFront,
-  Check,
   ChevronLeft,
   ChevronRight,
+  CreditCard,
+  Euro,
+  FileText,
   Heart,
-  Mail,
+  Layers,
+  Leaf,
   Phone,
   Menu,
   Search,
   ShieldCheck,
+  Star,
   Tag,
+  TrendingDown,
+  Wrench,
   X,
 } from "lucide-react";
-import { ServiceCard, SiteFooter } from "@/components/site-pages";
+import { SiteFooter } from "@/components/site-pages";
 import { useFavorites } from "@/lib/use-favorites";
 import { getFeatureIcons } from "@/lib/vehicle-features";
 import type { Vehicle } from "@/lib/vehicles";
@@ -56,12 +63,36 @@ const brands = [
   ["Fiat", "fiat"],
 ];
 
+const googleReviews = [
+  {
+    name: "David Samblanet",
+    text: "Quand on est satisfait, il faut savoir le dire. Nous avons acheté un véhicule d’occasion, conforme au descriptif, garantie 3 mois. Très bon accueil, un service professionnel au top. Je recommande.",
+  },
+  {
+    name: "Ismail Hemani",
+    text: "J’ai acheté ma voiture chez Planète Autos, et j’en suis ravi. Le service est excellent et le prix très raisonnable par rapport aux autres concessionnaires. Je recommande à tous ceux qui envisagent d’acheter un véhicule.",
+  },
+  {
+    name: "Amina Hemani",
+    text: "Concession fiable, personnel à l’écoute et pas de mauvaise surprise sur le véhicule. Transaction fluide du début à la fin. Je recommande.",
+  },
+  {
+    name: "Craig Mamilo",
+    text: "Un garage que je fréquente depuis 10 ans et que j’ai recommandé à tous mes proches. La fiabilité est au rendez-vous à chaque fois, que ce soit pour les réparations ou l’entretien. C’est rare de nos jours de trouver un garage aussi sérieux et de confiance.",
+  },
+  {
+    name: "sarah_sbr 17",
+    text: "Nous avons récemment acheté notre voiture dans ce garage et nous sommes très satisfaits de notre expérience. L’équipe a été réactive et professionnelle tout au long du processus. Le patron est une personne intègre et honnête, ce qui nous a tout de suite mis en confiance.",
+  },
+  {
+    name: "Kevin Coulm",
+    text: "J’ai acheté un véhicule avec une garantie de 6 mois. J’ai rencontré un problème pendant cette période, le vendeur a immédiatement fait le nécessaire.",
+  },
+];
+
 export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [formSent, setFormSent] = useState(false);
-  const [formError, setFormError] = useState("");
-  const [formSending, setFormSending] = useState(false);
   const [heroBrand, setHeroBrand] = useState("");
   const [heroModel, setHeroModel] = useState("");
   const [heroBudget, setHeroBudget] = useState("");
@@ -114,27 +145,6 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
     router.push(`/vehicules${params.toString() ? `?${params.toString()}` : ""}`);
   };
 
-  const submitContact = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormError("");
-    setFormSending(true);
-    const form = new FormData(event.currentTarget);
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.get("name"), email: form.get("email"), message: form.get("message") }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
-      setFormSent(true);
-    } catch (error) {
-      setFormError(error instanceof Error ? error.message : "L’envoi a échoué. Veuillez réessayer.");
-    } finally {
-      setFormSending(false);
-    }
-  };
-
   return (
     <main className="site-shell">
       <div className="topline">
@@ -160,7 +170,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           <a href="/a-propos" onClick={() => setMenuOpen(false)}>
             À propos
           </a>
-          <a href="#contact" onClick={() => setMenuOpen(false)}>
+          <a href="#footer" onClick={() => setMenuOpen(false)}>
             Contact
           </a>
         </nav>
@@ -377,178 +387,156 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       </section>
 
       <section className="brands-section" aria-labelledby="brands-title">
-        <div className="section-heading centered">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> Toutes marques <span className="eyebrow-line" />
+        <div className="brands-section-inner">
+          <div className="section-heading centered">
+            <div>
+              <h2 id="brands-title">
+                Les marques
+                <br />
+                <em>que nous proposons</em>
+              </h2>
             </div>
-            <h2 id="brands-title">
-              Choisissez votre
-              <br />
-              <em>prochaine voiture</em>
-            </h2>
           </div>
-        </div>
-        <div className="brands-grid">
-          {brands.map(([name, slug]) => (
-            <button className="brand-tile" key={slug} onClick={() => router.push(`/vehicules?marque=${encodeURIComponent(name)}`)}>
-              <img src={`https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/${slug}/default.svg`} alt="" />
-              <span>{name}</span>
-              <ArrowRight size={15} />
-            </button>
-          ))}
+          <div className="brands-card">
+            <div className="brands-grid">
+              {brands.map(([name, slug]) => (
+                <button className="brand-tile" key={slug} onClick={() => router.push(`/vehicules?marque=${encodeURIComponent(name)}`)}>
+                  <span className="brand-tile-icon">
+                    <img src={`/brands/${slug}.svg`} alt="" />
+                  </span>
+                  <span className="brand-tile-name">{name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="services">
-        <section className="page-hero homepage-services-hero">
-          <div className="eyebrow">
-            <span className="eyebrow-line" /> Nos services
+      <section className="why-section" id="services" aria-labelledby="why-title">
+        <div className="why-banner">
+          <div className="why-banner-photo">
+            <Image src="/why-cover.png" alt="" fill sizes="(max-width: 900px) 100vw, 50vw" style={{ objectFit: "cover" }} />
           </div>
-          <h1>
-            Tout pour acheter
+          <div className="why-banner-panel">
+            <h2 id="why-title">Pourquoi choisir Planète Auto</h2>
+            <ul className="why-list">
+              <li>
+                <CarFront size={18} /> Achat, vente et reprise de véhicules toutes marques
+              </li>
+              <li>
+                <ShieldCheck size={18} /> Garantie 3 mois ou 5 000 km sur la boîte et le moteur
+              </li>
+              <li>
+                <CreditCard size={18} /> Paiement échelonné ou jusqu’à 3 fois par carte bleue
+              </li>
+              <li>
+                <Tag size={18} /> Dossiers de financement étudiés, sans plafond
+              </li>
+              <li>
+                <Wrench size={18} /> Grosse et légère mécanique effectuées à notre garage
+              </li>
+              <li>
+                <FileText size={18} /> Démarches administratives prises en charge (carte grise, déclaration d’achat)
+              </li>
+            </ul>
+            <Link href="/vehicules" className="why-cta">
+              Voir nos véhicules
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="occasion-section" aria-labelledby="occasion-title">
+        <div className="occasion-inner">
+          <h2 id="occasion-title">
+            Pourquoi acheter
             <br />
-            <em>plus simplement.</em>
-          </h1>
-          <p>Achat, reprise, financement, garantie et démarches administratives : nous vous accompagnons à chaque étape.</p>
-        </section>
-        <section className="page-section service-grid">
-          <ServiceCard
-            number="01"
-            icon={<CarFront />}
-            title="Achat & vente"
-            text="Des véhicules d’occasion toutes marques, disponibles à Saint-Jean-de-Védas."
-          />
-          <ServiceCard
-            number="02"
-            icon={<ShieldCheck />}
-            title="Garantie 3 mois"
-            text="Garantie 3 mois ou 5 000 km sur la boîte et le moteur."
-          />
-          <ServiceCard
-            number="03"
-            icon={<CarFront />}
-            title="Reprise"
-            text="Nous étudions votre ancien véhicule pour vous aider à financer le suivant."
-          />
-          <ServiceCard
-            number="04"
-            icon={<ShieldCheck />}
-            title="Financement"
-            text="Des solutions de paiement et de financement adaptées à votre situation."
-          />
-        </section>
-        <section className="dark-callout">
-          <div>
-            <div className="eyebrow light">
-              <span className="eyebrow-line" /> Un accompagnement concret
-            </div>
-            <h2>
-              Une voiture d’occasion
-              <br />
-              <em>sans complication.</em>
-            </h2>
-          </div>
-          <p>Nous pouvons aussi vous aider pour les démarches administratives, la carte grise et la déclaration d’achat.</p>
-        </section>
-      </section>
-
-      <section className="section journey-section" id="reprise">
-        <div className="section-heading centered">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> Un achat plus simple <span className="eyebrow-line" />
-            </div>
-            <h2>
-              De la recherche
-              <br />
-              <em>à la remise des clés.</em>
-            </h2>
-          </div>
-        </div>
-        <div className="journey-grid">
-          <div className="journey-step">
-            <span className="step-number">01</span>
-            <CalendarDays size={25} />
-            <h3>Vous cherchez</h3>
-            <p>Parcourez nos véhicules d’occasion et trouvez celui qui correspond à votre budget.</p>
-          </div>
-          <div className="journey-step">
-            <span className="step-number">02</span>
-            <Search size={25} />
-            <h3>Vous échangez</h3>
-            <p>Posez vos questions, demandez une reprise ou étudiez une solution de financement.</p>
-          </div>
-          <div className="journey-step">
-            <span className="step-number">03</span>
-            <Check size={25} />
-            <h3>Vous prenez la route</h3>
-            <p>Votre véhicule est préparé et les démarches sont accompagnées jusqu’à la livraison.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="contact-section" id="contact">
-        <div className="contact-copy">
-          <div className="eyebrow light">
-            <span className="eyebrow-line" /> Contactez-nous
-          </div>
-          <h2>
-            Vous cherchez
-            <br />
-            <em>une voiture ?</em>
+            <em>une voiture d’occasion</em>
           </h2>
-          <p>Une question sur un véhicule, une reprise ou un financement ? Écrivez-nous directement.</p>
-          <div className="contact-details">
-            <div>
-              <Phone size={18} />
-              <strong>+33 4 67 82 54 12</strong>
+          <div className="occasion-grid">
+            <div className="occasion-item">
+              <Euro size={22} />
+              <h3>Un prix plus accessible</h3>
+              <p>La plus forte dépréciation a déjà eu lieu : vous payez le véhicule à sa juste valeur.</p>
             </div>
-            <div>
-              <Mail size={18} />
-              <span>planeteauto34@gmail.com</span>
+            <div className="occasion-item">
+              <Tag size={22} />
+              <h3>Plus d’équipements pour le budget</h3>
+              <p>Accédez à des finitions et options qui seraient hors de portée sur un modèle neuf équivalent.</p>
+            </div>
+            <div className="occasion-item">
+              <CalendarDays size={22} />
+              <h3>Disponibilité immédiate</h3>
+              <p>Repartez avec votre véhicule tout de suite, sans les délais de commande du neuf.</p>
+            </div>
+            <div className="occasion-item">
+              <Layers size={22} />
+              <h3>Un choix plus large</h3>
+              <p>Comparez librement les années, motorisations et kilométrages pour trouver le bon compromis.</p>
+            </div>
+            <div className="occasion-item">
+              <TrendingDown size={22} />
+              <h3>Une revente plus sereine</h3>
+              <p>Le véhicule a déjà connu sa plus grosse perte de valeur, la revente future est plus prévisible.</p>
+            </div>
+            <div className="occasion-item">
+              <Leaf size={22} />
+              <h3>Un geste pour l’environnement</h3>
+              <p>Prolonger la vie d’un véhicule existant plutôt que d’en produire un nouveau limite son impact.</p>
             </div>
           </div>
         </div>
-        <form className="contact-form" onSubmit={submitContact}>
-          {formSent ? (
-            <div className="form-success">
-              <Check size={30} />
-              <h3>Message bien reçu.</h3>
-              <p>Nous reviendrons vers vous rapidement.</p>
-            </div>
-          ) : (
-            <>
-              <div className="form-heading">
-                <span>01 / 01</span>
-                <h3>Parlez-nous de votre projet</h3>
+      </section>
+
+      <section className="reviews-section" aria-labelledby="reviews-title">
+        <div className="reviews-inner">
+          <div className="reviews-header">
+            <h2 id="reviews-title">
+              Ce que disent
+              <br />
+              <em>nos clients</em>
+            </h2>
+            <div className="reviews-score">
+              <span className="reviews-score-number">4,3</span>
+              <div>
+                <div className="reviews-stars" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} size={18} fill={index < 4 ? "currentColor" : "none"} />
+                  ))}
+                </div>
+                <p>169 avis Google</p>
               </div>
-              <label>
-                Votre nom
-                <input name="name" required placeholder="Prénom Nom" />
-              </label>
-              <label>
-                Votre adresse e-mail
-                <input name="email" required type="email" placeholder="vous@exemple.fr" />
-              </label>
-              <label>
-                Votre message
-                <textarea name="message" required placeholder="Je recherche..." rows={3} />
-              </label>
-              {formError && (
-                <p className="form-error" role="alert">
-                  {formError}
-                </p>
-              )}
-              <button className="button button-red" type="submit" disabled={formSending}>
-                {formSending ? "Envoi en cours..." : "Envoyer ma demande"} <ArrowRight size={17} />
-              </button>
-            </>
-          )}
-        </form>
+            </div>
+          </div>
+          <div className="reviews-grid">
+            {googleReviews.map((review) => (
+              <div className="review-card" key={review.name}>
+                <div className="reviews-stars" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                <p>{review.text}</p>
+                <span className="review-name">{review.name}</span>
+              </div>
+            ))}
+          </div>
+          <a
+            className="reviews-cta"
+            href="https://www.google.com/search?q=planete+auto+saint+jean+de+v%C3%A9das"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Voir tous les avis Google <ArrowUpRight size={16} />
+          </a>
+        </div>
       </section>
 
       <SiteFooter />
+
+      <a href="#top" className="back-to-top" aria-label="Retour en haut de la page">
+        <ArrowUp size={20} />
+      </a>
     </main>
   );
 }
