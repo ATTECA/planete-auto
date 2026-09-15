@@ -191,7 +191,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       </header>
 
       <section className="hero hero-photo" id="top">
-        <div className="hero-bg" style={{ backgroundImage: "url('/hero-pic.jpg')" }} />
+        <div className="hero-bg" />
         <div className="hero-photo-inner">
         <div className="hero-photo-content">
           <div className="hero-photo-card">

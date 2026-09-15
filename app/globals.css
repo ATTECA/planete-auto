@@ -216,6 +216,7 @@ textarea {
 .hero-bg {
   position: absolute;
   inset: 0;
+  background-image: url("/hero-pic.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: left 65% bottom 30%;
@@ -3554,6 +3555,10 @@ em {
     height: auto;
     min-height: 0;
   }
+  .hero-bg {
+    background-image: url("/homepage-hero-phone-ver.jpg");
+    background-position: center 30%;
+  }
   .hero-photo-inner {
     display: flex;
     flex-direction: column;
@@ -3566,6 +3571,8 @@ em {
   }
   .hero-photo-card {
     padding: 30px;
+    background: linear-gradient(160deg, rgba(255, 2, 19, 0.06) 0%, rgba(15, 13, 11, 0.3) 55%);
+    backdrop-filter: blur(2px);
   }
   .hero-search-box-fields {
     grid-template-columns: 1fr;
