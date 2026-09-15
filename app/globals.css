@@ -3456,7 +3456,7 @@ em {
     font-size: 23px;
 	
   }
-  .topline span:nth-child(2) {
+  .topline {
     display: none;
   }
   .navbar {
@@ -3464,6 +3464,9 @@ em {
     height: 70px;
   }
   .nav-actions {
+    display: none;
+  }
+  .nav-cta {
     display: none;
   }
   .menu-button {
@@ -3506,8 +3509,7 @@ em {
     grid-template-columns: 1fr;
   }
   .hero-photo-intro {
-    position: static;
-    max-width: none;
+    display: none;
   }
   .section {
     padding: 75px 5vw;
@@ -3651,7 +3653,7 @@ em {
     padding: 55px 5vw 40px;
   }
   .footer-tracks {
-    opacity: 0.12;
+    display: none;
   }
   .footer-bottom {
     display: flex;

@@ -12,6 +12,7 @@ import {
   ImagePlus,
   Mail,
   MapPin,
+  Menu,
   MessageSquare,
   Palette,
   Phone,
@@ -28,6 +29,8 @@ import {
 const iconLogo = "/planete-auto-logo.png";
 
 export function SiteHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <>
       <div className="topline">
@@ -40,16 +43,29 @@ export function SiteHeader() {
           <img src={iconLogo} alt="" />
           Planète <b>Auto</b>
         </a>
-        <nav className="nav-links" aria-label="Navigation principale">
-          <a href="/">Accueil</a>
-          <a href="/vehicules">Stock</a>
-          <a href="/reprise">Vente & reprise</a>
-          <a href="/a-propos">À propos</a>
-          <a href="/contact">Contact</a>
+        <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navigation principale">
+          <a href="/" onClick={() => setMenuOpen(false)}>
+            Accueil
+          </a>
+          <a href="/vehicules" onClick={() => setMenuOpen(false)}>
+            Stock
+          </a>
+          <a href="/reprise" onClick={() => setMenuOpen(false)}>
+            Vente & reprise
+          </a>
+          <a href="/a-propos" onClick={() => setMenuOpen(false)}>
+            À propos
+          </a>
+          <a href="/contact" onClick={() => setMenuOpen(false)}>
+            Contact
+          </a>
         </nav>
         <a className="nav-cta" href="tel:+33467825412">
           <Phone size={16} /> Nous appeler maintenant
         </a>
+        <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Ouvrir le menu">
+          {menuOpen ? <X /> : <Menu />}
+        </button>
       </header>
     </>
   );
