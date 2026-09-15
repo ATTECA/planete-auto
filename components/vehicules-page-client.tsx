@@ -28,6 +28,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
     colors: [...new Set(vehicles.map((vehicle) => getDetail(vehicle, 'Couleur')))],
   }), [vehicles])
 
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const [brand, setBrand] = useState(() => (filterOptions.brands.includes(initialBrand) ? initialBrand : ''))
   const [model, setModel] = useState('')
   const [fuel, setFuel] = useState('')
@@ -122,7 +123,16 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
           </div>
         </div>
         <div className="inventory-layout">
-          <aside className="inventory-filters" aria-label="Filtres de véhicules">
+          <button
+            type="button"
+            className={`inventory-filters-toggle ${filtersOpen ? 'is-open' : ''}`}
+            onClick={() => setFiltersOpen((open) => !open)}
+            aria-expanded={filtersOpen}
+          >
+            Filtrer les véhicules{activeFilters.length > 0 ? ` (${activeFilters.length})` : ''}
+            <ChevronDown size={18} aria-hidden />
+          </button>
+          <aside className={`inventory-filters ${filtersOpen ? 'is-open' : ''}`} aria-label="Filtres de véhicules">
             <div className="inventory-filters-header"><h3>Filtrer les véhicules</h3><p className="inventory-count"><strong>{filteredVehicles.length}</strong> résultat{filteredVehicles.length > 1 ? 's' : ''}</p></div>
             <label className="inventory-filter-field">Marque<select value={brand} onChange={(event) => setBrand(event.target.value)}><option value="">Toutes les marques</option>{filterOptions.brands.map((option) => <option key={option}>{option}</option>)}</select></label>
             <label className="inventory-filter-field">Modèle<select value={model} onChange={(event) => setModel(event.target.value)}><option value="">Tous les modèles</option>{filterOptions.models.map((option) => <option key={option}>{option}</option>)}</select></label>

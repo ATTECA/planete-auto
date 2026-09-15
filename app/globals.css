@@ -655,10 +655,30 @@ em {
   .arrivals-section {
     padding: 75px 5vw 60px;
   }
-  .arrivals-page.arrivals-page {
-    grid-template-columns: 1fr;
+  .arrivals-viewport {
+    overflow: visible;
   }
-  .arrivals-arrow {
+  .arrivals-track {
+    transform: none !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding-bottom: 6px;
+    margin: 0 -5vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  .arrivals-page.arrivals-page {
+    display: contents;
+  }
+  .arrivals-track .inventory-card {
+    flex: 0 0 82vw;
+    max-width: 340px;
+    scroll-snap-align: start;
+  }
+  .arrivals-arrow,
+  .arrivals-dots {
     display: none;
   }
 }
@@ -1620,10 +1640,22 @@ em {
   }
   .tradein-hero .trust-row {
     justify-content: center;
+    gap: 10px;
+  }
+  .tradein-hero .trust-row div {
+    padding-right: 10px;
+  }
+  .tradein-hero .trust-row strong {
+    font-size: 14px;
+  }
+  .tradein-hero .trust-row span {
+    font-size: 9px;
+    letter-spacing: 0.04em;
   }
   .tradein-hero-car {
-    width: 78vw;
-    margin-top: 12px;
+    align-self: center;
+    width: 58vw;
+    margin-top: 16px;
   }
 }
 
@@ -1635,7 +1667,7 @@ em {
 }
 @media (max-width: 850px) {
   .tradein-below {
-    margin-top: -160px;
+    margin-top: -40px;
   }
 }
 .tradein-edge-glow {
@@ -2270,6 +2302,9 @@ em {
 }
 .inventory-results {
   min-width: 0;
+}
+.inventory-filters-toggle {
+  display: none;
 }
 @media (min-width: 851px) {
   .inventory-layout {
@@ -3430,6 +3465,33 @@ em {
     align-items: flex-start;
     flex-direction: column;
     gap: 16px;
+  }
+  .inventory-filters-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--gray);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .inventory-filters-toggle svg {
+    transition: transform 0.2s;
+  }
+  .inventory-filters-toggle.is-open svg {
+    transform: rotate(180deg);
+  }
+  .inventory-filters {
+    display: none;
+  }
+  .inventory-filters.is-open {
+    display: block;
   }
   .inventory-toolbar {
     align-items: stretch;
