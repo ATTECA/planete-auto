@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--paper);
+  --color-foreground: var(--black);
+  --color-primary: var(--red);
+  --color-primary-foreground: var(--paper);
+  --color-secondary: var(--black);
+  --color-secondary-foreground: var(--paper);
+  --color-muted: var(--line);
+  --color-muted-foreground: var(--gray);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--red);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--black);
+  --color-destructive: var(--red);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px var(--paper) inset;
+  -webkit-text-fill-color: var(--black);
+  transition: background-color 9999s ease-in-out 0s;
+}

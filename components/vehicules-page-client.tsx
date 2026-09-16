@@ -29,7 +29,9 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
   }), [vehicles])
 
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [brand, setBrand] = useState(() => (filterOptions.brands.includes(initialBrand) ? initialBrand : ''))
+  const [brand, setBrand] = useState(
+    () => filterOptions.brands.find((option) => option.toLowerCase() === initialBrand.toLowerCase()) ?? '',
+  )
   const [model, setModel] = useState('')
   const [fuel, setFuel] = useState('')
   const [gearbox, setGearbox] = useState('')

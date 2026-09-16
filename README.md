@@ -22,7 +22,7 @@ Les véhicules sont stockés dans une base Supabase (Postgres) plutôt que dans 
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY` (clé secrète — ne jamais l'exposer côté client)
-5. Définir un `ADMIN_PASSCODE` dans `.env.local` (code requis pour ajouter un véhicule depuis `/admin/vehicules/new`).
+5. Créer un utilisateur admin dans **Authentication > Users** sur Supabase (email + mot de passe) — c'est ce compte qui sert à se connecter sur `/admin/login`.
 6. (Optionnel, une seule fois) migrer les véhicules d'exemple de `data/vehicles.json` vers Supabase :
    ```bash
    node scripts/seed-vehicles.mjs
@@ -32,7 +32,7 @@ Les véhicules sont stockés dans une base Supabase (Postgres) plutôt que dans 
 
 ## Administration
 
-`/admin/vehicules/new` permet d'ajouter un véhicule (fiche technique, équipements, photos) directement dans Supabase, protégé par le code défini dans `ADMIN_PASSCODE`. Il ne s'agit pas d'une authentification complète — la page reste accessible à qui connaît l'URL, mais l'enregistrement est bloqué sans le bon code.
+`/admin/login` permet de se connecter avec un compte Supabase Auth. Une fois connecté, `/admin` donne accès à l'espace d'administration (protégé côté proxy et côté serveur — accès refusé sans session valide).
 
 ## Structure
 

@@ -2044,9 +2044,8 @@ em {
 .footer-column .footer-map-link {
   color: #fff !important;
 }
-.footer-column a:hover,
-.footer-column a:focus-visible {
-  color: var(--red);
+.footer-column a:hover {
+  text-decoration: underline;
 }
 .footer-find span,
 .footer-find a {
