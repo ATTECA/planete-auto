@@ -23,6 +23,7 @@ export type Vehicle = {
   description?: string
   details: [string, string][]
   equipment?: EquipmentGroup[]
+  archived: boolean
 }
 
 const FACT_GROUPS: { title: string; labels: string[] }[] = [
@@ -69,6 +70,7 @@ type VehicleRow = {
   description: string | null
   details: [string, string][] | null
   equipment: EquipmentGroup[] | null
+  archived: boolean | null
 }
 
 function fromRow(row: VehicleRow): Vehicle {
@@ -90,14 +92,31 @@ function fromRow(row: VehicleRow): Vehicle {
     description: row.description ?? undefined,
     details: row.details ?? [],
     equipment: row.equipment ?? undefined,
+    archived: row.archived ?? false,
   }
 }
 
+/** Public-facing: excludes archived vehicles. Used by the website itself. */
 export async function getVehicles(): Promise<Vehicle[]> {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from('vehicles')
+    .select('*')
+    .eq('archived', false)
+    .order('id', { ascending: false })
+  if (error) {
+    console.error('getVehicles failed:', error.message)
+    return []
+  }
+  return (data as VehicleRow[]).map(fromRow)
+}
+
+/** Admin-only: includes archived vehicles. Used by the admin vehicle list. */
+export async function getVehiclesAdmin(): Promise<Vehicle[]> {
   if (!supabase) return []
   const { data, error } = await supabase.from('vehicles').select('*').order('id', { ascending: false })
   if (error) {
-    console.error('getVehicles failed:', error.message)
+    console.error('getVehiclesAdmin failed:', error.message)
     return []
   }
   return (data as VehicleRow[]).map(fromRow)

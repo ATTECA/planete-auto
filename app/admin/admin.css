@@ -15,6 +15,10 @@
   --color-card: var(--paper);
   --color-card-foreground: var(--black);
   --color-destructive: var(--red);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--black);
+  --color-accent: var(--line);
+  --color-accent-foreground: var(--black);
 }
 
 input:-webkit-autofill,

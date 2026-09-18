@@ -18,6 +18,7 @@ create table if not exists vehicles (
   description text,
   details jsonb not null default '[]',
   equipment jsonb not null default '[]',
+  archived boolean not null default false,
   created_at timestamptz not null default now()
 );
 

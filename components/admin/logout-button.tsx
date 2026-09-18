@@ -1,7 +1,9 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { createClient} from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import { LogOut } from 'lucide-react'
 
 export default function LogoutButton() {
     const router = useRouter()
@@ -13,5 +15,14 @@ export default function LogoutButton() {
         router.refresh()
     }
 
-    return <button onClick={handleLogout}>Se déconnecter</button>
+    return (
+        <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="w-full justify-start gap-2.5 text-muted-foreground hover:text-foreground"
+        >
+            <LogOut className="size-4" />
+            Se déconnecter
+        </Button>
+    )
 }
