@@ -165,7 +165,7 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ eyebrow, title, intro, children }: { eyebrow?: string; title: ReactNode; intro: string; children: ReactNode }) {
+export function PageShell({ eyebrow, title, intro, children }: { eyebrow?: string; title: ReactNode; intro: string; children?: ReactNode }) {
   return (
     <main className="inner-shell">
       <SiteHeader />
@@ -618,6 +618,128 @@ export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { veh
   );
 }
 
+export function VehicleTestDriveForm({ vehicleId, vehicleName }: { vehicleId: number; vehicleName: string }) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSending(true);
+    try {
+      const response = await fetch("/api/essai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, preferredDate, preferredTime, message, vehicleId, vehicleName }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (sent)
+    return (
+      <div className="vehicle-offer vehicle-offer-success">
+        <Check size={26} />
+        <h3>Demande envoyée.</h3>
+        <p>Nous revenons vers vous rapidement pour confirmer votre essai de {vehicleName}.</p>
+      </div>
+    );
+
+  return (
+    <form className="vehicle-offer" onSubmit={submit}>
+      <h3>Demander un essai</h3>
+      <label>
+        Nom complet
+        <input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Prénom Nom" />
+      </label>
+      <label>
+        Téléphone
+        <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="04 00 00 00 00" />
+      </label>
+      <label>
+        Date souhaitée
+        <input
+          required
+          type="date"
+          value={preferredDate}
+          onChange={(event) => setPreferredDate(event.target.value)}
+        />
+      </label>
+      <label>
+        Créneau préféré (facultatif)
+        <select value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)}>
+          <option value="">Peu importe</option>
+          <option value="Matin">Matin</option>
+          <option value="Après-midi">Après-midi</option>
+        </select>
+      </label>
+      <label>
+        E-mail (facultatif)
+        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="vous@exemple.fr" />
+      </label>
+      <label>
+        Message (facultatif)
+        <input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Une précision à ajouter ?" />
+      </label>
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button className="button button-red" type="submit" disabled={sending}>
+        {sending ? "Envoi en cours..." : "Envoyer la demande"} <ArrowRight size={17} />
+      </button>
+    </form>
+  );
+}
+
+export function VehicleRequestPanel({ vehicleId, vehicleName, vehiclePrice }: { vehicleId: number; vehicleName: string; vehiclePrice: string }) {
+  const [tab, setTab] = useState<"offer" | "essai">("offer");
+
+  return (
+    <div className="vehicle-request">
+      <div className="vehicle-request-tabs" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === "offer"}
+          className={tab === "offer" ? "is-active" : ""}
+          onClick={() => setTab("offer")}
+        >
+          Faire une offre
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === "essai"}
+          className={tab === "essai" ? "is-active" : ""}
+          onClick={() => setTab("essai")}
+        >
+          Demander un essai
+        </button>
+      </div>
+      {tab === "offer" ? (
+        <VehicleOfferForm vehicleId={vehicleId} vehicleName={vehicleName} vehiclePrice={vehiclePrice} />
+      ) : (
+        <VehicleTestDriveForm vehicleId={vehicleId} vehicleName={vehicleName} />
+      )}
+    </div>
+  );
+}
+
 export function VehicleShareButton({ title }: { title: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -710,60 +832,17 @@ export function ServiceCard({ number, icon, title, text }: { number: string; ico
 
 export function AboutPageContent() {
   return (
-    <>
-      <PageShell
-        eyebrow="À propos de Planète Auto"
-        title={
-          <>
-            L’occasion,
-            <br />
-            <em>en toute simplicité.</em>
-          </>
-        }
-        intro="Planète Auto vous accompagne pour l’achat, la vente et la reprise de véhicules d’occasion toutes marques à Saint-Jean-de-Védas."
-      >
-        <section className="page-section split-page">
-          <div className="copy-block">
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> Notre activité
-            </div>
-            <h2>
-              Une voiture d’occasion
-              <br />
-              <em>sans complication</em>
-            </h2>
-          </div>
-          <div className="copy-block">
-            <p>
-              Planète Auto est un professionnel indépendant de l’achat, de la vente et de la reprise de véhicules d’occasion toutes marques.
-            </p>
-            <p>
-              Nous vous accompagnons également pour le financement, les garanties et les démarches administratives, de la première visite à
-              la remise des clés.
-            </p>
-            <ul>
-              <li>Véhicules toutes marques</li>
-              <li>Reprise de votre ancien véhicule</li>
-              <li>Financement et garanties</li>
-              <li>Démarches administratives prises en charge</li>
-            </ul>
-          </div>
-        </section>
-        <section className="dark-callout">
-          <div>
-            <div className="eyebrow light">
-              <span className="eyebrow-line" /> Notre engagement
-            </div>
-            <h2>
-              Acheter une voiture
-              <br />
-              <em>sans mauvaise surprise.</em>
-            </h2>
-          </div>
-          <p>Des informations claires, un accompagnement direct et des solutions adaptées à votre projet.</p>
-        </section>
-      </PageShell>
-    </>
+    <PageShell
+      eyebrow="À propos de Planète Auto"
+      title={
+        <>
+          L’occasion,
+          <br />
+          <em>en toute simplicité.</em>
+        </>
+      }
+      intro="Planète Auto vous accompagne pour l’achat, la vente et la reprise de véhicules d’occasion toutes marques à Saint-Jean-de-Védas."
+    />
   );
 }
 

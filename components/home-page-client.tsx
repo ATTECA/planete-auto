@@ -31,7 +31,7 @@ import {
 import { SiteFooter } from "@/components/site-pages";
 import { useFavorites } from "@/lib/use-favorites";
 import { getFeatureIcons } from "@/lib/vehicle-features";
-import type { Vehicle } from "@/lib/vehicles";
+import { vehicleSlug, type Vehicle } from "@/lib/vehicles";
 
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
 const ARRIVALS_PAGE_SIZE = 4;
@@ -301,7 +301,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                   const extraCount = icons.length - visibleIcons.length;
                   return (
                     <article className="inventory-card" key={vehicle.id}>
-                      <Link href={`/vehicules/${vehicle.id}`} className="inventory-card-image">
+                      <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-image">
                         <Image
                           src={vehicle.image}
                           alt={`${vehicle.name} ${vehicle.meta}`}
@@ -348,7 +348,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                           <span>{vehicle.gearbox}</span>
                         </div>
                       </div>
-                      <Link href={`/vehicules/${vehicle.id}`} className="inventory-card-cta">
+                      <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-cta">
                         Voir le véhicule <ArrowUpRight aria-hidden="true" />
                       </Link>
                     </article>

@@ -1,4 +1,4 @@
-import { getVehiclesAdmin } from '@/lib/vehicles'
+import { getVehiclesAdmin, vehicleSlug, vehicleStatusBadgeClassName } from '@/lib/vehicles'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 
 export default async function AdminVehiclesPage() {
     const vehicles = await getVehiclesAdmin()
@@ -50,15 +51,19 @@ export default async function AdminVehiclesPage() {
                                 </div>
                             </TableCell>
                             <TableCell className="font-medium">
-                                {vehicle.name}
-                                {vehicle.archived && (
-                                    <Badge variant="outline" className="ml-2">Archivé</Badge>
-                                )}
+                                <Link
+                                    href={`/vehicules/${vehicleSlug(vehicle)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline!"
+                                >
+                                    {vehicle.name}
+                                </Link>
                             </TableCell>
                             <TableCell>{vehicle.id}</TableCell>
                             <TableCell>{vehicle.price}</TableCell>
                             <TableCell>
-                                <Badge>{vehicle.status}</Badge>
+                                <Badge className={cn(vehicleStatusBadgeClassName(vehicle.status))}>{vehicle.status}</Badge>
                             </TableCell>
                             <TableCell>
                                 {new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}

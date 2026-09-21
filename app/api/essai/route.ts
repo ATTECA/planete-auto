@@ -15,12 +15,13 @@ export async function POST(request: Request) {
     const name = typeof body.name === 'string' ? body.name.trim() : ''
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const email = typeof body.email === 'string' ? body.email.trim() : ''
-    const offer = typeof body.offer === 'string' ? body.offer.trim() : ''
+    const preferredDate = typeof body.preferredDate === 'string' ? body.preferredDate.trim() : ''
+    const preferredTime = typeof body.preferredTime === 'string' ? body.preferredTime.trim() : ''
+    const message = typeof body.message === 'string' ? body.message.trim() : ''
     const vehicleId = typeof body.vehicleId === 'number' ? body.vehicleId : null
     const vehicleName = typeof body.vehicleName === 'string' ? body.vehicleName.trim() : ''
-    const vehiclePrice = typeof body.vehiclePrice === 'string' ? body.vehiclePrice.trim() : ''
 
-    if (!name || !phone || !offer || !vehicleName) {
+    if (!name || !phone || !preferredDate || !vehicleName) {
       return NextResponse.json({ error: 'Veuillez remplir tous les champs obligatoires.' }, { status: 400 })
     }
 
@@ -43,40 +44,48 @@ export async function POST(request: Request) {
       from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
       to: recipient,
       replyTo: email || undefined,
-      subject: `Planète Auto — Offre sur ${vehicleName} : ${offer} €`,
+      subject: `Planète Auto — Demande d'essai : ${vehicleName}`,
       text: [
-        `Véhicule: ${vehicleName} (prix affiché: ${vehiclePrice})`,
-        `Offre proposée: ${offer} €`,
+        `Véhicule: ${vehicleName}`,
+        `Date souhaitée: ${preferredDate}`,
+        preferredTime && `Créneau: ${preferredTime}`,
         `Nom: ${name}`,
         `Téléphone: ${phone}`,
         email && `E-mail: ${email}`,
+        message && `\nMessage:\n${message}`,
       ].filter(Boolean).join('\n'),
       html: renderEmailHtml({
-        heading: `Offre sur ${vehicleName}`,
-        subheading: 'Nouvelle offre via le site',
+        heading: `Demande d'essai — ${vehicleName}`,
+        subheading: 'Nouvelle demande via le site',
         rows: [
-          { label: 'Véhicule', value: `${vehicleName} (prix affiché: ${vehiclePrice})` },
-          { label: 'Offre proposée', value: `${offer} €` },
+          { label: 'Véhicule', value: vehicleName },
+          { label: 'Date souhaitée', value: preferredDate },
+          ...(preferredTime ? [{ label: 'Créneau', value: preferredTime }] : []),
           { label: 'Nom', value: name },
           { label: 'Téléphone', value: phone },
           ...(email ? [{ label: 'E-mail', value: email }] : []),
         ],
+        message: message || undefined,
       }),
     })
 
     await createLead({
-      type: 'offer',
+      type: 'essai',
       name,
       email,
       phone,
       vehicleId,
       vehicleName,
-      offerAmount: offer,
+      message,
+      details: {
+        'Date souhaitée': preferredDate,
+        ...(preferredTime && { Créneau: preferredTime }),
+      },
     })
 
     return NextResponse.json({ ok: true })
   } catch (error) {
-    console.error('Offer form error:', error)
+    console.error('Test drive form error:', error)
     return NextResponse.json({ error: 'L’envoi a échoué. Veuillez réessayer ou nous appeler.' }, { status: 500 })
   }
 }

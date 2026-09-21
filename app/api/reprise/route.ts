@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { renderEmailHtml } from '@/lib/email-template'
 import { createLead } from '@/lib/leads'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -11,6 +12,29 @@ function requiredEnv(name: string) {
 
 const MAX_PHOTOS = 8
 const MAX_PHOTO_SIZE = 8 * 1024 * 1024
+const PHOTOS_BUCKET = 'vehicles'
+
+/** Best-effort: a storage hiccup shouldn't block the email that already went out. */
+async function uploadLeadPhotos(photos: File[]): Promise<string[]> {
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const urls = await Promise.all(
+      photos.map(async (photo) => {
+        const ext = photo.name.split('.').pop() || 'jpg'
+        const path = `leads/${crypto.randomUUID()}.${ext}`
+        const { error } = await supabaseAdmin.storage
+          .from(PHOTOS_BUCKET)
+          .upload(path, photo, { contentType: photo.type || 'image/jpeg' })
+        if (error) throw error
+        return supabaseAdmin.storage.from(PHOTOS_BUCKET).getPublicUrl(path).data.publicUrl
+      }),
+    )
+    return urls
+  } catch (err) {
+    console.error('uploadLeadPhotos failed:', err instanceof Error ? err.message : err)
+    return []
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -107,6 +131,8 @@ export async function POST(request: Request) {
       attachments,
     })
 
+    const photoUrls = await uploadLeadPhotos(photos)
+
     await createLead({
       type: 'reprise',
       name,
@@ -123,6 +149,7 @@ export async function POST(request: Request) {
         ...(color && { Couleur: color }),
         ...(condition && { État: condition }),
       },
+      photos: photoUrls,
     })
 
     return NextResponse.json({ ok: true })

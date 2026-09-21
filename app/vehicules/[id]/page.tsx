@@ -1,15 +1,16 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { ArrowLeft, ArrowUpRight, Armchair, Calendar, CarFront, ClipboardList, Clock3, Fuel, Gauge, Mail, Phone, Radio, Settings2, ShieldCheck, Sparkles, SunMedium } from 'lucide-react'
 import Link from 'next/link'
-import { getVehicle, groupVehicleFacts } from '@/lib/vehicles'
+import { getVehicle, groupVehicleFacts, parseVehicleIdParam, vehicleSlug } from '@/lib/vehicles'
 import { DEFAULT_EQUIPMENT_ITEM_ICON, EQUIPMENT_ITEM_ICONS } from '@/lib/equipment-icons'
-import { SiteFooter, SiteHeader, VehicleOfferForm, VehicleShareButton } from '@/components/site-pages'
+import { SiteFooter, SiteHeader, VehicleRequestPanel, VehicleShareButton } from '@/components/site-pages'
 import { VehicleGallery } from '@/components/vehicle-gallery'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  const vehicle = await getVehicle((await params).id)
+  const id = parseVehicleIdParam((await params).id)
+  const vehicle = id ? await getVehicle(id) : undefined
   if (!vehicle) return { title: 'Véhicule introuvable' }
   return {
     title: `${vehicle.name} ${vehicle.meta}`,
@@ -35,8 +36,17 @@ const EQUIPMENT_ICONS: Record<string, ReactNode> = {
 }
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const vehicle = await getVehicle((await params).id)
+  const rawParam = (await params).id
+  const id = parseVehicleIdParam(rawParam)
+  if (!id) notFound()
+  const vehicle = await getVehicle(id)
   if (!vehicle) notFound()
+
+  const canonicalSlug = vehicleSlug(vehicle)
+  if (rawParam !== canonicalSlug) {
+    permanentRedirect(`/vehicules/${canonicalSlug}`)
+  }
+
   const gallery = vehicle.gallery.length ? vehicle.gallery : [vehicle.image]
   const reference = vehicle.id
   const factGroups = groupVehicleFacts(vehicle.details ?? [])
@@ -107,7 +117,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
       <section className="vehicle-closing">
         <div><h2>Intéressé par ce véhicule ?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> +33 4 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
-        <div id="offre"><VehicleOfferForm vehicleId={vehicle.id} vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
+        <div id="offre"><VehicleRequestPanel vehicleId={vehicle.id} vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
       </section>
     </div>
     <SiteFooter />

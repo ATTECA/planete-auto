@@ -4,6 +4,12 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { revalidatePath } from 'next/cache'
 import type { LeadStatus } from '@/lib/leads'
 
+function revalidateLeadPaths() {
+    revalidatePath('/admin/reprises')
+    revalidatePath('/admin/messages')
+    revalidatePath('/admin')
+}
+
 export async function setLeadStatus(id: number, status: LeadStatus) {
     const supabaseAdmin = getSupabaseAdmin()
 
@@ -13,8 +19,7 @@ export async function setLeadStatus(id: number, status: LeadStatus) {
         throw new Error(`Échec de la mise à jour: ${error.message}`)
     }
 
-    revalidatePath('/admin/prospects')
-    revalidatePath('/admin')
+    revalidateLeadPaths()
 }
 
 export async function deleteLead(id: number) {
@@ -26,6 +31,5 @@ export async function deleteLead(id: number) {
         throw new Error(`Échec de la suppression: ${error.message}`)
     }
 
-    revalidatePath('/admin/prospects')
-    revalidatePath('/admin')
+    revalidateLeadPaths()
 }

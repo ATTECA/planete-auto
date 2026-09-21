@@ -1,9 +1,11 @@
 import Link from 'next/link'
-import { getVehicles } from '@/lib/vehicles'
+import Image from 'next/image'
+import { getVehicles, getVehiclesAdmin, vehicleSlug, vehicleStatusBadgeClassName } from '@/lib/vehicles'
 import { countNewLeads } from '@/lib/leads'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import {
     Table,
     TableBody,
@@ -12,16 +14,23 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import { Car, MessageSquare, Tag, Plus, TriangleAlert } from 'lucide-react'
+import { Car, MessageSquare, RefreshCcw, Tag, Plus, TriangleAlert } from 'lucide-react'
 
 export default async function AdminDashboardPage() {
-    const [vehicles, newLeadsCount] = await Promise.all([getVehicles(), countNewLeads()])
-    const recentVehicles = vehicles.slice(0, 5)
+    const [vehicles, allVehicles, newMessagesCount, newReprisesCount] = await Promise.all([
+        getVehicles(),
+        getVehiclesAdmin(),
+        countNewLeads(['contact', 'offer', 'essai']),
+        countNewLeads(['reprise']),
+    ])
+    // getVehiclesAdmin() already orders newest-id-first, i.e. most recently created/touched first.
+    const recentVehicles = allVehicles.slice(0, 5)
     const soldVehicles = vehicles.filter((v) => v.status?.toLowerCase().includes('vendu'))
 
     const stats = [
         { label: 'Véhicules en stock', value: String(vehicles.length), icon: Car, href: '/admin/vehicules' },
-        { label: 'Nouvelles demandes', value: String(newLeadsCount), icon: MessageSquare, href: '/admin/prospects' },
+        { label: 'Nouveaux messages', value: String(newMessagesCount), icon: MessageSquare, href: '/admin/messages' },
+        { label: 'Nouvelles reprises', value: String(newReprisesCount), icon: RefreshCcw, href: '/admin/reprises' },
         { label: 'Véhicules vendus', value: String(soldVehicles.length), icon: Tag, href: '/admin/vehicules' },
     ]
 
@@ -38,7 +47,7 @@ export default async function AdminDashboardPage() {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map(({ label, value, icon: Icon, href }) => (
                     <Link key={label} href={href}>
                         <Card className="gap-3 transition-colors hover:bg-muted">
@@ -82,21 +91,38 @@ export default async function AdminDashboardPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-16"></TableHead>
                                     <TableHead>Nom</TableHead>
-                                    <TableHead>Année</TableHead>
+                                    <TableHead>Réf.</TableHead>
                                     <TableHead>Prix</TableHead>
                                     <TableHead>Statut</TableHead>
+                                    <TableHead>Ajouté le</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {recentVehicles.map((vehicle) => (
-                                    <TableRow key={vehicle.id}>
-                                        <TableCell>{vehicle.name}</TableCell>
-                                        <TableCell>{vehicle.year}</TableCell>
+                                    <TableRow key={vehicle.id} className={vehicle.archived ? 'opacity-50' : undefined}>
+                                        <TableCell>
+                                            <div className="relative size-12 overflow-hidden rounded-md bg-muted">
+                                                <Image src={vehicle.image} alt="" fill className="object-cover" />
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            <Link
+                                                href={`/vehicules/${vehicleSlug(vehicle)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline!"
+                                            >
+                                                {vehicle.name}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>{vehicle.id}</TableCell>
                                         <TableCell>{vehicle.price}</TableCell>
                                         <TableCell>
-                                            <Badge>{vehicle.status}</Badge>
+                                            <Badge className={cn(vehicleStatusBadgeClassName(vehicle.status))}>{vehicle.status}</Badge>
                                         </TableCell>
+                                        <TableCell>{new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

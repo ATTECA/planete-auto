@@ -1,7 +1,8 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 
-export type LeadType = 'contact' | 'offer' | 'reprise'
-export type LeadStatus = 'Nouveau' | 'Traité'
+export type LeadType = 'contact' | 'offer' | 'reprise' | 'essai'
+export type LeadStatus = 'Nouveau' | 'En cours' | 'Traité'
+export const LEAD_STATUSES: LeadStatus[] = ['Nouveau', 'En cours', 'Traité']
 
 export type Lead = {
   id: number
@@ -16,6 +17,7 @@ export type Lead = {
   offerAmount: string | null
   message: string | null
   details: Record<string, string>
+  photos: string[]
 }
 
 type LeadRow = {
@@ -31,6 +33,7 @@ type LeadRow = {
   offer_amount: string | null
   message: string | null
   details: Record<string, string> | null
+  photos: string[] | null
 }
 
 function fromRow(row: LeadRow): Lead {
@@ -47,6 +50,7 @@ function fromRow(row: LeadRow): Lead {
     offerAmount: row.offer_amount,
     message: row.message,
     details: row.details ?? {},
+    photos: row.photos ?? [],
   }
 }
 
@@ -61,6 +65,7 @@ export async function createLead(input: {
   offerAmount?: string | null
   message?: string | null
   details?: Record<string, string>
+  photos?: string[]
 }) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
@@ -74,6 +79,7 @@ export async function createLead(input: {
       offer_amount: input.offerAmount ?? null,
       message: input.message ?? null,
       details: input.details ?? {},
+      photos: input.photos ?? [],
     })
     if (error) console.error('createLead failed:', error.message)
   } catch (err) {
@@ -81,9 +87,11 @@ export async function createLead(input: {
   }
 }
 
-export async function getLeads(): Promise<Lead[]> {
+export async function getLeads(types?: LeadType[]): Promise<Lead[]> {
   const supabaseAdmin = getSupabaseAdmin()
-  const { data, error } = await supabaseAdmin.from('leads').select('*').order('created_at', { ascending: false })
+  let query = supabaseAdmin.from('leads').select('*').order('created_at', { ascending: false })
+  if (types) query = query.in('type', types)
+  const { data, error } = await query
   if (error) {
     console.error('getLeads failed:', error.message)
     return []
@@ -91,12 +99,11 @@ export async function getLeads(): Promise<Lead[]> {
   return (data as LeadRow[]).map(fromRow)
 }
 
-export async function countNewLeads(): Promise<number> {
+export async function countNewLeads(types?: LeadType[]): Promise<number> {
   const supabaseAdmin = getSupabaseAdmin()
-  const { count, error } = await supabaseAdmin
-    .from('leads')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'Nouveau')
+  let query = supabaseAdmin.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'Nouveau')
+  if (types) query = query.in('type', types)
+  const { count, error } = await query
   if (error) {
     console.error('countNewLeads failed:', error.message)
     return 0

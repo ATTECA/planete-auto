@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { createLead } from '@/lib/leads'
+import { renderEmailHtml } from '@/lib/email-template'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -40,6 +41,15 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `Planète Auto — nouveau message de ${name}`,
       text: `Nom: ${name}\nE-mail: ${email}\n\nMessage:\n${message}`,
+      html: renderEmailHtml({
+        heading: `Nouveau message de ${name}`,
+        subheading: 'Nouveau message via le formulaire de contact',
+        rows: [
+          { label: 'Nom', value: name },
+          { label: 'E-mail', value: email },
+        ],
+        message,
+      }),
     })
 
     await createLead({ type: 'contact', name, email, message })

@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Car, Users } from 'lucide-react'
+import { LayoutDashboard, Car, RefreshCcw, MessageSquare } from 'lucide-react'
 
 const links = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/vehicules', label: 'Véhicules', icon: Car },
-    { href: '/admin/prospects', label: 'Prospects', icon: Users },
+    { href: '/admin/reprises', label: 'Reprises', icon: RefreshCcw },
+    { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
 ]
 
 export default function SidebarNav() {

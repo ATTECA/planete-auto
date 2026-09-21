@@ -3,7 +3,7 @@
 import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
-import { deleteLead } from '@/app/admin/(protected)/prospects/actions'
+import { deleteLead } from '@/app/admin/(protected)/_leads/actions'
 
 export default function DeleteLeadButton({ id, name }: { id: number; name: string }) {
     const [isPending, startTransition] = useTransition()

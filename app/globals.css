@@ -1923,6 +1923,7 @@ em {
   gap: 10px;
   padding: 120px 24px;
   text-align: center;
+  border-radius: 10px;
 }
 .tradein-success svg {
   color: var(--red);
@@ -3127,6 +3128,30 @@ em {
   color: var(--black);
   font-weight: 700;
 }
+.vehicle-request-tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+.vehicle-request-tabs button {
+  flex: 1;
+  padding: 14px 0;
+  border: 1px solid var(--line);
+  background: #f7f7f5;
+  color: #85888f;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.vehicle-request-tabs button + button {
+  border-left: 0;
+}
+.vehicle-request-tabs button.is-active {
+  background: var(--black);
+  border-color: var(--black);
+  color: #fff;
+}
 .vehicle-offer {
   display: flex;
   flex-direction: column;
@@ -3159,16 +3184,19 @@ em {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
-.vehicle-offer input {
+.vehicle-offer input,
+.vehicle-offer select {
   padding: 12px 0;
   border: 0;
   border-bottom: 2px solid var(--line);
   outline: 0;
+  background: transparent;
   color: var(--black);
   font-size: 16px;
   font-weight: 600;
 }
-.vehicle-offer input:focus {
+.vehicle-offer input:focus,
+.vehicle-offer select:focus {
   border-color: var(--red);
 }
 .vehicle-offer input::placeholder {

@@ -3,7 +3,7 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { EquipmentGroup } from '@/lib/vehicles'
+import { isArchivedStatus, type EquipmentGroup } from '@/lib/vehicles'
 
 const BUCKET = 'vehicles'
 
@@ -113,6 +113,7 @@ function formatKm(raw: string) {
 }
 
 function readVehicleFields(formData: FormData) {
+    const status = String(formData.get('status') ?? '').trim()
     return {
         name: String(formData.get('name') ?? '').trim(),
         meta: String(formData.get('meta') ?? '').trim(),
@@ -122,7 +123,10 @@ function readVehicleFields(formData: FormData) {
         gearbox: String(formData.get('gearbox') ?? '').trim(),
         price: formatPrice(String(formData.get('price') ?? '')),
         tag: String(formData.get('tag') ?? '').trim(),
-        status: String(formData.get('status') ?? '').trim(),
+        status,
+        // Keeps the "archived" flag (what actually hides the car from the public site) in
+        // sync with the Statut dropdown, so picking "Archivé" there really archives it.
+        archived: isArchivedStatus(status),
         description: String(formData.get('description') ?? '').trim() || null,
         details: readDetails(formData),
         equipment: readEquipment(formData),
@@ -215,7 +219,8 @@ export async function duplicateVehicle(id: number) {
     }
 
     const { id: _id, created_at: _createdAt, ...rest } = data
-    const row = { ...rest, archived: false }
+    // A duplicate always starts as an active listing, even if the source was archived.
+    const row = { ...rest, archived: false, status: isArchivedStatus(data.status) ? 'Disponible' : data.status }
 
     const { error: insertError } = await supabaseAdmin.from('vehicles').insert(row)
 
@@ -230,7 +235,13 @@ export async function duplicateVehicle(id: number) {
 export async function setVehicleArchived(id: number, archived: boolean) {
     const supabaseAdmin = getSupabaseAdmin()
 
-    const { error } = await supabaseAdmin.from('vehicles').update({ archived }).eq('id', id)
+    // Keeps the Statut dropdown in sync with this quick toggle: archiving sets it to
+    // "Archivé", restoring puts it back to "Disponible" (its only prior state, since
+    // "archived" and "Archivé" are now always set together).
+    const { error } = await supabaseAdmin
+        .from('vehicles')
+        .update({ archived, status: archived ? 'Archivé' : 'Disponible' })
+        .eq('id', id)
 
     if (error) {
         throw new Error(`Échec de la mise à jour: ${error.message}`)

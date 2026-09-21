@@ -27,6 +27,27 @@ export type Vehicle = {
   createdAt: string
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/** Descriptive, SEO-friendly URL segment for a vehicle, e.g. "16-bmw-x5-e70-3-0-v6-tdi-245ch". */
+export function vehicleSlug(vehicle: Pick<Vehicle, 'id' | 'name' | 'meta'>): string {
+  const slug = slugify(`${vehicle.name} ${vehicle.meta}`)
+  return slug ? `${vehicle.id}-${slug}` : String(vehicle.id)
+}
+
+/** Extracts the numeric id from a `[id]` route param, which may be a bare id or a full slug. */
+export function parseVehicleIdParam(param: string): string | null {
+  const match = param.match(/^(\d+)/)
+  return match ? match[1] : null
+}
+
 const FACT_GROUPS: { title: string; labels: string[] }[] = [
   { title: 'Identité', labels: ['Marque', 'Modèle', 'Finition', 'Version', 'Type de véhicule'] },
   { title: 'Année & kilométrage', labels: ['Année modèle', 'Date de 1ère mise en circulation', 'Kilométrage'] },
@@ -67,6 +88,21 @@ export const COMMON_FUELS = [
 
 /** Gearbox types, for the admin form's "Boîte de vitesse" dropdown. */
 export const COMMON_GEARBOXES = ['Manuelle', 'Automatique', 'Semi-automatique']
+
+/** Badge color classes for a vehicle status, for the admin vehicle tables. Matches loosely (case/accent/whitespace-insensitive) so a stray old value never renders an unstyled, invisible badge. */
+export function vehicleStatusBadgeClassName(status: string): string {
+  const s = status.trim().toLowerCase()
+  if (s.includes('disponible')) return 'border-transparent bg-green-600 text-white'
+  if (s.includes('reserv') || s.includes('réserv')) return 'border-transparent bg-orange-400 text-white'
+  if (s.includes('vendu')) return 'border-transparent bg-blue-600 text-white'
+  if (s.includes('archiv')) return 'border-transparent bg-purple-600 text-white'
+  return 'border-transparent bg-muted text-foreground'
+}
+
+/** Whether a status string means "archived" (hidden from the public site). */
+export function isArchivedStatus(status: string): boolean {
+  return status.trim().toLowerCase().includes('archiv')
+}
 
 export function groupVehicleFacts(details: [string, string][]) {
   const detailsMap = new Map(details)
