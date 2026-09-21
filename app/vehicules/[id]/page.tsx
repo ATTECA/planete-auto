@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { ArrowLeft, ArrowUpRight, Armchair, Calendar, CarFront, Check, ClipboardList, Clock3, Fuel, Gauge, Mail, Phone, Radio, Settings2, ShieldCheck, Sparkles, SunMedium } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Armchair, Calendar, CarFront, ClipboardList, Clock3, Fuel, Gauge, Mail, Phone, Radio, Settings2, ShieldCheck, Sparkles, SunMedium } from 'lucide-react'
 import Link from 'next/link'
 import { getVehicle, groupVehicleFacts } from '@/lib/vehicles'
+import { DEFAULT_EQUIPMENT_ITEM_ICON, EQUIPMENT_ITEM_ICONS } from '@/lib/equipment-icons'
 import { SiteFooter, SiteHeader, VehicleOfferForm, VehicleShareButton } from '@/components/site-pages'
 import { VehicleGallery } from '@/components/vehicle-gallery'
 
@@ -37,7 +38,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const vehicle = await getVehicle((await params).id)
   if (!vehicle) notFound()
   const gallery = vehicle.gallery.length ? vehicle.gallery : [vehicle.image]
-  const reference = vehicle.details?.find(([label]) => label === 'Référence')?.[1] ?? vehicle.id
+  const reference = vehicle.id
   const factGroups = groupVehicleFacts(vehicle.details ?? [])
 
   return <main className="vehicle-detail-page"><SiteHeader />
@@ -94,7 +95,10 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             {vehicle.equipment.map((group) => (
               <div className="equipment-group" key={group.category}>
                 <h3>{EQUIPMENT_ICONS[group.category] ?? <ClipboardList size={17} />}{group.category}</h3>
-                <ul>{group.items.map((item) => <li key={item}><Check size={14} />{item}</li>)}</ul>
+                <ul>{group.items.map((item) => {
+                  const ItemIcon = EQUIPMENT_ITEM_ICONS[item] ?? DEFAULT_EQUIPMENT_ITEM_ICON
+                  return <li key={item}><ItemIcon size={14} />{item}</li>
+                })}</ul>
               </div>
             ))}
           </div>
@@ -103,7 +107,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
       <section className="vehicle-closing">
         <div><h2>Intéressé par ce véhicule ?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> +33 4 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
-        <div id="offre"><VehicleOfferForm vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
+        <div id="offre"><VehicleOfferForm vehicleId={vehicle.id} vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
       </section>
     </div>
     <SiteFooter />

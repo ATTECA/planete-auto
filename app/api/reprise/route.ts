@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { renderEmailHtml } from '@/lib/email-template'
+import { createLead } from '@/lib/leads'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -104,6 +105,24 @@ export async function POST(request: Request) {
         photoCids: attachments.map((a) => a.cid),
       }),
       attachments,
+    })
+
+    await createLead({
+      type: 'reprise',
+      name,
+      email,
+      phone,
+      vehicleName: `${brand} ${model}`.trim(),
+      message,
+      details: {
+        'Type de demande': intent,
+        ...(year && { Année: year }),
+        ...(mileage && { Kilométrage: mileage }),
+        ...(gearbox && { Boîte: gearbox }),
+        ...(fuel && { Carburant: fuel }),
+        ...(color && { Couleur: color }),
+        ...(condition && { État: condition }),
+      },
     })
 
     return NextResponse.json({ ok: true })

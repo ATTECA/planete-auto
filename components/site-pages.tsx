@@ -541,7 +541,7 @@ export function TradeInForm() {
   );
 }
 
-export function VehicleOfferForm({ vehicleName, vehiclePrice }: { vehicleName: string; vehiclePrice: string }) {
+export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { vehicleId: number; vehicleName: string; vehiclePrice: string }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -558,7 +558,7 @@ export function VehicleOfferForm({ vehicleName, vehiclePrice }: { vehicleName: s
       const response = await fetch("/api/offer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, offer, vehicleName, vehiclePrice }),
+        body: JSON.stringify({ name, phone, email, offer, vehicleId, vehicleName, vehiclePrice }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);

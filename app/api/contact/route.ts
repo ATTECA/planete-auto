@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { createLead } from '@/lib/leads'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -40,6 +41,8 @@ export async function POST(request: Request) {
       subject: `Planète Auto — nouveau message de ${name}`,
       text: `Nom: ${name}\nE-mail: ${email}\n\nMessage:\n${message}`,
     })
+
+    await createLead({ type: 'contact', name, email, message })
 
     return NextResponse.json({ ok: true })
   } catch (error) {

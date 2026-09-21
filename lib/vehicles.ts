@@ -24,14 +24,49 @@ export type Vehicle = {
   details: [string, string][]
   equipment?: EquipmentGroup[]
   archived: boolean
+  createdAt: string
 }
 
 const FACT_GROUPS: { title: string; labels: string[] }[] = [
-  { title: 'Identité', labels: ['Marque', 'Modèle', 'Finition', 'Version', 'Type de véhicule', 'Référence'] },
+  { title: 'Identité', labels: ['Marque', 'Modèle', 'Finition', 'Version', 'Type de véhicule'] },
   { title: 'Année & kilométrage', labels: ['Année modèle', 'Date de 1ère mise en circulation', 'Kilométrage'] },
   { title: 'Moteur & performances', labels: ['Énergie', 'Boîte de vitesse', 'Puissance DIN', 'Puissance fiscale', "Crit'Air", 'CO2'] },
   { title: 'Confort & dimensions', labels: ['Nombre de portes', 'Nombre de places', 'Couleur', 'Couleur intérieur', 'Longueur'] },
 ]
+
+/** Common detail labels, for autocompletion in the admin form. */
+export const COMMON_DETAIL_LABELS = FACT_GROUPS.flatMap((group) => group.labels)
+
+/** Common equipment groups & items, for autocompletion in the admin form. */
+export const COMMON_EQUIPMENT_GROUPS: { category: string; items: string[] }[] = [
+  { category: 'Audio - Télécommunications', items: ['Kit mains-libres Bluetooth', 'GPS Cartographique', 'Prise USB'] },
+  { category: 'Conduite', items: ['Régulateur de vitesse', 'Palettes changement vitesses au volant'] },
+  { category: 'Extérieur', items: ['Jantes Alu', 'Rétroviseurs électriques', 'Feux de jour à LED'] },
+  { category: 'Intérieur', items: ['Clim automatique bi-zones', 'Volant cuir', 'Sièges avant chauffants', 'Ordinateur de bord'] },
+  { category: 'Sécurité', items: ['ABS', 'ESP', 'Airbags latéraux avant', 'Antipatinage'] },
+]
+export const COMMON_EQUIPMENT_CATEGORIES = COMMON_EQUIPMENT_GROUPS.map((g) => g.category)
+export const COMMON_EQUIPMENT_ITEMS = COMMON_EQUIPMENT_GROUPS.flatMap((g) => g.items)
+
+/** Items belonging to a known equipment category, for filtering the item dropdown in the admin form. */
+export function equipmentItemsForCategory(category: string): string[] {
+  return COMMON_EQUIPMENT_GROUPS.find((g) => g.category === category)?.items ?? COMMON_EQUIPMENT_ITEMS
+}
+
+/** Fuel types, for the admin form's "Énergie" dropdown. */
+export const COMMON_FUELS = [
+  'Essence',
+  'Diesel',
+  'Hybride',
+  'Hybride rechargeable',
+  'Électrique',
+  'GPL',
+  'Éthanol E85',
+  'Hydrogène',
+]
+
+/** Gearbox types, for the admin form's "Boîte de vitesse" dropdown. */
+export const COMMON_GEARBOXES = ['Manuelle', 'Automatique', 'Semi-automatique']
 
 export function groupVehicleFacts(details: [string, string][]) {
   const detailsMap = new Map(details)
@@ -71,6 +106,7 @@ type VehicleRow = {
   details: [string, string][] | null
   equipment: EquipmentGroup[] | null
   archived: boolean | null
+  created_at: string
 }
 
 function fromRow(row: VehicleRow): Vehicle {
@@ -93,6 +129,7 @@ function fromRow(row: VehicleRow): Vehicle {
     details: row.details ?? [],
     equipment: row.equipment ?? undefined,
     archived: row.archived ?? false,
+    createdAt: row.created_at,
   }
 }
 

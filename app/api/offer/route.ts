@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { createLead } from '@/lib/leads'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const email = typeof body.email === 'string' ? body.email.trim() : ''
     const offer = typeof body.offer === 'string' ? body.offer.trim() : ''
+    const vehicleId = typeof body.vehicleId === 'number' ? body.vehicleId : null
     const vehicleName = typeof body.vehicleName === 'string' ? body.vehicleName.trim() : ''
     const vehiclePrice = typeof body.vehiclePrice === 'string' ? body.vehiclePrice.trim() : ''
 
@@ -48,6 +50,16 @@ export async function POST(request: Request) {
         `Téléphone: ${phone}`,
         email && `E-mail: ${email}`,
       ].filter(Boolean).join('\n'),
+    })
+
+    await createLead({
+      type: 'offer',
+      name,
+      email,
+      phone,
+      vehicleId,
+      vehicleName,
+      offerAmount: offer,
     })
 
     return NextResponse.json({ ok: true })

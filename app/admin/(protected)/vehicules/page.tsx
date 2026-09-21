@@ -1,10 +1,11 @@
 import { getVehiclesAdmin } from '@/lib/vehicles'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Pencil } from 'lucide-react'
 import DeleteVehicleButton from '@/components/admin/delete-vehicle-button'
 import ArchiveVehicleButton from '@/components/admin/archive-vehicle-button'
-import VehicleFormDialog from '@/components/admin/vehicle-form-dialog'
+import DuplicateVehicleButton from '@/components/admin/duplicate-vehicle-button'
 
 import {
     Table,
@@ -24,7 +25,7 @@ export default async function AdminVehiclesPage() {
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-semibold">Véhicules</h1>
-                <VehicleFormDialog mode="create" trigger={<Button>Ajouter un véhicule</Button>} />
+                <Button nativeButton={false} render={<Link href="/admin/vehicules/new" />}>Ajouter un véhicule</Button>
             </div>
             <Card>
             <Table>
@@ -32,9 +33,10 @@ export default async function AdminVehiclesPage() {
                     <TableRow>
                         <TableHead className="w-16"></TableHead>
                         <TableHead>Nom</TableHead>
-                        <TableHead>Année</TableHead>
+                        <TableHead>Réf.</TableHead>
                         <TableHead>Prix</TableHead>
                         <TableHead>Statut</TableHead>
+                        <TableHead>Ajouté le</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -53,23 +55,21 @@ export default async function AdminVehiclesPage() {
                                     <Badge variant="outline" className="ml-2">Archivé</Badge>
                                 )}
                             </TableCell>
-                            <TableCell>{vehicle.year}</TableCell>
+                            <TableCell>{vehicle.id}</TableCell>
                             <TableCell>{vehicle.price}</TableCell>
                             <TableCell>
                                 <Badge>{vehicle.status}</Badge>
                             </TableCell>
                             <TableCell>
+                                {new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}
+                            </TableCell>
+                            <TableCell>
                                 <div className="flex items-center justify-end gap-1">
-                                    <VehicleFormDialog
-                                        mode="edit"
-                                        vehicle={vehicle}
-                                        trigger={
-                                            <Button variant="ghost" size="icon-sm">
-                                                <Pencil className="size-4" />
-                                                <span className="sr-only">Modifier</span>
-                                            </Button>
-                                        }
-                                    />
+                                    <Button variant="ghost" size="icon-sm" nativeButton={false} render={<Link href={`/admin/vehicules/${vehicle.id}`} />}>
+                                        <Pencil className="size-4" />
+                                        <span className="sr-only">Modifier</span>
+                                    </Button>
+                                    <DuplicateVehicleButton id={vehicle.id} />
                                     <ArchiveVehicleButton id={vehicle.id} archived={vehicle.archived} />
                                     <DeleteVehicleButton id={vehicle.id} name={vehicle.name} />
                                 </div>
