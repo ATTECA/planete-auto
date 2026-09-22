@@ -121,6 +121,7 @@ function readVehicleFields(formData: FormData) {
         km: formatKm(String(formData.get('km') ?? '')),
         fuel: String(formData.get('fuel') ?? '').trim(),
         gearbox: String(formData.get('gearbox') ?? '').trim(),
+        carrosserie: String(formData.get('carrosserie') ?? '').trim(),
         price: formatPrice(String(formData.get('price') ?? '')),
         tag: String(formData.get('tag') ?? '').trim(),
         status,
@@ -159,6 +160,9 @@ export async function createVehicle(_prevState: VehicleFormState, formData: Form
 
     revalidatePath('/admin/vehicules')
     revalidatePath('/admin')
+    revalidatePath('/vehicules')
+    revalidatePath('/vehicules/[id]', 'page')
+    revalidatePath('/')
     redirect('/admin/vehicules')
 }
 
@@ -193,6 +197,9 @@ export async function updateVehicle(_prevState: VehicleFormState, formData: Form
 
     revalidatePath('/admin/vehicules')
     revalidatePath('/admin')
+    revalidatePath('/vehicules')
+    revalidatePath('/vehicules/[id]', 'page')
+    revalidatePath('/')
     redirect('/admin/vehicules')
 }
 
@@ -207,6 +214,9 @@ export async function deleteVehicle(id: number) {
 
     revalidatePath('/admin/vehicules')
     revalidatePath('/admin')
+    revalidatePath('/vehicules')
+    revalidatePath('/vehicules/[id]', 'page')
+    revalidatePath('/')
 }
 
 export async function duplicateVehicle(id: number) {
@@ -230,6 +240,9 @@ export async function duplicateVehicle(id: number) {
 
     revalidatePath('/admin/vehicules')
     revalidatePath('/admin')
+    revalidatePath('/vehicules')
+    revalidatePath('/vehicules/[id]', 'page')
+    revalidatePath('/')
 }
 
 export async function setVehicleArchived(id: number, archived: boolean) {
@@ -249,4 +262,7 @@ export async function setVehicleArchived(id: number, archived: boolean) {
 
     revalidatePath('/admin/vehicules')
     revalidatePath('/admin')
+    revalidatePath('/vehicules')
+    revalidatePath('/vehicules/[id]', 'page')
+    revalidatePath('/')
 }

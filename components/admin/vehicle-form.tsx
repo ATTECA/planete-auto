@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { createVehicle, updateVehicle, type VehicleFormState } from '@/app/admin/(protected)/vehicules/actions'
 import {
+    COMMON_CARROSSERIES,
     COMMON_DETAIL_LABELS,
     COMMON_EQUIPMENT_CATEGORIES,
     COMMON_EQUIPMENT_ITEMS,
@@ -209,6 +210,20 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                 {[...new Set([...COMMON_GEARBOXES, ...(vehicle?.gearbox ? [vehicle.gearbox] : [])])].map((gearbox) => (
                                     <option key={gearbox} value={gearbox}>
                                         {gearbox}
+                                    </option>
+                                ))}
+                            </select>
+                        </Field>
+                        <Field label="Type de carrosserie" htmlFor="carrosserie">
+                            <select
+                                id="carrosserie"
+                                name="carrosserie"
+                                defaultValue={vehicle?.carrosserie || COMMON_CARROSSERIES[0]}
+                                className={selectClassName}
+                            >
+                                {[...new Set([...COMMON_CARROSSERIES, ...(vehicle?.carrosserie ? [vehicle.carrosserie] : [])])].map((carrosserie) => (
+                                    <option key={carrosserie} value={carrosserie}>
+                                        {carrosserie}
                                     </option>
                                 ))}
                             </select>

@@ -1464,6 +1464,7 @@ em {
   padding: 56px;
   background: #fff;
   border: 1px solid var(--line);
+  border-radius: 14px;
 }
 .standalone-form label {
   display: flex;
@@ -1535,6 +1536,7 @@ em {
   padding: 56px;
   background: var(--gray);
   color: #fff;
+  border-radius: 14px;
 }
 .info-list {
   display: flex;
@@ -2804,6 +2806,7 @@ em {
   position: relative;
   height: 600px;
   overflow: hidden;
+  border-radius: 14px;
   background: #ececea;
 }
 .vehicle-main-photo-open {
@@ -2828,6 +2831,7 @@ em {
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
+  border-radius: 999px;
   background: #14120dcc;
   color: #fff;
   font-size: 11px;
@@ -2881,6 +2885,7 @@ em {
   right: 20px;
   bottom: 18px;
   padding: 8px 10px;
+  border-radius: 999px;
   background: #14120dcc;
   color: #fff;
   font-size: 11px;
@@ -2897,6 +2902,8 @@ em {
   height: 64px;
   padding: 0;
   border: 0;
+  border-radius: 8px;
+  overflow: hidden;
   opacity: 0.5;
   background: #ececea;
   cursor: pointer;
@@ -2982,7 +2989,9 @@ em {
   height: 100%;
   background: #fff;
   border: 1px solid var(--line);
+  border-radius: 14px;
   padding: 28px;
+  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.35);
 }
 .vehicle-purchase-top {
   display: flex;
@@ -2990,13 +2999,12 @@ em {
   align-items: center;
 }
 .vehicle-status {
-  color: #fff;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: var(--red);
-  padding: 7px 12px;
+  border-radius: 999px;
+  padding: 7px 14px;
 }
 .vehicle-ref {
   color: #8a8b8f;
@@ -3156,7 +3164,9 @@ em {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
+  border-radius: 14px;
   padding: 36px;
+  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.35);
 }
 .vehicle-offer h3 {
   margin: 0 0 22px;
@@ -3227,42 +3237,136 @@ em {
 .vehicle-section-heading {
   margin-bottom: 36px;
 }
+.vehicle-body-with-finance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 40px;
+  margin-top: 30px;
+}
+.vehicle-body-main {
+  min-width: 0;
+}
+.vehicle-body-finance > * {
+  position: sticky;
+  top: 24px;
+}
 .vehicle-facts,
 .vehicle-equipment {
   margin-top: 50px;
-  padding-top: 60px;
-  border-top: 2px solid var(--black);
-}
-.facts-groups {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-}
-.facts-group {
-  padding: 0 40px 30px 0;
-}
-.facts-group:nth-child(odd) {
-  border-right: 1px solid var(--line);
-}
-.facts-group:nth-child(even) {
-  padding-left: 40px;
-}
-.facts-group:nth-child(n + 3) {
+  padding-top: 40px;
   border-top: 1px solid var(--line);
-  padding-top: 30px;
 }
-.facts-group h3 {
+.vehicle-body-main .vehicle-facts {
+  margin-top: 0;
+}
+.finance-calculator {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.35);
+}
+.finance-calculator-header {
+  padding: 16px 22px;
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.finance-calculator-body {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 22px;
+  background: var(--gray);
+}
+.finance-calculator-row {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 9px;
-  margin: 0 0 18px;
+  gap: 12px;
+}
+.finance-calculator-row span {
+  color: #e2e3e0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.finance-calculator-row strong {
+  color: #fff;
   font-size: 15px;
   font-weight: 700;
 }
-.facts-group h3 svg {
-  color: var(--red);
-  width: 25px;
-  height: 25px;
+.finance-calculator-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.finance-calculator-field-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.finance-calculator-field-top span {
+  color: #e2e3e0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.finance-calculator-field-top strong {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+}
+.finance-calculator-field input[type="range"] {
+  width: 100%;
+  accent-color: #fff;
+}
+.finance-calculator-field-bounds {
+  display: flex;
+  justify-content: space-between;
+  color: #c9cacd;
+  font-size: 11px;
+  font-weight: 600;
+}
+.finance-calculator-rule {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.finance-calculator-highlight strong {
+  color: #fff;
+  font-size: 22px;
+}
+.finance-calculator-detail span {
+  font-size: 12px;
+}
+.finance-calculator-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+  border-radius: 999px;
+  font-size: 14px;
+  text-align: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.finance-calculator-cta:hover {
+  box-shadow: 0 14px 24px -12px rgba(230, 30, 50, 0.55);
+}
+.finance-calculator-disclaimer {
+  margin: 0;
+  color: #d3d4d1;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.facts-flat-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 40px;
 }
 .facts-grid {
   display: flex;
@@ -3291,9 +3395,9 @@ em {
 }
 .vehicle-description {
   display: block;
-  margin-top: 90px;
-  padding: 60px 0;
-  border-top: 2px solid var(--black);
+  margin-top: 50px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line);
 }
 .vehicle-description > div:first-child {
   margin-bottom: 28px;
@@ -3367,9 +3471,9 @@ em {
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: start;
-  margin-top: 90px;
-  padding: 70px 0 0;
-  border-top: 2px solid var(--black);
+  margin-top: 48px;
+  padding: 48px 0 0;
+  border-top: 1px solid var(--line);
 }
 .vehicle-closing h2 {
   margin: 0 0 14px;
@@ -3448,31 +3552,34 @@ em {
   .vehicle-offer {
     padding: 24px;
   }
+  .vehicle-body-with-finance {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .vehicle-body-finance {
+    order: -1;
+  }
+  .vehicle-body-finance > * {
+    position: static;
+  }
   .vehicle-facts,
-  .vehicle-equipment {
-    margin-top: 48px;
-    padding-top: 36px;
-  }
+  .vehicle-equipment,
   .vehicle-description {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    margin-top: 48px;
-    padding: 36px 0;
+    margin-top: 36px;
+    padding-top: 28px;
   }
-  .vehicle-description {
-    padding-bottom: 0;
-	margin-bottom: 0;
+  .vehicle-body-main .vehicle-facts {
+    margin-top: 0;
   }
-  .facts-groups,
+  .facts-flat-columns,
   .equipment-groups {
     grid-template-columns: 1fr;
   }
-  .facts-group,
   .equipment-group {
     padding: 24px 0 0;
     border-right: 0 !important;
   }
-  .facts-group:first-child,
   .equipment-group:first-child {
     padding-top: 0;
     border-top: 0;

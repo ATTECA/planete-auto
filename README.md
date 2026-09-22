@@ -32,7 +32,7 @@ Les véhicules sont stockés dans une base Supabase (Postgres) plutôt que dans 
 
 ## Déploiement
 
-Le déploiement sur Vercel se fait via une GitHub Action (`.github/workflows/deploy.yml`), et non via l'intégration Git native de Vercel — le plan Hobby de Vercel bloque les déploiements automatiques déclenchés par un push venant d'un compte GitHub autre que celui du propriétaire du projet, ce qui posait problème puisque plusieurs comptes poussent sur ce dépôt.
+Le déploiement sur Vercel se fait via une GitHub Action (`.github/workflows/deploy.yml`).
 
 Secrets requis dans **Settings > Secrets and variables > Actions** du dépôt GitHub :
 - `VERCEL_TOKEN` — jeton d'API généré sur le compte Vercel officiel (Account Settings > Tokens). **Régénéré le 21/09/2026, à renouveler avant le 21/09/2027** (mettre à jour le secret GitHub après régénération).

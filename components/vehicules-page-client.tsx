@@ -15,6 +15,7 @@ const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([ke
 export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }) {
   const searchParams = useSearchParams()
   const initialBrand = searchParams.get('marque') ?? ''
+  const initialCarrosserie = searchParams.get('carrosserie') ?? ''
   const initialMaxPrice = searchParams.get('prixMax')
 
   const prices = useMemo(() => vehicles.map((vehicle) => Number(vehicle.price.replace(/\D/g, ''))), [vehicles])
@@ -25,6 +26,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
     models: [...new Set(vehicles.map((vehicle) => getDetail(vehicle, 'Modèle')))],
     fuels: [...new Set(vehicles.map((vehicle) => vehicle.fuel))],
     gearboxes: [...new Set(vehicles.map((vehicle) => vehicle.gearbox))],
+    carrosseries: [...new Set(vehicles.map((vehicle) => vehicle.carrosserie).filter(Boolean))],
     colors: [...new Set(vehicles.map((vehicle) => getDetail(vehicle, 'Couleur')))],
   }), [vehicles])
 
@@ -35,6 +37,9 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
   const [model, setModel] = useState('')
   const [fuel, setFuel] = useState('')
   const [gearbox, setGearbox] = useState('')
+  const [carrosserie, setCarrosserie] = useState(
+    () => filterOptions.carrosseries.find((option) => option.toLowerCase() === initialCarrosserie.toLowerCase()) ?? '',
+  )
   const [color, setColor] = useState('')
   const [maxPrice, setMaxPrice] = useState(() => (initialMaxPrice ? Math.min(Number(initialMaxPrice), Math.max(...prices)) : Math.max(...prices)))
   const [yearFrom, setYearFrom] = useState(() => Math.min(...years))
@@ -55,6 +60,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
         && (!model || getDetail(vehicle, 'Modèle') === model)
         && (!fuel || vehicle.fuel === fuel)
         && (!gearbox || vehicle.gearbox === gearbox)
+        && (!carrosserie || vehicle.carrosserie === carrosserie)
         && (!color || getDetail(vehicle, 'Couleur') === color)
         && price <= maxPrice
         && year >= yearFrom
@@ -65,13 +71,14 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
       : sort === 'Prix décroissant'
         ? Number(b.price.replace(/\D/g, '')) - Number(a.price.replace(/\D/g, ''))
         : 0)
-  }, [vehicles, brand, color, fuel, gearbox, maxMileage, maxPrice, model, query, sort, yearFrom])
+  }, [vehicles, brand, carrosserie, color, fuel, gearbox, maxMileage, maxPrice, model, query, sort, yearFrom])
 
   const resetFilters = () => {
     setBrand('')
     setModel('')
     setFuel('')
     setGearbox('')
+    setCarrosserie('')
     setColor('')
     setMaxPrice(Math.max(...prices))
     setYearFrom(Math.min(...years))
@@ -88,6 +95,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
   if (model) activeFilters.push({ key: 'model', label: model, onRemove: () => setModel('') })
   if (fuel) activeFilters.push({ key: 'fuel', label: fuel, onRemove: () => setFuel('') })
   if (gearbox) activeFilters.push({ key: 'gearbox', label: gearbox, onRemove: () => setGearbox('') })
+  if (carrosserie) activeFilters.push({ key: 'carrosserie', label: carrosserie, onRemove: () => setCarrosserie('') })
   if (color) activeFilters.push({ key: 'color', label: color, onRemove: () => setColor('') })
   if (maxPrice < maxPricePossible) activeFilters.push({ key: 'price', label: `Jusqu'à ${maxPrice.toLocaleString('fr-FR')} €`, onRemove: () => setMaxPrice(maxPricePossible) })
   if (yearFrom > minYear) activeFilters.push({ key: 'year', label: `Dès ${yearFrom}`, onRemove: () => setYearFrom(minYear) })
@@ -101,7 +109,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
   useEffect(() => {
     setPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [brand, model, fuel, gearbox, color, maxPrice, yearFrom, maxMileage, sort, query])
+  }, [brand, model, fuel, gearbox, carrosserie, color, maxPrice, yearFrom, maxMileage, sort, query])
 
   useEffect(() => {
     setIsLoading(true)
@@ -140,6 +148,7 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
             <label className="inventory-filter-field">Modèle<select value={model} onChange={(event) => setModel(event.target.value)}><option value="">Tous les modèles</option>{filterOptions.models.map((option) => <option key={option}>{option}</option>)}</select></label>
             <label className="inventory-filter-field">Carburant<select value={fuel} onChange={(event) => setFuel(event.target.value)}><option value="">Tous les carburants</option>{filterOptions.fuels.map((option) => <option key={option}>{option}</option>)}</select></label>
             <label className="inventory-filter-field">Boîte de vitesses<select value={gearbox} onChange={(event) => setGearbox(event.target.value)}><option value="">Toutes les boîtes</option>{filterOptions.gearboxes.map((option) => <option key={option}>{option}</option>)}</select></label>
+            <label className="inventory-filter-field">Type de carrosserie<select value={carrosserie} onChange={(event) => setCarrosserie(event.target.value)}><option value="">Toutes les carrosseries</option>{filterOptions.carrosseries.map((option) => <option key={option}>{option}</option>)}</select></label>
             <div className="inventory-range-field"><div><span>Prix maximum</span><strong>{maxPrice.toLocaleString('fr-FR')} €</strong></div><input type="range" min={Math.min(...prices)} max={Math.max(...prices)} step="100" value={maxPrice} onChange={(event) => setMaxPrice(Number(event.target.value))} aria-label="Prix maximum" /></div>
             <div className="inventory-range-field"><div><span>Année minimum</span><strong>{yearFrom}</strong></div><input type="range" min={Math.min(...years)} max={Math.max(...years)} value={yearFrom} onChange={(event) => setYearFrom(Number(event.target.value))} aria-label="Année minimum" /></div>
             <div className="inventory-range-field"><div><span>Kilométrage maximum</span><strong>{maxMileage.toLocaleString('fr-FR')} km</strong></div><input type="range" min={Math.min(...mileages)} max={Math.max(...mileages)} step="1000" value={maxMileage} onChange={(event) => setMaxMileage(Number(event.target.value))} aria-label="Kilométrage maximum" /></div>

@@ -15,6 +15,7 @@ export type Vehicle = {
   km: string
   fuel: string
   gearbox: string
+  carrosserie: string
   price: string
   tag: string
   status: string
@@ -89,6 +90,9 @@ export const COMMON_FUELS = [
 /** Gearbox types, for the admin form's "Boîte de vitesse" dropdown. */
 export const COMMON_GEARBOXES = ['Manuelle', 'Automatique', 'Semi-automatique']
 
+/** Body types, for the admin form's "Type de carrosserie" dropdown. Matches the homepage's carrosserie tiles. */
+export const COMMON_CARROSSERIES = ['SUV', 'Berline', 'Citadine', 'Break', 'Monospace / Van', 'Coupé', 'Cabriolet', 'Pickup']
+
 /** Badge color classes for a vehicle status, for the admin vehicle tables. Matches loosely (case/accent/whitespace-insensitive) so a stray old value never renders an unstyled, invisible badge. */
 export function vehicleStatusBadgeClassName(status: string): string {
   const s = status.trim().toLowerCase()
@@ -133,6 +137,7 @@ type VehicleRow = {
   km: string
   fuel: string
   gearbox: string
+  carrosserie: string | null
   price: string
   tag: string
   status: string
@@ -156,6 +161,7 @@ function fromRow(row: VehicleRow): Vehicle {
     km: row.km,
     fuel: row.fuel,
     gearbox: row.gearbox,
+    carrosserie: row.carrosserie ?? '',
     price: row.price,
     tag: row.tag,
     status: row.status,
