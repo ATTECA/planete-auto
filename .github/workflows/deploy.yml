@@ -29,9 +29,6 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Debug IDs (temporary)
-        run: echo "ORG=[$VERCEL_ORG_ID] PROJECT=[$VERCEL_PROJECT_ID]"
-
       - name: Pull Vercel project settings
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
