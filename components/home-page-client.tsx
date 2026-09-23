@@ -8,11 +8,14 @@ import {
   ArrowRight,
   ArrowUp,
   ArrowUpRight,
+  Award,
   CalendarDays,
   CarFront,
   ChevronLeft,
   ChevronRight,
   CreditCard,
+  Disc,
+  Droplets,
   Euro,
   FileText,
   Heart,
@@ -23,6 +26,7 @@ import {
   Search,
   ShieldCheck,
   Star,
+  Stethoscope,
   Tag,
   TrendingDown,
   Wrench,
@@ -31,6 +35,7 @@ import {
 import { SiteFooter } from "@/components/site-pages";
 import { useFavorites } from "@/lib/use-favorites";
 import { getFeatureIcons } from "@/lib/vehicle-features";
+import { googleReviews, GOOGLE_REVIEWS_COUNT, GOOGLE_REVIEWS_SCORE, GOOGLE_REVIEWS_URL } from "@/lib/reviews";
 import { vehicleSlug, type Vehicle } from "@/lib/vehicles";
 
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
@@ -70,33 +75,6 @@ const brandLogoSize: Record<string, number> = {
   audi: 68,
   toyota: 60,
 };
-
-const googleReviews = [
-  {
-    name: "David Samblanet",
-    text: "Quand on est satisfait, il faut savoir le dire. Nous avons acheté un véhicule d’occasion, conforme au descriptif, garantie 3 mois. Très bon accueil, un service professionnel au top. Je recommande.",
-  },
-  {
-    name: "Ismail Hemani",
-    text: "J’ai acheté ma voiture chez Planète Autos, et j’en suis ravi. Le service est excellent et le prix très raisonnable par rapport aux autres concessionnaires. Je recommande à tous ceux qui envisagent d’acheter un véhicule.",
-  },
-  {
-    name: "Amina Hemani",
-    text: "Concession fiable, personnel à l’écoute et pas de mauvaise surprise sur le véhicule. Transaction fluide du début à la fin. Je recommande.",
-  },
-  {
-    name: "Craig Mamilo",
-    text: "Un garage que je fréquente depuis 10 ans et que j’ai recommandé à tous mes proches. La fiabilité est au rendez-vous à chaque fois, que ce soit pour les réparations ou l’entretien. C’est rare de nos jours de trouver un garage aussi sérieux et de confiance.",
-  },
-  {
-    name: "sarah_sbr 17",
-    text: "Nous avons récemment acheté notre voiture dans ce garage et nous sommes très satisfaits de notre expérience. L’équipe a été réactive et professionnelle tout au long du processus. Le patron est une personne intègre et honnête, ce qui nous a tout de suite mis en confiance.",
-  },
-  {
-    name: "Kevin Coulm",
-    text: "J’ai acheté un véhicule avec une garantie de 6 mois. J’ai rencontré un problème pendant cette période, le vendeur a immédiatement fait le nécessaire.",
-  },
-];
 
 export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
   const router = useRouter();
@@ -195,6 +173,9 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         <div className="hero-photo-inner">
         <div className="hero-photo-content">
           <div className="hero-photo-card">
+            <span className="hero-experience-badge">
+              <Award size={14} /> 15 ans d’expérience
+            </span>
             <h1>
               Une voiture d’occasion,
               <br />
@@ -444,6 +425,15 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                 <Wrench size={18} /> Grosse et légère mécanique effectuées à notre garage
               </li>
               <li>
+                <Disc size={18} /> Pneumatique : montage, équilibrage et vente de pneus
+              </li>
+              <li>
+                <Stethoscope size={18} /> Diagnostic électronique et mécanique
+              </li>
+              <li>
+                <Droplets size={18} /> Lavage et préparation de véhicule
+              </li>
+              <li>
                 <FileText size={18} /> Démarches administratives prises en charge (carte grise, déclaration d’achat)
               </li>
             </ul>
@@ -505,14 +495,14 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
               <em>nos clients</em>
             </h2>
             <div className="reviews-score">
-              <span className="reviews-score-number">4,3</span>
+              <span className="reviews-score-number">{GOOGLE_REVIEWS_SCORE}</span>
               <div>
                 <div className="reviews-stars" aria-hidden="true">
                   {Array.from({ length: 5 }).map((_, index) => (
                     <Star key={index} size={18} fill={index < 4 ? "currentColor" : "none"} />
                   ))}
                 </div>
-                <p>169 avis Google</p>
+                <p>{GOOGLE_REVIEWS_COUNT} avis Google</p>
               </div>
             </div>
           </div>
@@ -531,7 +521,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           </div>
           <a
             className="reviews-cta"
-            href="https://www.google.com/search?q=planete+auto+saint+jean+de+v%C3%A9das"
+            href={GOOGLE_REVIEWS_URL}
             target="_blank"
             rel="noreferrer"
           >

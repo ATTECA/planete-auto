@@ -286,6 +286,21 @@ textarea {
   font-weight: 400;
   -webkit-text-stroke: 0.6px currentColor;
 }
+.hero-experience-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  align-self: flex-start;
+  margin-bottom: 16px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
 .hero-photo-card h1 {
   margin: 0 0 26px;
   font-size: clamp(34px, 3.4vw, 52px);
@@ -1159,6 +1174,152 @@ em {
   max-width: 1240px;
   margin: 0 auto;
   padding: 100px 8vw;
+}
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  gap: 64px;
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 76px 8vw 0;
+}
+.about-hero-text .eyebrow {
+  margin-bottom: 22px;
+}
+.about-hero-text h1 {
+  margin: 0 0 22px;
+  font-family: "BC Alphapipe";
+  font-size: clamp(40px, 4.4vw, 62px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.about-hero-text h1 em {
+  font-style: normal;
+  color: var(--red);
+}
+.about-hero-lead {
+  margin: 0 0 20px;
+  color: var(--black);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.about-hero-lead strong {
+  color: var(--red);
+}
+.about-hero-text > p:not(.about-hero-lead) {
+  margin: 0;
+  color: #5f6065;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.8;
+  max-width: 480px;
+}
+.about-hero-cta {
+  align-self: flex-start;
+  margin-top: 28px;
+}
+.about-hero-photo {
+  position: relative;
+  aspect-ratio: 4 / 3.2;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ececea;
+  box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.35);
+}
+.about-filmstrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+  max-width: 1320px;
+  margin: 90px auto 110px;
+  padding: 0 8vw;
+}
+.about-filmstrip-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ececea;
+  box-shadow: 0 30px 50px -28px rgba(0, 0, 0, 0.3);
+}
+.about-filmstrip-photo:nth-child(2) {
+  margin-top: 56px;
+}
+.about-faq {
+  max-width: 900px;
+  margin: 100px auto 110px;
+  padding: 0 8vw;
+}
+.about-faq h2 {
+  margin: 0 0 32px;
+  font-family: "BC Alphapipe";
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+.about-faq-list {
+  display: flex;
+  flex-direction: column;
+}
+.about-faq-item {
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+.about-faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 700;
+  list-style: none;
+}
+.about-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.about-faq-item summary svg {
+  flex: none;
+  color: var(--red);
+  transition: transform 0.2s;
+}
+.about-faq-item[open] summary svg {
+  transform: rotate(90deg);
+}
+.about-faq-item p {
+  margin: 16px 0 0;
+  color: #5f6065;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+@media (max-width: 850px) {
+  .about-hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 5vw 0;
+  }
+  .about-hero-photo {
+    order: -1;
+    aspect-ratio: 4 / 3;
+  }
+  .about-filmstrip {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin: 44px auto 65px;
+    padding: 0 5vw;
+  }
+  .about-filmstrip-photo {
+    aspect-ratio: 4 / 3;
+  }
+  .about-filmstrip-photo:nth-child(2) {
+    margin-top: 0;
+  }
 }
 .why-section {
   max-width: 1600px;

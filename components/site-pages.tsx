@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import {
   ArrowRight,
+  ArrowUpRight,
   Calendar,
   CarFront,
   Check,
@@ -21,10 +23,12 @@ import {
   ShieldCheck,
   Share2,
   Sparkles,
+  Star,
   Tag,
   User,
   X,
 } from "lucide-react";
+import { googleReviews, GOOGLE_REVIEWS_COUNT, GOOGLE_REVIEWS_SCORE, GOOGLE_REVIEWS_URL } from "@/lib/reviews";
 
 const iconLogo = "/planete-auto-logo.png";
 
@@ -830,19 +834,140 @@ export function ServiceCard({ number, icon, title, text }: { number: string; ico
   );
 }
 
+const ABOUT_FAQ = [
+  {
+    question: "Proposez-vous une garantie sur les véhicules ?",
+    answer:
+      "Oui, tous nos véhicules sont vendus avec une garantie de 3 mois ou 5 000 km sur la boîte de vitesses et le moteur.",
+  },
+  {
+    question: "Puis-je faire reprendre mon ancien véhicule ?",
+    answer:
+      "Oui, nous étudions la reprise de votre véhicule actuel, toutes marques, que vous achetiez ou non un véhicule chez nous.",
+  },
+  {
+    question: "Proposez-vous des solutions de financement ?",
+    answer:
+      "Oui, un paiement échelonné est possible, ainsi qu’un règlement jusqu’à 3 fois par carte bleue. Nous étudions aussi les dossiers de financement, sans plafond.",
+  },
+  {
+    question: "Puis-je essayer un véhicule avant de l’acheter ?",
+    answer: "Oui, vous pouvez demander un essai directement depuis la fiche du véhicule qui vous intéresse.",
+  },
+  {
+    question: "Vous occupez-vous des démarches administratives ?",
+    answer:
+      "Oui, nous prenons en charge les démarches liées à votre achat, comme la carte grise et la déclaration d’achat.",
+  },
+  {
+    question: "Proposez-vous aussi l’entretien et la réparation de véhicules ?",
+    answer: "Oui, notre atelier assure la mécanique, la carrosserie, le pneumatique, le diagnostic et le lavage de véhicule.",
+  },
+  {
+    question: "Quels sont vos horaires d’ouverture ?",
+    answer: "Du lundi au vendredi de 9h00 à 12h30 et de 14h00 à 18h00, et le samedi de 10h00 à 17h00. Fermé le dimanche.",
+  },
+];
+
 export function AboutPageContent() {
   return (
-    <PageShell
-      eyebrow="À propos de Planète Auto"
-      title={
-        <>
-          L’occasion,
-          <br />
-          <em>en toute simplicité.</em>
-        </>
-      }
-      intro="Planète Auto vous accompagne pour l’achat, la vente et la reprise de véhicules d’occasion toutes marques à Saint-Jean-de-Védas."
-    />
+    <main className="inner-shell about-page">
+      <SiteHeader />
+      <section className="about-hero">
+        <div className="about-hero-text">
+          <div className="eyebrow">
+            <span className="eyebrow-line" /> À propos
+          </div>
+          <h1>
+            Bienvenue chez <em>Planète Auto</em>
+          </h1>
+          <p className="about-hero-lead">
+            Depuis <strong>15 ans</strong>, votre adresse de confiance pour acheter, vendre ou faire reprendre un
+            véhicule d’occasion à Saint-Jean-de-Védas, près de Montpellier.
+          </p>
+          <p>
+            Un large choix de véhicules toutes marques, sélectionnés et contrôlés avec soin. Notre atelier prend
+            en charge la mécanique, la carrosserie, le pneumatique, le diagnostic et le lavage de votre véhicule,
+            et nous nous occupons aussi des démarches administratives liées à votre achat, pour vous simplifier
+            la vie du début à la fin.
+          </p>
+          <a className="button button-black about-hero-cta" href="/vehicules">
+            Trouver votre auto <ArrowRight size={16} />
+          </a>
+        </div>
+        <div className="about-hero-photo">
+          <Image src="/a-propos/image-11.jpg" alt="Façade et parc de véhicules Planète Auto" fill sizes="(max-width: 900px) 100vw, 45vw" style={{ objectFit: "cover" }} priority />
+        </div>
+      </section>
+
+      <section className="about-filmstrip" aria-label="Planète Auto en images">
+        <div className="about-filmstrip-photo">
+          <Image src="/a-propos/image-17.jpg" alt="Atelier mécanique de Planète Auto" fill sizes="(max-width: 700px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+        </div>
+        <div className="about-filmstrip-photo">
+          <Image src="/a-propos/image-15.jpg" alt="Espace d’accueil de Planète Auto" fill sizes="(max-width: 700px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+        </div>
+        <div className="about-filmstrip-photo">
+          <Image src="/a-propos/image-21.jpg" alt="Bureau de Planète Auto" fill sizes="(max-width: 700px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+        </div>
+      </section>
+
+      <section className="reviews-section" aria-labelledby="about-reviews-title">
+        <div className="reviews-inner">
+          <div className="reviews-header">
+            <h2 id="about-reviews-title">
+              Ce que disent
+              <br />
+              <em>nos clients</em>
+            </h2>
+            <div className="reviews-score">
+              <span className="reviews-score-number">{GOOGLE_REVIEWS_SCORE}</span>
+              <div>
+                <div className="reviews-stars" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} size={18} fill={index < 4 ? "currentColor" : "none"} />
+                  ))}
+                </div>
+                <p>{GOOGLE_REVIEWS_COUNT} avis Google</p>
+              </div>
+            </div>
+          </div>
+          <div className="reviews-grid">
+            {googleReviews.slice(0, 3).map((review) => (
+              <div className="review-card" key={review.name}>
+                <div className="reviews-stars" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} size={14} fill="currentColor" />
+                  ))}
+                </div>
+                <p>{review.text}</p>
+                <span className="review-name">{review.name}</span>
+              </div>
+            ))}
+          </div>
+          <a className="reviews-cta" href={GOOGLE_REVIEWS_URL} target="_blank" rel="noreferrer">
+            Voir tous les avis Google <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </section>
+
+      <section className="about-faq" aria-labelledby="about-faq-title">
+        <h2 id="about-faq-title">Foire aux questions</h2>
+        <div className="about-faq-list">
+          {ABOUT_FAQ.map((item) => (
+            <details className="about-faq-item" key={item.question}>
+              <summary>
+                {item.question}
+                <ArrowRight size={16} />
+              </summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <SiteFooter />
+    </main>
   );
 }
 

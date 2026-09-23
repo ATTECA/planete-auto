@@ -32,13 +32,13 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
 
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [brand, setBrand] = useState(
-    () => filterOptions.brands.find((option) => option.toLowerCase() === initialBrand.toLowerCase()) ?? '',
+    () => filterOptions.brands.find((option) => option.toLowerCase() === initialBrand.toLowerCase()) ?? initialBrand,
   )
   const [model, setModel] = useState('')
   const [fuel, setFuel] = useState('')
   const [gearbox, setGearbox] = useState('')
   const [carrosserie, setCarrosserie] = useState(
-    () => filterOptions.carrosseries.find((option) => option.toLowerCase() === initialCarrosserie.toLowerCase()) ?? '',
+    () => filterOptions.carrosseries.find((option) => option.toLowerCase() === initialCarrosserie.toLowerCase()) ?? initialCarrosserie,
   )
   const [color, setColor] = useState('')
   const [maxPrice, setMaxPrice] = useState(() => (initialMaxPrice ? Math.min(Number(initialMaxPrice), Math.max(...prices)) : Math.max(...prices)))
