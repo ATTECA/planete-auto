@@ -22,7 +22,7 @@ export default async function AdminReprisesPage() {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="flex flex-col gap-4">
+                <div className="divide-y divide-border rounded-2xl border border-border bg-card px-6">
                     {leads.map((lead) => (
                         <LeadCard key={lead.id} lead={lead} />
                     ))}

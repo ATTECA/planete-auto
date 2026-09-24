@@ -3,7 +3,20 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import {
+    ArrowLeft,
+    ArrowRight,
+    ClipboardList,
+    GripVertical,
+    ImagePlus,
+    Info,
+    Loader2,
+    Save,
+    Sparkles,
+    Trash2,
+    UploadCloud,
+    X,
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -56,14 +69,32 @@ function toEquipmentGroupRow(group: { category: string; items: string[] }): Equi
     }
 }
 
-function Section({ number, title, children }: { number: number; title: string; children: React.ReactNode }) {
+function Section({
+    number,
+    title,
+    subtitle,
+    icon: Icon,
+    children,
+}: {
+    number: number
+    title: string
+    subtitle?: string
+    icon: typeof Info
+    children: React.ReactNode
+}) {
     return (
-        <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6">
-            <div className="flex items-center gap-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-base font-semibold text-primary-foreground">
-                    {number}
+        <div className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md sm:p-7">
+            <div className="flex items-center gap-4">
+                <span className="relative flex size-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary/70 text-primary-foreground shadow-sm shadow-primary/30">
+                    <Icon className="size-5" />
+                    <span className="absolute -bottom-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full border-2 border-card bg-foreground text-[10px] font-bold text-background">
+                        {number}
+                    </span>
                 </span>
-                <h2 className="text-lg font-semibold">{title}</h2>
+                <div>
+                    <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+                    {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+                </div>
             </div>
             {children}
         </div>
@@ -98,6 +129,8 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
         (vehicle?.gallery ?? []).map((url) => ({ id: url, url, kind: 'existing' })),
     )
     const newPhotosInputRef = useRef<HTMLInputElement>(null)
+    const filePickerRef = useRef<HTMLInputElement>(null)
+    const [isDropzoneActive, setIsDropzoneActive] = useState(false)
 
     // Keeps the hidden multi-file input in sync with the "new" photos in `photos`,
     // in their current display order, so a normal form submit carries the right files.
@@ -132,9 +165,22 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
         })
     }
 
+    function reorderPhoto(from: number, to: number) {
+        setPhotos((current) => {
+            if (from === to || from < 0 || to < 0 || from >= current.length || to >= current.length) return current
+            const next = [...current]
+            const [moved] = next.splice(from, 1)
+            next.splice(to, 0, moved)
+            return next
+        })
+    }
+
     function removePhoto(id: string) {
         setPhotos((current) => current.filter((photo) => photo.id !== id))
     }
+
+    const [dragIndex, setDragIndex] = useState<number | null>(null)
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
     const initialTagIsCustom = !!vehicle?.tag && !COMMON_TAGS.includes(vehicle.tag)
     const [tagChoice, setTagChoice] = useState<string>(initialTagIsCustom ? CUSTOM : vehicle?.tag ?? COMMON_TAGS[0])
@@ -152,19 +198,31 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
 
     return (
         <div className="flex flex-col gap-6 pb-16">
-            <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-semibold">
-                    {mode === 'create' ? 'Ajouter un véhicule' : `Modifier : ${vehicle?.name}`}
-                </h1>
-                <Button variant="outline" nativeButton={false} render={<Link href="/admin/vehicules" />}>
-                    Retour à la liste
-                </Button>
-            </div>
-
             <form action={formAction} className="flex flex-col gap-6">
                 {mode === 'edit' && vehicle && <input type="hidden" name="id" value={vehicle.id} />}
 
-                <Section number={1} title="Informations générales">
+                <div className="sticky top-0 z-20 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/95 px-6 py-4 shadow-md backdrop-blur-sm">
+                    <div className="min-w-0">
+                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            {mode === 'create' ? 'Nouveau véhicule' : `Réf. ${vehicle?.id}`}
+                        </p>
+                        <h1 className="truncate text-xl font-semibold text-foreground">
+                            {mode === 'create' ? 'Ajouter un véhicule' : vehicle?.name}
+                        </h1>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                        <Button variant="outline" nativeButton={false} render={<Link href="/admin/vehicules" />}>
+                            <X className="size-4" />
+                            Annuler
+                        </Button>
+                        <Button type="submit" className="gap-2 shadow-sm shadow-primary/30" disabled={pending}>
+                            {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                            {pending ? 'Enregistrement...' : 'Enregistrer'}
+                        </Button>
+                    </div>
+                </div>
+
+                <Section number={1} title="Informations générales" subtitle="Les informations principales de l'annonce" icon={Info}>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Field label="Nom du véhicule" htmlFor="name" hint="Exemple : Audi A5 Cabriolet">
                             <Input id="name" name="name" className="h-11 text-base" defaultValue={vehicle?.name} required />
@@ -286,53 +344,87 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                     </Field>
                 </Section>
 
-                <Section number={2} title="Photos">
+                <Section number={2} title="Photos" subtitle="La première photo est utilisée comme photo principale" icon={ImagePlus}>
                     <p className="text-sm text-muted-foreground">
-                        Ajoutez une ou plusieurs photos. La première photo de la liste est celle utilisée comme photo
-                        principale (dans le stock et les résultats de recherche). Utilisez les flèches pour changer
-                        l&apos;ordre.
+                        Ajoutez une ou plusieurs photos, puis glissez-déposez-les pour changer l&apos;ordre. La première
+                        photo de la liste est celle utilisée comme photo principale (dans le stock et les résultats de
+                        recherche).
                     </p>
 
                     <input ref={newPhotosInputRef} type="file" name="newPhotos" accept="image/*" multiple className="hidden" />
                     <input type="hidden" name="galleryOrder" value={galleryOrder} />
 
                     {photos.length > 0 && (
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                             {photos.map((photo, index) => (
-                                <div key={photo.id} className="flex flex-col gap-2 rounded-md border border-border p-3">
-                                    <div className="relative aspect-4/3 overflow-hidden rounded-md bg-muted">
-                                        <Image src={photo.url} alt="" fill className="object-cover" unoptimized={photo.kind === 'new'} />
+                                <div
+                                    key={photo.id}
+                                    draggable
+                                    onDragStart={() => setDragIndex(index)}
+                                    onDragOver={(event) => {
+                                        event.preventDefault()
+                                        if (dragOverIndex !== index) setDragOverIndex(index)
+                                    }}
+                                    onDragLeave={() => setDragOverIndex((current) => (current === index ? null : current))}
+                                    onDrop={(event) => {
+                                        event.preventDefault()
+                                        if (dragIndex !== null) reorderPhoto(dragIndex, index)
+                                        setDragIndex(null)
+                                        setDragOverIndex(null)
+                                    }}
+                                    onDragEnd={() => {
+                                        setDragIndex(null)
+                                        setDragOverIndex(null)
+                                    }}
+                                    className={`group relative flex cursor-grab flex-col gap-2 overflow-hidden rounded-xl border bg-muted/30 shadow-sm transition-all active:cursor-grabbing ${
+                                        dragIndex === index
+                                            ? 'opacity-40'
+                                            : dragOverIndex === index
+                                              ? 'border-primary ring-2 ring-primary/40'
+                                              : 'border-border hover:shadow-md'
+                                    }`}
+                                >
+                                    <div className="relative aspect-4/3 overflow-hidden bg-muted">
+                                        <Image src={photo.url} alt="" fill className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized={photo.kind === 'new'} />
                                         {index === 0 && (
-                                            <span className="absolute left-2 top-2 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-                                                Photo principale
+                                            <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
+                                                <Sparkles className="size-3" />
+                                                Principale
                                             </span>
                                         )}
+                                        <span className="absolute bottom-2 left-2 flex size-6 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                                            <GripVertical className="size-3.5" />
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removePhoto(photo.id)}
+                                            aria-label="Supprimer cette photo"
+                                            className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-background/80 text-destructive opacity-0 shadow-sm backdrop-blur-sm transition-opacity hover:bg-destructive hover:text-destructive-foreground group-hover:opacity-100"
+                                        >
+                                            <Trash2 className="size-3.5" />
+                                        </button>
                                     </div>
-                                    <div className="flex items-center justify-between gap-2">
-                                        <div className="flex gap-1">
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon-sm"
-                                                disabled={index === 0}
-                                                onClick={() => movePhoto(index, -1)}
-                                                aria-label="Déplacer vers la gauche"
-                                            >
-                                                <ArrowLeft className="size-4" />
-                                            </Button>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon-sm"
-                                                disabled={index === photos.length - 1}
-                                                onClick={() => movePhoto(index, 1)}
-                                                aria-label="Déplacer vers la droite"
-                                            >
-                                                <ArrowRight className="size-4" />
-                                            </Button>
-                                        </div>
-                                        <Button type="button" variant="destructive" size="sm" onClick={() => removePhoto(photo.id)}>
-                                            Supprimer
+                                    <div className="flex items-center justify-center gap-1 px-2 pb-2">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon-sm"
+                                            disabled={index === 0}
+                                            onClick={() => movePhoto(index, -1)}
+                                            aria-label="Déplacer vers la gauche"
+                                        >
+                                            <ArrowLeft className="size-4" />
+                                        </Button>
+                                        <span className="text-xs font-medium text-muted-foreground">{index + 1}/{photos.length}</span>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon-sm"
+                                            disabled={index === photos.length - 1}
+                                            onClick={() => movePhoto(index, 1)}
+                                            aria-label="Déplacer vers la droite"
+                                        >
+                                            <ArrowRight className="size-4" />
                                         </Button>
                                     </div>
                                 </div>
@@ -340,22 +432,47 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                         </div>
                     )}
 
-                    <Field label="Ajouter des photos" htmlFor="addPhotos">
-                        <Input
-                            id="addPhotos"
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            className="h-11 text-base"
-                            onChange={(e) => {
-                                addPhotos(e.target.files)
-                                e.target.value = ''
+                    <div className="flex flex-col gap-1.5">
+                        <Label className="text-base">Ajouter des photos</Label>
+                        <div
+                            onDragOver={(event) => {
+                                event.preventDefault()
+                                setIsDropzoneActive(true)
                             }}
-                        />
-                    </Field>
+                            onDragLeave={() => setIsDropzoneActive(false)}
+                            onDrop={(event) => {
+                                event.preventDefault()
+                                setIsDropzoneActive(false)
+                                addPhotos(event.dataTransfer.files)
+                            }}
+                            className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ${
+                                isDropzoneActive ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'
+                            }`}
+                        >
+                            <span className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <UploadCloud className="size-5" />
+                            </span>
+                            <p className="text-sm font-medium text-foreground">Glissez vos photos ici</p>
+                            <p className="text-xs text-muted-foreground">ou</p>
+                            <Button type="button" variant="outline" onClick={() => filePickerRef.current?.click()}>
+                                Parcourir mes fichiers
+                            </Button>
+                            <input
+                                ref={filePickerRef}
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                className="hidden"
+                                onChange={(e) => {
+                                    addPhotos(e.target.files)
+                                    e.target.value = ''
+                                }}
+                            />
+                        </div>
+                    </div>
                 </Section>
 
-                <Section number={3} title="Fiche technique">
+                <Section number={3} title="Fiche technique" subtitle="Les caractéristiques affichées sur l'annonce" icon={ClipboardList}>
                     <p className="text-sm text-muted-foreground">
                         Choisissez une caractéristique dans la liste, ou sélectionnez « Autre » pour en écrire une nouvelle.
                     </p>
@@ -431,7 +548,7 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                     </Button>
                 </Section>
 
-                <Section number={4} title="Équipements">
+                <Section number={4} title="Équipements" subtitle="Les équipements regroupés par catégorie" icon={Sparkles}>
                     <p className="text-sm text-muted-foreground">
                         Choisissez une catégorie et des équipements dans les listes, ou sélectionnez « Autre » pour en écrire
                         de nouveaux.
@@ -598,15 +715,19 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                 </Section>
 
                 {state && 'error' in state && (
-                    <p className="rounded-md bg-destructive/10 px-4 py-3 text-base text-destructive">{state.error}</p>
+                    <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-base font-medium text-destructive">
+                        {state.error}
+                    </p>
                 )}
 
-                <div className="flex items-center gap-3">
-                    <Button type="submit" size="lg" className="h-12 px-6 text-base" disabled={pending}>
-                        {pending ? 'Enregistrement...' : 'Enregistrer le véhicule'}
-                    </Button>
-                    <Button variant="outline" size="lg" className="h-12 px-6 text-base" nativeButton={false} render={<Link href="/admin/vehicules" />}>
+                <div className="flex items-center justify-end gap-2">
+                    <Button variant="outline" nativeButton={false} render={<Link href="/admin/vehicules" />}>
+                        <X className="size-4" />
                         Annuler
+                    </Button>
+                    <Button type="submit" size="lg" className="h-12 gap-2 px-6 text-base shadow-sm shadow-primary/30" disabled={pending}>
+                        {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                        {pending ? 'Enregistrement...' : 'Enregistrer le véhicule'}
                     </Button>
                 </div>
             </form>

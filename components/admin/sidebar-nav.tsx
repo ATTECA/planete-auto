@@ -11,7 +11,7 @@ const links = [
     { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
 ]
 
-export default function SidebarNav() {
+export default function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
     const pathname = usePathname()
 
     return (
@@ -23,14 +23,16 @@ export default function SidebarNav() {
                     <Link
                         key={link.href}
                         href={link.href}
+                        title={collapsed ? link.label : undefined}
                         className={
-                            isActive
+                            (isActive
                                 ? 'flex items-center gap-2.5 rounded-md bg-primary/10 px-3 py-2 text-sm font-medium text-primary'
-                                : 'flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+                                : 'flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground')
+                            + (collapsed ? ' justify-center' : '')
                         }
                     >
-                        <Icon className="size-4" />
-                        {link.label}
+                        <Icon className="size-4 shrink-0" />
+                        {!collapsed && link.label}
                     </Link>
                 )
             })}

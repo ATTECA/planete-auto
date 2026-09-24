@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* The admin shell relies on a fixed h-screen sidebar + independently scrolling
+   main panel. Without this, html/body have no fixed height, so the document
+   itself can grow taller than the viewport and scroll, leaving blank space
+   below the h-screen layout instead of scrolling inside `main`. */
+html:has(.admin-app),
+body:has(.admin-app) {
+  height: 100%;
+  overflow: hidden;
+}
+
 @theme {
   --color-background: var(--paper);
   --color-foreground: var(--black);
