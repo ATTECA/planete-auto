@@ -115,8 +115,11 @@ export default function VehiclesPageClient({ vehicles }: { vehicles: Vehicle[] }
     setIsLoading(true)
     const timeout = setTimeout(() => setIsLoading(false), 280)
     return () => clearTimeout(timeout)
+    // Only page changes show the loading skeleton; live filter/slider changes re-render
+    // the grid instantly, otherwise every slider tick would flicker the skeleton and
+    // make the page jump between the skeleton's fixed height and the real card height.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, filteredVehicles])
+  }, [page])
 
   const goToPage = (next: number) => {
     setPage(next)
