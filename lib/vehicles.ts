@@ -26,6 +26,7 @@ export type Vehicle = {
   equipment?: EquipmentGroup[]
   archived: boolean
   createdAt: string
+  updatedAt: string
 }
 
 function slugify(text: string): string {
@@ -103,6 +104,18 @@ export function vehicleStatusBadgeClassName(status: string): string {
   return 'border-transparent bg-muted text-foreground'
 }
 
+export type VehicleStatusCategory = 'disponible' | 'reserve' | 'vendu' | 'archive' | 'autre'
+
+/** Buckets a status string into one of the known categories, matching loosely like the badge helper above. */
+export function vehicleStatusCategory(status: string): VehicleStatusCategory {
+  const s = status.trim().toLowerCase()
+  if (s.includes('disponible')) return 'disponible'
+  if (s.includes('reserv') || s.includes('réserv')) return 'reserve'
+  if (s.includes('vendu')) return 'vendu'
+  if (s.includes('archiv')) return 'archive'
+  return 'autre'
+}
+
 /** Whether a status string means "archived" (hidden from the public site). */
 export function isArchivedStatus(status: string): boolean {
   return status.trim().toLowerCase().includes('archiv')
@@ -148,6 +161,7 @@ type VehicleRow = {
   equipment: EquipmentGroup[] | null
   archived: boolean | null
   created_at: string
+  updated_at: string | null
 }
 
 function fromRow(row: VehicleRow): Vehicle {
@@ -172,6 +186,7 @@ function fromRow(row: VehicleRow): Vehicle {
     equipment: row.equipment ?? undefined,
     archived: row.archived ?? false,
     createdAt: row.created_at,
+    updatedAt: row.updated_at ?? row.created_at,
   }
 }
 

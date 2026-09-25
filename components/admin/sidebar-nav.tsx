@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Car, RefreshCcw, MessageSquare } from 'lucide-react'
 
 const links = [
-    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/admin', label: 'Tableau de bord', icon: LayoutDashboard },
     { href: '/admin/vehicules', label: 'Véhicules', icon: Car },
     { href: '/admin/reprises', label: 'Reprises', icon: RefreshCcw },
     { href: '/admin/messages', label: 'Messages', icon: MessageSquare },

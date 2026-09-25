@@ -51,7 +51,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             <main
                 id="admin-main"
                 style={{ flex: '1 1 0%', minHeight: 0, minWidth: 0, overflowY: 'auto' }}
-                className="p-8"
+                className="bg-background p-8"
             >
                 <div className="mx-auto max-w-6xl">{children}</div>
             </main>
