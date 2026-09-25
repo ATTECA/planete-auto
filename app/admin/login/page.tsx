@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
             {/* Left: full-height cover photo, hidden on small screens */}
             <div className="relative hidden w-3/5 md:block">
                 <Image
-                    src="/why-cover.png"
+                    src="/why-cover.jpg"
                     alt=""
                     fill
                     priority

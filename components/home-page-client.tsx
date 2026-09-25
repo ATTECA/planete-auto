@@ -10,7 +10,6 @@ import {
   ArrowUpRight,
   Award,
   CalendarDays,
-  CarFront,
   ChevronLeft,
   ChevronRight,
   CreditCard,
@@ -231,6 +230,24 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
       </section>
 
+      <div className="workshop-strip" aria-label="Notre atelier">
+        <span className="workshop-strip-label">Notre atelier</span>
+        <div className="workshop-strip-items">
+          <span>
+            <Wrench size={16} /> Mécanique
+          </span>
+          <span>
+            <Disc size={16} /> Pneumatique
+          </span>
+          <span>
+            <Stethoscope size={16} /> Diagnostic
+          </span>
+          <span>
+            <Droplets size={16} /> Lavage
+          </span>
+        </div>
+      </div>
+
       <section className="carrosserie-section" aria-label="Recherchez par type de carrosserie">
         <div className="section-heading">
           <div>
@@ -404,14 +421,11 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       <section className="why-section" id="services" aria-labelledby="why-title">
         <div className="why-banner">
           <div className="why-banner-photo">
-            <Image src="/why-cover.png" alt="" fill sizes="(max-width: 900px) 100vw, 50vw" style={{ objectFit: "cover" }} />
+            <Image src="/why-cover.jpg" alt="" fill sizes="(max-width: 900px) 100vw, 50vw" style={{ objectFit: "cover" }} />
           </div>
           <div className="why-banner-panel">
             <h2 id="why-title">Pourquoi choisir Planète Auto</h2>
             <ul className="why-list">
-              <li>
-                <CarFront size={18} /> Achat, vente et reprise de véhicules toutes marques
-              </li>
               <li>
                 <ShieldCheck size={18} /> Garantie 3 mois ou 5 000 km sur la boîte et le moteur
               </li>
@@ -420,18 +434,6 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
               </li>
               <li>
                 <Tag size={18} /> Dossiers de financement étudiés, sans plafond
-              </li>
-              <li>
-                <Wrench size={18} /> Grosse et légère mécanique effectuées à notre garage
-              </li>
-              <li>
-                <Disc size={18} /> Pneumatique : montage, équilibrage et vente de pneus
-              </li>
-              <li>
-                <Stethoscope size={18} /> Diagnostic électronique et mécanique
-              </li>
-              <li>
-                <Droplets size={18} /> Lavage et préparation de véhicule
               </li>
               <li>
                 <FileText size={18} /> Démarches administratives prises en charge (carte grise, déclaration d’achat)

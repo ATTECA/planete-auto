@@ -1389,6 +1389,40 @@ em {
 .why-cta:hover {
   opacity: 0.85;
 }
+.workshop-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 22px 5vw;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.workshop-strip-label {
+  color: #6c6d70;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.workshop-strip-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+}
+.workshop-strip-items span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 600;
+}
+.workshop-strip-items svg {
+  color: var(--red);
+}
 .occasion-section {
   background: var(--black);
   color: #fff;
