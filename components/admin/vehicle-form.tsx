@@ -17,6 +17,7 @@ import {
     UploadCloud,
     X,
 } from 'lucide-react'
+import BackToTopButton from '@/components/admin/back-to-top-button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -198,6 +199,7 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
 
     return (
         <div className="flex flex-col gap-6 pb-16">
+            <BackToTopButton />
             <form action={formAction} className="flex flex-col gap-6">
                 {mode === 'edit' && vehicle && <input type="hidden" name="id" value={vehicle.id} />}
 
@@ -477,11 +479,17 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                         Choisissez une caractéristique dans la liste, ou sélectionnez « Autre » pour en écrire une nouvelle.
                     </p>
                     <input type="hidden" name="details" value={JSON.stringify(details)} />
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-2">
+                        {detailRows.length > 0 && (
+                            <div className="hidden gap-3 px-1 sm:grid sm:grid-cols-[1fr_1fr_auto]">
+                                <Label className="text-xs uppercase tracking-wide text-muted-foreground">Libellé</Label>
+                                <Label className="text-xs uppercase tracking-wide text-muted-foreground">Valeur</Label>
+                                <span />
+                            </div>
+                        )}
                         {detailRows.map((row) => (
-                            <div key={row.id} className="flex flex-col gap-2 sm:flex-row sm:items-end">
-                                <div className="flex flex-1 flex-col gap-1.5">
-                                    <Label className="text-sm">Libellé</Label>
+                            <div key={row.id} className="grid grid-cols-1 items-start gap-2 rounded-xl border border-border bg-muted/30 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-center">
+                                <div className="flex flex-col gap-1.5">
                                     <select
                                         value={row.choice}
                                         onChange={(e) =>
@@ -511,25 +519,25 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                         />
                                     )}
                                 </div>
-                                <div className="flex flex-1 flex-col gap-1.5">
-                                    <Label className="text-sm">Valeur</Label>
-                                    <Input
-                                        className="h-11 text-base"
-                                        placeholder="Exemple : S line"
-                                        value={row.value}
-                                        onChange={(e) =>
-                                            setDetailRows((rows) =>
-                                                rows.map((r) => (r.id === row.id ? { ...r, value: e.target.value } : r)),
-                                            )
-                                        }
-                                    />
-                                </div>
+                                <Input
+                                    className="h-11 text-base"
+                                    placeholder="Exemple : S line"
+                                    value={row.value}
+                                    onChange={(e) =>
+                                        setDetailRows((rows) =>
+                                            rows.map((r) => (r.id === row.id ? { ...r, value: e.target.value } : r)),
+                                        )
+                                    }
+                                />
                                 <Button
                                     type="button"
-                                    variant="destructive"
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    className="justify-self-end text-muted-foreground hover:text-destructive"
                                     onClick={() => setDetailRows((rows) => rows.filter((r) => r.id !== row.id))}
+                                    aria-label="Supprimer cette ligne"
                                 >
-                                    Supprimer cette ligne
+                                    <Trash2 className="size-4" />
                                 </Button>
                             </div>
                         ))}
@@ -537,6 +545,7 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                     <Button
                         type="button"
                         variant="outline"
+                        className="w-fit"
                         onClick={() =>
                             setDetailRows((rows) => [
                                 ...rows,
@@ -559,10 +568,10 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                             const resolvedCategory = resolveChoice(group.categoryChoice, group.categoryCustom)
                             const itemOptions = equipmentItemsForCategory(resolvedCategory)
                             return (
-                                <div key={group.id} className="flex flex-col gap-3 rounded-md border border-border p-4">
-                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+                                <div key={group.id} className="flex flex-col gap-3 rounded-xl border border-border bg-muted/20 p-4">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                                         <div className="flex flex-1 flex-col gap-1.5">
-                                            <Label className="text-sm">Catégorie</Label>
+                                            <Label className="text-xs uppercase tracking-wide text-muted-foreground">Catégorie</Label>
                                             <select
                                                 value={group.categoryChoice}
                                                 onChange={(e) =>
@@ -598,15 +607,18 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                         </div>
                                         <Button
                                             type="button"
-                                            variant="destructive"
+                                            variant="ghost"
+                                            size="icon-sm"
+                                            className="text-muted-foreground hover:text-destructive"
                                             onClick={() => setEquipmentGroups((groups) => groups.filter((g) => g.id !== group.id))}
+                                            aria-label="Supprimer cette catégorie"
                                         >
-                                            Supprimer cette catégorie
+                                            <Trash2 className="size-4" />
                                         </Button>
                                     </div>
-                                    <div className="flex flex-col gap-2 pl-4">
+                                    <div className="flex flex-col gap-2 border-l-2 border-border pl-4">
                                         {group.items.map((item) => (
-                                            <div key={item.id} className="flex flex-col gap-2 sm:flex-row sm:items-end">
+                                            <div key={item.id} className="flex flex-col gap-2 sm:flex-row sm:items-center">
                                                 <div className="flex flex-1 flex-col gap-1.5">
                                                     <select
                                                         value={item.choice}
@@ -659,7 +671,9 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                                 </div>
                                                 <Button
                                                     type="button"
-                                                    variant="destructive"
+                                                    variant="ghost"
+                                                    size="icon-sm"
+                                                    className="shrink-0 self-start text-muted-foreground hover:text-destructive sm:self-center"
                                                     onClick={() =>
                                                         setEquipmentGroups((groups) =>
                                                             groups.map((g) =>
@@ -669,8 +683,9 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                                             ),
                                                         )
                                                     }
+                                                    aria-label="Supprimer cet équipement"
                                                 >
-                                                    Supprimer
+                                                    <Trash2 className="size-4" />
                                                 </Button>
                                             </div>
                                         ))}
@@ -678,6 +693,7 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                                     <Button
                                         type="button"
                                         variant="outline"
+                                        className="w-fit"
                                         onClick={() =>
                                             setEquipmentGroups((groups) =>
                                                 groups.map((g) =>
@@ -703,6 +719,7 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                     <Button
                         type="button"
                         variant="outline"
+                        className="w-fit"
                         onClick={() =>
                             setEquipmentGroups((groups) => [
                                 ...groups,

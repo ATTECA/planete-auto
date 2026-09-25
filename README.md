@@ -16,8 +16,12 @@ Ouvrez [http://localhost:3000](http://localhost:3000) pour voir le résultat. L'
 Les véhicules sont stockés dans une base Supabase (Postgres) plutôt que dans un fichier statique. Pour faire fonctionner le site en local :
 
 1. Créer un projet sur [supabase.com](https://supabase.com).
-2. Dans l'éditeur SQL du projet, exécuter le contenu de `supabase/schema.sql` (crée la table `vehicles` et ses règles d'accès).
-3. Dans **Storage**, créer un bucket nommé exactement `vehicles`, avec l'option **Public bucket** activée (sert à héberger les photos ajoutées depuis la page admin).
+2. Dans l'éditeur SQL du projet, exécuter dans l'ordre `supabase/schema.sql` puis chaque migration ajoutée depuis (toutes dans `supabase/`) :
+   - `add_archived_column.sql`
+   - `add_leads_table.sql`
+   - `add_leads_photos_column.sql`
+   - `add_carrosserie_column.sql`
+3. Dans **Storage**, créer un bucket nommé exactement `vehicles`, avec l'option **Public bucket** activée (sert à héberger les photos ajoutées depuis la page admin, ainsi que les photos jointes aux demandes de reprise).
 4. Copier les variables d'environnement dans `.env.local` (voir `Project Settings > API` dans Supabase) :
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -41,14 +45,20 @@ Secrets requis dans **Settings > Secrets and variables > Actions** du dépôt Gi
 
 ## Administration
 
-`/admin/login` permet de se connecter avec un compte Supabase Auth. Une fois connecté, `/admin` donne accès à l'espace d'administration (protégé côté proxy et côté serveur — accès refusé sans session valide).
+`/admin/login` permet de se connecter avec un compte Supabase Auth. Une fois connecté, l'espace d'administration (protégé côté serveur — accès refusé sans session valide) donne accès à :
+
+- **Dashboard** (`/admin`) — vue d'ensemble (stock, nouveaux messages/reprises, véhicules récents)
+- **Véhicules** (`/admin/vehicules`) — gestion du stock (ajout, modification, duplication, archivage, filtres par statut)
+- **Reprises** (`/admin/reprises`) — demandes reçues via le formulaire de vente/reprise
+- **Messages** (`/admin/messages`) — messages de contact, offres et demandes d'essai reçus sur les véhicules
 
 ## Structure
 
 - `app/` — pages et routes de l'application (App Router)
-- `app/api/` — routes API (contact, vente/reprise, offre sur un véhicule, ajout admin)
-- `app/admin/` — page d'ajout de véhicule protégée par code d'accès
+- `app/api/` — routes API (contact, vente/reprise, offre sur un véhicule, demande d'essai)
+- `app/admin/` — espace d'administration protégé (véhicules, reprises, messages)
 - `components/` — composants partagés (header, footer, formulaires, pages avec logique interactive)
-- `lib/` — accès aux données (Supabase) et utilitaires liés aux véhicules
-- `supabase/schema.sql` — définition de la table `vehicles` et des règles d'accès (RLS)
+- `components/admin/` — composants de l'espace d'administration
+- `lib/` — accès aux données (Supabase) et utilitaires liés aux véhicules et aux demandes (leads)
+- `supabase/` — `schema.sql` (table `vehicles` et règles d'accès) et les migrations ajoutées depuis
 - `scripts/seed-vehicles.mjs` — migration ponctuelle de `data/vehicles.json` vers Supabase

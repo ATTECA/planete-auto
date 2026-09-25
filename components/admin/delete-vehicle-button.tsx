@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
+import IconTooltip from '@/components/admin/icon-tooltip'
 import { Trash2 } from 'lucide-react'
 import { deleteVehicle } from '@/app/admin/(protected)/vehicules/actions'
 
@@ -18,15 +19,17 @@ export default function DeleteVehicleButton({ id, name }: { id: number; name: st
     }
 
     return (
-        <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={isPending}
-            onClick={handleDelete}
-            className="text-muted-foreground hover:text-destructive"
-        >
-            <Trash2 className="size-4" />
-            <span className="sr-only">Supprimer</span>
-        </Button>
+        <IconTooltip label="Supprimer">
+            <Button
+                variant="ghost"
+                size="icon-sm"
+                disabled={isPending}
+                onClick={handleDelete}
+                className="text-muted-foreground hover:text-destructive"
+            >
+                <Trash2 className="size-4" />
+                <span className="sr-only">Supprimer</span>
+            </Button>
+        </IconTooltip>
     )
 }

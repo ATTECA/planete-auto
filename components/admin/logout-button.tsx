@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
 
 export default function LogoutButton({ collapsed = false }: { collapsed?: boolean }) {
@@ -16,14 +15,15 @@ export default function LogoutButton({ collapsed = false }: { collapsed?: boolea
     }
 
     return (
-        <Button
-            variant="ghost"
+        <button
+            type="button"
             onClick={handleLogout}
             title={collapsed ? 'Se déconnecter' : undefined}
-            className={`w-full gap-2.5 text-muted-foreground hover:text-foreground ${collapsed ? 'justify-center' : 'justify-start'}`}
+            className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive ${collapsed ? 'justify-center' : ''
+                }`}
         >
             <LogOut className="size-4 shrink-0" />
             {!collapsed && 'Se déconnecter'}
-        </Button>
+        </button>
     )
 }

@@ -3,9 +3,10 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Pencil, Search, Car, CheckCircle2, Clock3, Tag, Archive } from 'lucide-react'
+import { ChevronDown, ChevronUp, Pencil, Plus, Search, Car, CheckCircle2, Clock3, Tag, Archive } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import IconTooltip from '@/components/admin/icon-tooltip'
 import DeleteVehicleButton from '@/components/admin/delete-vehicle-button'
 import ArchiveVehicleButton from '@/components/admin/archive-vehicle-button'
 import DuplicateVehicleButton from '@/components/admin/duplicate-vehicle-button'
@@ -32,6 +33,7 @@ function normalize(status: string) {
 export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
     const [query, setQuery] = useState('')
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+    const [dateSort, setDateSort] = useState<'newest' | 'oldest'>('newest')
 
     const counts = useMemo(() => {
         const normalized = vehicles.map((v) => normalize(v.status))
@@ -46,12 +48,16 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase()
-        return vehicles.filter((vehicle) => {
+        const result = vehicles.filter((vehicle) => {
             const matchesQuery = !q || `${vehicle.name} ${vehicle.meta}`.toLowerCase().includes(q) || String(vehicle.id).includes(q)
             const matchesStatus = statusFilter === 'all' || STATUS_MATCH[statusFilter](normalize(vehicle.status))
             return matchesQuery && matchesStatus
         })
-    }, [vehicles, query, statusFilter])
+        return [...result].sort((a, b) => {
+            const diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            return dateSort === 'newest' ? -diff : diff
+        })
+    }, [vehicles, query, statusFilter, dateSort])
 
     const stats: { key: StatusFilter; label: string; value: number; icon: typeof Car; accent: string; dot: string }[] = [
         { key: 'all', label: 'Total', value: counts.total, icon: Car, accent: 'text-foreground bg-foreground/5', dot: 'bg-foreground' },
@@ -93,14 +99,20 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                 })}
             </div>
 
-            <div className="relative">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Rechercher un véhicule par nom ou référence..."
-                    className="h-11 pl-10 text-base"
-                />
+            <div className="flex gap-3">
+                <div className="relative flex-1">
+                    <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder="Rechercher un véhicule par nom ou référence..."
+                        className="h-11 pl-10 text-base"
+                    />
+                </div>
+                <Button className="h-11 shrink-0 px-5" nativeButton={false} render={<Link href="/admin/vehicules/new" />}>
+                    <Plus className="size-4" />
+                    Ajouter un véhicule
+                </Button>
             </div>
 
             {filtered.length === 0 ? (
@@ -111,14 +123,24 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                 </div>
             ) : (
                 <div className="overflow-hidden rounded-xl border border-border bg-card">
-                    <div className="grid grid-cols-[64px_minmax(0,1fr)_90px_120px_130px_110px_auto] items-center gap-4 border-b border-border bg-muted/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <div className="grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 border-b border-border bg-muted/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <div />
                         <div>Véhicule</div>
                         <div>Réf.</div>
                         <div>Prix</div>
                         <div>Statut</div>
-                        <div>Ajouté le</div>
-                        <div className="text-right">Actions</div>
+                        <button
+                            type="button"
+                            onClick={() => setDateSort((current) => (current === 'newest' ? 'oldest' : 'newest'))}
+                            className="group flex items-center gap-1 text-left uppercase tracking-wide text-muted-foreground hover:text-foreground"
+                        >
+                            Ajouté le
+                            <span className="flex -space-y-1.5 flex-col">
+                                <ChevronUp className={cn('size-3', dateSort === 'oldest' ? 'text-blue-600' : 'text-muted-foreground/40 group-hover:text-muted-foreground')} />
+                                <ChevronDown className={cn('size-3', dateSort === 'newest' ? 'text-blue-600' : 'text-muted-foreground/40 group-hover:text-muted-foreground')} />
+                            </span>
+                        </button>
+                        <div className="text-center">Actions</div>
                     </div>
                     <div className="divide-y divide-border">
                         {filtered.map((vehicle) => {
@@ -129,11 +151,11 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                 <div
                                     key={vehicle.id}
                                     className={cn(
-                                        'grid grid-cols-[64px_minmax(0,1fr)_90px_120px_130px_110px_auto] items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40',
+                                        'grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40',
                                         isArchived && 'opacity-55',
                                     )}
                                 >
-                                    <div className="relative size-14 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border">
+                                    <div className="relative size-22 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border">
                                         <Image src={vehicle.image} alt="" fill className="object-cover" />
                                     </div>
                                     <div className="min-w-0">
@@ -154,11 +176,13 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                         {vehicle.status}
                                     </div>
                                     <div className="text-sm text-muted-foreground">{new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}</div>
-                                    <div className="flex items-center justify-end gap-1 rounded-lg bg-muted/60 p-1">
-                                        <Button variant="ghost" size="icon-sm" nativeButton={false} render={<Link href={`/admin/vehicules/${vehicle.id}`} />}>
-                                            <Pencil className="size-4" />
-                                            <span className="sr-only">Modifier</span>
-                                        </Button>
+                                    <div className="mx-auto flex w-fit items-center gap-1 rounded-lg bg-muted/60 p-1">
+                                        <IconTooltip label="Modifier">
+                                            <Button variant="ghost" size="icon-sm" nativeButton={false} render={<Link href={`/admin/vehicules/${vehicle.id}`} />}>
+                                                <Pencil className="size-4" />
+                                                <span className="sr-only">Modifier</span>
+                                            </Button>
+                                        </IconTooltip>
                                         <DuplicateVehicleButton id={vehicle.id} />
                                         <ArchiveVehicleButton id={vehicle.id} archived={vehicle.archived} />
                                         <DeleteVehicleButton id={vehicle.id} name={vehicle.name} />

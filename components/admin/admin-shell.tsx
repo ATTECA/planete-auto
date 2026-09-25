@@ -27,7 +27,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         >
             <aside
                 style={{ height: '100%', overflow: 'hidden' }}
-                className={`flex shrink-0 flex-col justify-between border-r border-border bg-card transition-[width] duration-200 ease-in-out ${collapsed ? 'w-[76px]' : 'w-64'
+                className={`flex shrink-0 flex-col justify-between border-r border-border bg-card transition-[width] duration-200 ease-in-out ${collapsed ? 'w-19' : 'w-64'
                     }`}
             >
                 <div>
@@ -49,6 +49,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
                 </div>
             </aside>
             <main
+                id="admin-main"
                 style={{ flex: '1 1 0%', minHeight: 0, minWidth: 0, overflowY: 'auto' }}
                 className="p-8"
             >
