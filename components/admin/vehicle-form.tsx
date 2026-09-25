@@ -120,6 +120,17 @@ const selectClassName =
 export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'; vehicle?: Vehicle }) {
     const action = mode === 'create' ? createVehicle : updateVehicle
     const [state, formAction, pending] = useActionState<VehicleFormState, FormData>(action, undefined)
+    const [toast, setToast] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (state && 'error' in state) setToast(state.error)
+    }, [state])
+
+    useEffect(() => {
+        if (!toast) return
+        const timer = setTimeout(() => setToast(null), 5000)
+        return () => clearTimeout(timer)
+    }, [toast])
 
     const [detailRows, setDetailRows] = useState<DetailRow[]>((vehicle?.details ?? []).map(toDetailRow))
     const [equipmentGroups, setEquipmentGroups] = useState<EquipmentGroupRow[]>(
@@ -200,7 +211,29 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
     return (
         <div className="flex flex-col gap-6 pb-16">
             <BackToTopButton />
-            <form action={formAction} className="flex flex-col gap-6">
+
+            {toast && (
+                <div
+                    role="alert"
+                    className="fixed top-5 left-1/2 z-50 flex max-w-lg -translate-x-1/2 items-center gap-3 rounded-xl border border-destructive/30 bg-card px-4 py-3 text-sm font-medium text-destructive shadow-lg"
+                >
+                    {toast}
+                    <button type="button" onClick={() => setToast(null)} className="text-muted-foreground hover:text-foreground">
+                        <X className="size-4" />
+                    </button>
+                </div>
+            )}
+
+            <form
+                action={formAction}
+                onSubmit={(event) => {
+                    if (photos.length === 0) {
+                        event.preventDefault()
+                        setToast('Au moins une photo est obligatoire.')
+                    }
+                }}
+                className="flex flex-col gap-6"
+            >
                 {mode === 'edit' && vehicle && <input type="hidden" name="id" value={vehicle.id} />}
 
                 <div className="sticky top-0 z-20 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/95 px-6 py-4 shadow-md backdrop-blur-sm">
@@ -730,12 +763,6 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
                         + Ajouter une catégorie d&apos;équipements
                     </Button>
                 </Section>
-
-                {state && 'error' in state && (
-                    <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-base font-medium text-destructive">
-                        {state.error}
-                    </p>
-                )}
 
                 <div className="flex items-center justify-end gap-2">
                     <Button variant="outline" nativeButton={false} render={<Link href="/admin/vehicules" />}>

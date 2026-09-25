@@ -638,10 +638,10 @@ em {
   cursor: default;
 }
 .arrivals-arrow-prev {
-  left: -22px;
+  left: -60px;
 }
 .arrivals-arrow-next {
-  right: -22px;
+  right: -60px;
 }
 .arrivals-dots {
   display: flex;
@@ -1390,37 +1390,34 @@ em {
   opacity: 0.85;
 }
 .workshop-strip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 20px;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 22px 5vw;
+  padding: 28px 5vw;
   border-bottom: 1px solid var(--line);
   background: var(--paper);
-}
-.workshop-strip-label {
-  color: #6c6d70;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 .workshop-strip-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 26px;
+  justify-content: center;
+  gap: 32px 56px;
 }
 .workshop-strip-items span {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   color: var(--black);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
 }
 .workshop-strip-items svg {
+  flex: none;
+  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  padding: 9px;
+  border-radius: 50%;
+  background: rgba(214, 27, 48, 0.1);
   color: var(--red);
 }
 .occasion-section {

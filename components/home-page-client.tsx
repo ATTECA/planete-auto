@@ -231,7 +231,6 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       </section>
 
       <div className="workshop-strip" aria-label="Notre atelier">
-        <span className="workshop-strip-label">Notre atelier</span>
         <div className="workshop-strip-items">
           <span>
             <Wrench size={16} /> Mécanique
