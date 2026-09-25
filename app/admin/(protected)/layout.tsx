@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AdminShell from '@/components/admin/admin-shell'
+import RealtimeLeadsRefresher from '@/components/admin/realtime-leads-refresher'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient()
@@ -10,5 +11,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         redirect('/admin/login')
     }
 
-    return <AdminShell>{children}</AdminShell>
+    return (
+        <>
+            <RealtimeLeadsRefresher />
+            <AdminShell>{children}</AdminShell>
+        </>
+    )
 }
