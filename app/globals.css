@@ -4714,3 +4714,30 @@ em {
     display: none;
   }
 }
+
+/* Phone-only: equipment groups stacked evenly (overrides the desktop 3-column indents and dividers). */
+@media (max-width: 850px) {
+  .equipment-groups .equipment-group {
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+  .equipment-groups .equipment-group:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* Phone-only: gallery thumbnails in one swipeable row (5 visible). */
+@media (max-width: 850px) {
+  .vehicle-thumbnails {
+    position: relative;
+    grid-template-columns: none;
+    grid-auto-columns: calc((100% - 24px) / 5);
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .vehicle-thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+}

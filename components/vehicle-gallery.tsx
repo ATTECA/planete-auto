@@ -1,12 +1,21 @@
 'use client'
 
 import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function VehicleGallery({ name, meta, images, showWarranty }: { name: string; meta: string; images: readonly string[]; showWarranty?: boolean }) {
   const [active, setActive] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const thumbnailsRef = useRef<HTMLDivElement>(null)
   const go = (direction: number) => setActive((current) => (current + direction + images.length) % images.length)
+
+  // On phones the thumbnails are a swipeable row: keep the active one in view (no-op when the row does not overflow).
+  useEffect(() => {
+    const row = thumbnailsRef.current
+    const thumb = row?.children[active] as HTMLElement | undefined
+    if (!row || !thumb || row.scrollWidth <= row.clientWidth) return
+    row.scrollTo({ left: thumb.offsetLeft - (row.clientWidth - thumb.offsetWidth) / 2, behavior: 'smooth' })
+  }, [active])
 
   useEffect(() => {
     if (!lightboxOpen) return
@@ -30,7 +39,7 @@ export function VehicleGallery({ name, meta, images, showWarranty }: { name: str
       <button type="button" className="vehicle-nav-btn vehicle-nav-next" aria-label="Photo suivante" onClick={() => go(1)}><ChevronRight /></button>
       <span className="photo-count">{String(active + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}</span>
     </div>
-    <div className="vehicle-thumbnails" role="tablist" aria-label="Choisir une photo">
+    <div className="vehicle-thumbnails" ref={thumbnailsRef} role="tablist" aria-label="Choisir une photo">
       {images.map((image, index) => <button type="button" role="tab" aria-selected={active === index} aria-label={`Afficher la photo ${index + 1}`} className={active === index ? 'is-active' : ''} key={image} onClick={() => setActive(index)}><img src={image} alt="" /></button>)}
     </div>
 
