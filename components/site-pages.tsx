@@ -233,15 +233,15 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
       </div>
       <label>
         Votre nom
-        <input name="name" required placeholder="Prénom Nom" />
+        <input name="name" required autoComplete="name" placeholder="Prénom Nom" />
       </label>
       <label>
         Votre téléphone
-        <input name="phone" placeholder="04 00 00 00 00" />
+        <input name="phone" type="tel" autoComplete="tel" placeholder="04 00 00 00 00" />
       </label>
       <label>
         Votre adresse e-mail
-        <input name="email" required type="email" placeholder="vous@exemple.fr" />
+        <input name="email" required type="email" autoComplete="email" placeholder="vous@exemple.fr" />
       </label>
       <label>
         Votre message
@@ -488,7 +488,7 @@ export function TradeInForm() {
                   required
                   value={contact.name}
                   onChange={(event) => setContact({ ...contact, name: event.target.value })}
-                  placeholder="Prénom Nom"
+                  autoComplete="name" placeholder="Prénom Nom"
                 />
               </label>
               <label className="tradein-field-group">
@@ -496,6 +496,9 @@ export function TradeInForm() {
                 <input
                   value={contact.phone}
                   onChange={(event) => setContact({ ...contact, phone: event.target.value })}
+                  required
+                  type="tel"
+                  autoComplete="tel"
                   placeholder="Téléphone (ex. 04 00 00 00 00)"
                 />
               </label>
@@ -506,7 +509,7 @@ export function TradeInForm() {
                   type="email"
                   value={contact.email}
                   onChange={(event) => setContact({ ...contact, email: event.target.value })}
-                  placeholder="vous@exemple.fr"
+                  autoComplete="email" placeholder="vous@exemple.fr"
                 />
               </label>
               <label className="tradein-field-group">
@@ -589,11 +592,11 @@ export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { veh
       <h3>Faire une offre</h3>
       <label>
         Nom complet
-        <input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Prénom Nom" />
+        <input required value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" placeholder="Prénom Nom" />
       </label>
       <label>
         Téléphone
-        <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="04 00 00 00 00" />
+        <input required value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" placeholder="04 00 00 00 00" />
       </label>
       <label>
         Prix proposé
@@ -609,7 +612,7 @@ export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { veh
       </label>
       <label>
         E-mail (facultatif)
-        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="vous@exemple.fr" />
+        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" placeholder="vous@exemple.fr" />
       </label>
       {error && (
         <p className="form-error" role="alert">
@@ -668,11 +671,11 @@ export function VehicleTestDriveForm({ vehicleId, vehicleName }: { vehicleId: nu
       <h3>Demander un essai</h3>
       <label>
         Nom complet
-        <input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Prénom Nom" />
+        <input required value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" placeholder="Prénom Nom" />
       </label>
       <label>
         Téléphone
-        <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="04 00 00 00 00" />
+        <input required value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" placeholder="04 00 00 00 00" />
       </label>
       <label>
         Date souhaitée
@@ -693,7 +696,7 @@ export function VehicleTestDriveForm({ vehicleId, vehicleName }: { vehicleId: nu
       </label>
       <label>
         E-mail (facultatif)
-        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="vous@exemple.fr" />
+        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" placeholder="vous@exemple.fr" />
       </label>
       <label>
         Message (facultatif)

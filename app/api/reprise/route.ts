@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     const condition = String(form.get('condition') ?? '').trim()
     const message = String(form.get('message') ?? '').trim()
 
-    if (!name || !email || !brand || !model) {
+    if (!name || !email || !phone || !brand || !model) {
       return NextResponse.json({ error: 'Veuillez remplir tous les champs obligatoires.' }, { status: 400 })
     }
 
