@@ -301,6 +301,15 @@ textarea {
   font-weight: 700;
   letter-spacing: 0.04em;
 }
+.hero-photo-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hero-mobile-tabs,
+.hero-search-count {
+  display: none;
+}
 .hero-photo-card h1 {
   margin: 0 0 26px;
   font-size: clamp(34px, 3.4vw, 52px);
@@ -4281,5 +4290,197 @@ em {
   }
   .admin-row {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Phone hero: photo band with headline, search form below (cars.com style). Desktop is untouched. */
+@media (max-width: 850px) {
+  .hero-photo {
+    display: block;
+    background: #f2f2f0;
+  }
+  .hero-bg,
+  .hero-sell-cta {
+    display: none;
+  }
+  .hero-photo-inner {
+    padding: 0;
+    gap: 0;
+  }
+  .hero-photo-content {
+    gap: 0;
+  }
+  .hero-photo-card {
+    gap: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    color: var(--black);
+  }
+  .hero-photo-heading {
+    justify-content: flex-start;
+    min-height: 300px;
+    padding: 28px 5vw 26px;
+    background:
+      linear-gradient(180deg, rgba(10, 9, 7, 0.75) 0%, rgba(10, 9, 7, 0.05) 70%),
+      url("/homepage-hero-phone-ver.jpg") center 100% / cover no-repeat;
+    color: #fff;
+  }
+  .navbar .brand {
+    gap: 8px;
+    font-size: 34px;
+  }
+  .navbar .brand img {
+    height: 25px;
+  }
+  .hero-photo-card h1 {
+    margin: 0;
+    font-size: 40px;
+  }
+  .hero-photo-heading .hero-experience-badge {
+    order: 1;
+    margin: auto 0 0;
+  }
+  .hero-search-box {
+    padding: 8px 5vw 30px;
+  }
+  .hero-mobile-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #d6d8db;
+  }
+  .hero-mobile-tabs > * {
+    margin-bottom: -1px;
+    padding: 14px 0;
+    border-bottom: 3px solid transparent;
+    color: #6b6d72;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .hero-mobile-tabs .is-active {
+    border-color: var(--red);
+    color: var(--black);
+  }
+  .hero-search-box-fields {
+    gap: 0;
+  }
+  .hero-search-box-fields label {
+    position: relative;
+    gap: 0;
+    color: #6b6d72;
+    font-size: 10px;
+  }
+  .hero-search-box-fields label > span {
+    position: absolute;
+    z-index: 1;
+    top: 11px;
+    left: 16px;
+    pointer-events: none;
+  }
+  .hero-search-box-fields select {
+    min-height: 62px;
+    margin-top: -1px;
+    padding: 22px 44px 0 16px;
+    border: 1px solid #cfd1d4;
+    border-radius: 0;
+    font-size: 16px;
+  }
+  .hero-search-box-fields label:first-child select {
+    margin-top: 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .hero-search-box-fields label:nth-child(3) select {
+    border-radius: 0 0 12px 12px;
+  }
+  .hero-search-box-fields select:focus {
+    box-shadow: inset 0 0 0 2px var(--red);
+  }
+  .hero-search-box-fields button {
+    min-height: 54px;
+    margin-top: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  .hero-search-label {
+    display: none;
+  }
+  .hero-search-count {
+    display: inline;
+  }
+  .hero-search-advanced {
+    margin: 18px auto 0;
+    color: var(--black);
+  }
+  .hero-search-advanced:hover {
+    color: var(--red);
+  }
+}
+
+/* Phone-only bar pinned to the bottom of a vehicle page: price, call, offer. */
+.vehicle-mobile-bar {
+  display: none;
+}
+@media (max-width: 850px) {
+  .vehicle-detail-page {
+    padding-bottom: calc(73px + env(safe-area-inset-bottom));
+  }
+  .vehicle-mobile-bar {
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 5vw calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 -10px 30px -18px rgba(0, 0, 0, 0.35);
+  }
+  .vehicle-mobile-bar-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .vehicle-mobile-bar-info strong {
+    color: var(--red);
+    font-size: 20px;
+    line-height: 1.1;
+  }
+  .vehicle-mobile-bar-info span {
+    overflow: hidden;
+    color: #6b6d72;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .vehicle-mobile-bar-call,
+  .vehicle-mobile-bar-offer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .vehicle-mobile-bar-call {
+    flex: none;
+    width: 48px;
+    border: 1px solid #cfd1d4;
+    color: var(--black);
+  }
+  .vehicle-mobile-bar-offer {
+    padding: 0 18px;
+    background: var(--red);
+    color: #fff;
+    font-size: 14px;
+    white-space: nowrap;
   }
 }

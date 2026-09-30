@@ -121,5 +121,10 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       </section>
     </div>
     <SiteFooter />
+    <div className="vehicle-mobile-bar">
+      <div className="vehicle-mobile-bar-info"><strong>{vehicle.price}</strong><span>{vehicle.name}</span></div>
+      <a className="vehicle-mobile-bar-call" href="tel:+33467825412" aria-label="Appeler Planète Auto"><Phone size={20} /></a>
+      <a className="vehicle-mobile-bar-offer" href="#offre">Faire une offre</a>
+    </div>
   </main>
 }

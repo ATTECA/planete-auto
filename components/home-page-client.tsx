@@ -116,6 +116,17 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
     [vehicles, heroBrand]
   );
 
+  const heroMatchCount = useMemo(
+    () =>
+      vehicles.filter(
+        (vehicle) =>
+          (!heroBrand || getDetail(vehicle, "Marque") === heroBrand) &&
+          (!heroModel || getDetail(vehicle, "Modèle") === heroModel) &&
+          (!heroBudget || Number(vehicle.price.replace(/\D/g, "")) <= Number(heroBudget))
+      ).length,
+    [vehicles, heroBrand, heroModel, heroBudget]
+  );
+
   const selectHeroBrand = (value: string) => {
     setHeroBrand(value);
     setHeroModel("");
@@ -172,15 +183,23 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         <div className="hero-photo-inner">
         <div className="hero-photo-content">
           <div className="hero-photo-card">
-            <span className="hero-experience-badge">
-              <Award size={14} /> 15 ans d’expérience
-            </span>
-            <h1>
-              Une voiture d’occasion,
-              <br />
-              <em>en toute confiance.</em>
-            </h1>
+            <div className="hero-photo-heading">
+              <span className="hero-experience-badge">
+                <Award size={14} /> 15 ans d’expérience
+              </span>
+              <h1>
+                Une voiture d’occasion,
+                <br />
+                <em>en toute confiance.</em>
+              </h1>
+            </div>
             <form className="hero-search-box" onSubmit={runHeroSearch} aria-label="Recherche rapide de véhicule">
+              <div className="hero-mobile-tabs">
+                <span className="is-active" aria-current="true">
+                  Acheter
+                </span>
+                <a href="/reprise">Vendre ma voiture</a>
+              </div>
               <div className="hero-search-box-fields">
                 <label>
                   <span>Marque</span>
@@ -211,7 +230,10 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                   </select>
                 </label>
                 <button type="submit">
-                  <Search size={17} /> Rechercher
+                  <Search size={17} /> <span className="hero-search-label">Rechercher</span>
+                  <span className="hero-search-count" aria-live="polite">
+                    {heroMatchCount === 0 ? "Aucun véhicule trouvé" : `Voir ${heroMatchCount} véhicule${heroMatchCount > 1 ? "s" : ""}`}
+                  </span>
                 </button>
               </div>
               <a className="hero-search-advanced" href="/vehicules">
