@@ -127,6 +127,12 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
     [vehicles, heroBrand, heroModel, heroBudget]
   );
 
+  const bodyTypeCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const vehicle of vehicles) if (vehicle.carrosserie) counts[vehicle.carrosserie] = (counts[vehicle.carrosserie] ?? 0) + 1;
+    return counts;
+  }, [vehicles]);
+
   const selectHeroBrand = (value: string) => {
     setHeroBrand(value);
     setHeroModel("");
@@ -275,22 +281,31 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
             <div className="eyebrow">
               <span className="eyebrow-line" /> Recherchez Par type de carrosserie
             </div>
+            <h2 className="carrosserie-mobile-title">
+              Par <em>carrosserie</em>
+            </h2>
           </div>
           <a className="text-link" href="/vehicules">
             Toutes les voitures <ArrowRight size={17} />
           </a>
         </div>
         <div className="carrosserie-grid">
-          {bodyTypes.map(([label, slug]) => (
-            <button
-              className="carrosserie-tile"
-              key={slug}
-              onClick={() => router.push(`/vehicules?carrosserie=${encodeURIComponent(label)}`)}
-            >
-              <img src={`/carrosserie/${slug}.png`} alt="" />
-              <span>{label}</span>
-            </button>
-          ))}
+          {bodyTypes.map(([label, slug]) => {
+            const count = bodyTypeCounts[label] ?? 0;
+            return (
+              <button
+                className={count === 0 ? "carrosserie-tile is-empty" : "carrosserie-tile"}
+                key={slug}
+                onClick={() => router.push(`/vehicules?carrosserie=${encodeURIComponent(label)}`)}
+              >
+                <img src={`/carrosserie/${slug}.png`} alt="" />
+                <span>{label}</span>
+                <small className="carrosserie-count">
+                  {count} véhicule{count > 1 ? "s" : ""}
+                </small>
+              </button>
+            );
+          })}
         </div>
       </section>
 
@@ -298,7 +313,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         <div className="section-heading">
           <div>
             <h2 id="arrivals-title">
-              Nouveaux
+              Nouveaux{" "}
               <br />
               <em>arrivages</em>
             </h2>
@@ -416,9 +431,14 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
       <section className="brands-section" aria-labelledby="brands-title">
         <div className="brands-section-inner">
           <h2 id="brands-title" className="brands-heading">
-            Les marques
-            <br />
-            <em>que nous proposons</em>
+            <span className="brands-heading-full">
+              Les marques
+              <br />
+              <em>que nous proposons</em>
+            </span>
+            <span className="brands-heading-short">
+              Nos <em>marques</em>
+            </span>
           </h2>
           <div className="brands-card">
             <div className="brands-grid">
@@ -513,9 +533,14 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         <div className="reviews-inner">
           <div className="reviews-header">
             <h2 id="reviews-title">
-              Ce que disent
-              <br />
-              <em>nos clients</em>
+              <span className="reviews-title-full">
+                Ce que disent
+                <br />
+                <em>nos clients</em>
+              </span>
+              <span className="reviews-title-short">
+                Avis <em>clients</em>
+              </span>
             </h2>
             <div className="reviews-score">
               <span className="reviews-score-number">{GOOGLE_REVIEWS_SCORE}</span>

@@ -106,11 +106,12 @@ export function SiteFooter() {
             </a>
           </nav>
         </div>
-        <div className="footer-column">
+        <div className="footer-column footer-nav">
           <h3>Navigation</h3>
           <a href="/">Accueil</a>
           <a href="/vehicules">Nos véhicules</a>
           <a href="/reprise">Vente & reprise</a>
+          <a href="/a-propos">À propos</a>
           <a href="/contact">Nous contacter</a>
         </div>
         <div className="footer-column footer-find">

@@ -4484,3 +4484,233 @@ em {
     white-space: nowrap;
   }
 }
+
+/* Phone-only: body-type section with counts, tidier atelier strip. */
+.carrosserie-mobile-title,
+.carrosserie-count {
+  display: none;
+}
+@media (max-width: 850px) {
+  .carrosserie-section {
+    padding: 40px 5vw 32px;
+  }
+  .carrosserie-section .section-heading {
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+  .carrosserie-section .eyebrow {
+    display: none;
+  }
+  .carrosserie-section .section-heading h2.carrosserie-mobile-title {
+    display: block;
+    margin: 0;
+    font-size: 40px;
+  }
+  .carrosserie-grid {
+    grid-auto-columns: 128px;
+    scroll-padding-inline: 5vw;
+  }
+  .carrosserie-tile {
+    height: auto;
+    gap: 4px;
+    padding: 14px 10px;
+  }
+  .carrosserie-tile.is-empty {
+    display: none;
+  }
+  .carrosserie-count {
+    display: block;
+    color: #6b6d72;
+    font-size: 12px;
+  }
+  .workshop-strip {
+    padding: 22px 5vw;
+  }
+  .workshop-strip-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 12px;
+  }
+  .workshop-strip-items span {
+    font-size: 14px;
+  }
+  .arrivals-section {
+    padding-top: 12px;
+  }
+  .arrivals-section .section-heading h2 {
+    font-size: 40px;
+  }
+  .arrivals-section .section-heading h2 br {
+    display: none;
+  }
+  .arrivals-section .section-heading p,
+  .arrivals-section .inventory-card-icons {
+    display: none;
+  }
+  .arrivals-track {
+    scroll-padding-inline: 5vw;
+  }
+  .arrivals-section .inventory-card-image {
+    height: 200px;
+  }
+  .arrivals-section .inventory-card-cta,
+  .arrivals-section .inventory-card:hover .inventory-card-cta {
+    margin: 0 17px 17px;
+    padding: 11px;
+    border: 1px solid #cfd1d4;
+    background: transparent;
+    color: var(--black);
+  }
+}
+
+/* Phone-only: brands as separate white tiles with a one-line title. */
+.brands-heading-short {
+  display: none;
+}
+@media (max-width: 850px) {
+  .brands-section-inner {
+    padding: 48px 5vw;
+  }
+  .brands-heading {
+    margin-bottom: 24px;
+    font-size: 40px;
+    text-align: left;
+  }
+  .brands-heading-full {
+    display: none;
+  }
+  .brands-heading-short {
+    display: inline;
+  }
+  .brands-card {
+    padding: 0;
+    border: 0;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .brands-grid {
+    gap: 10px;
+  }
+  .brands-grid .brand-tile {
+    gap: 6px;
+    padding: 16px 6px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.55);
+  }
+  .brands-grid .brand-tile::before,
+  .brands-grid .brand-tile::after {
+    display: none;
+  }
+  .brand-tile-name {
+    font-size: 13px;
+  }
+}
+
+/* Phone-only: "Pourquoi acheter une voiture d'occasion" as a compact 2-column grid of titles. */
+@media (max-width: 850px) {
+  .occasion-inner {
+    padding: 56px 5vw;
+  }
+  .occasion-inner h2 {
+    margin-bottom: 28px;
+  }
+  .occasion-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .occasion-item {
+    padding: 16px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .occasion-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 10px;
+  }
+  .occasion-item h3 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .occasion-item p {
+    display: none;
+  }
+}
+
+/* Phone-only: reviews as a swipe row with a one-line title and compact score. */
+.reviews-title-short {
+  display: none;
+}
+@media (max-width: 850px) {
+  .reviews-inner {
+    padding: 48px 5vw;
+  }
+  .reviews-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    margin-bottom: 20px;
+  }
+  .reviews-cta {
+    margin-top: 20px;
+  }
+  .reviews-header h2 {
+    font-size: 40px;
+  }
+  .reviews-title-full {
+    display: none;
+  }
+  .reviews-title-short {
+    display: inline;
+  }
+  .reviews-score {
+    gap: 8px;
+  }
+  .reviews-score > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .reviews-score-number {
+    font-family: "Futura";
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .reviews-score p {
+    margin: 0;
+  }
+  .reviews-grid {
+    grid-template-columns: none;
+    grid-auto-columns: 85%;
+    grid-auto-flow: column;
+    gap: 12px;
+    margin: 0 -5vw;
+    padding: 0 5vw 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 5vw;
+  }
+  .review-card {
+    padding: 22px;
+    scroll-snap-align: start;
+  }
+}
+
+/* Phone-only footer: contact info and hours first, no navigation (it is in the menu), SIRET only at the bottom. */
+@media (max-width: 850px) {
+  .footer-identity > span {
+    display: none;
+  }
+  .footer-find {
+    order: 1;
+  }
+  .footer-hours {
+    order: 2;
+  }
+  .footer-nav {
+    display: none;
+  }
+}
