@@ -99,7 +99,7 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                 })}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 max-[850px]:flex-col">
                 <div className="relative flex-1">
                     <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -123,7 +123,7 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                 </div>
             ) : (
                 <div className="overflow-hidden rounded-xl border border-border bg-card">
-                    <div className="grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 border-b border-border bg-muted/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <div className="grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 max-[850px]:hidden border-b border-border bg-muted/40 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <div />
                         <div>Véhicule</div>
                         <div>Réf.</div>
@@ -151,14 +151,14 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                 <div
                                     key={vehicle.id}
                                     className={cn(
-                                        'grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40',
+                                        'grid grid-cols-[96px_minmax(0,1fr)_90px_120px_130px_110px_150px] items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/40 max-[850px]:flex max-[850px]:flex-wrap max-[850px]:gap-x-3 max-[850px]:gap-y-2',
                                         isArchived && 'opacity-55',
                                     )}
                                 >
-                                    <div className="relative size-22 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border">
+                                    <div className="relative size-22 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border max-[850px]:size-16 max-[850px]:shrink-0">
                                         <Image src={vehicle.image} alt="" fill className="object-cover" />
                                     </div>
-                                    <div className="min-w-0">
+                                    <div className="min-w-0 max-[850px]:flex-1 max-[850px]:basis-[calc(100%-76px)]">
                                         <Link
                                             href={`/vehicules/${vehicleSlug(vehicle)}`}
                                             target="_blank"
@@ -176,7 +176,7 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                         {vehicle.status}
                                     </div>
                                     <div className="text-sm text-muted-foreground">{new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}</div>
-                                    <div className="mx-auto flex w-fit items-center gap-1 rounded-lg bg-muted/60 p-1">
+                                    <div className="mx-auto flex w-fit items-center gap-1 rounded-lg bg-muted/60 p-1 max-[850px]:ml-auto max-[850px]:mr-0">
                                         <IconTooltip label="Modifier">
                                             <Button variant="ghost" size="icon-sm" nativeButton={false} render={<Link href={`/admin/vehicules/${vehicle.id}`} />}>
                                                 <Pencil className="size-4" />

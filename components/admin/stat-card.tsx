@@ -22,11 +22,11 @@ export default function StatCard({
     return (
         <Link
             href={href}
-            className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+            className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-card p-5 max-[850px]:gap-3 max-[850px]:p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
         >
             <Icon className={cn('pointer-events-none absolute -bottom-3 -right-3 size-20 opacity-[0.06] transition-transform duration-300 group-hover:scale-110', accent.split(' ')[0])} />
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between max-[850px]:flex-wrap max-[850px]:gap-2">
                 <div className={cn('flex size-10 items-center justify-center rounded-xl', accent)}>
                     <Icon className="size-5" />
                 </div>

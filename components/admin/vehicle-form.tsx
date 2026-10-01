@@ -236,19 +236,19 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
             >
                 {mode === 'edit' && vehicle && <input type="hidden" name="id" value={vehicle.id} />}
 
-                <div className="sticky top-0 z-20 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/95 px-6 py-4 shadow-md backdrop-blur-sm">
+                <div className="sticky top-0 z-20 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/95 px-6 py-4 shadow-md backdrop-blur-sm max-[850px]:gap-2 max-[850px]:px-4 max-[850px]:py-3">
                     <div className="min-w-0">
                         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                             {mode === 'create' ? 'Nouveau véhicule' : `Réf. ${vehicle?.id}`}
                         </p>
-                        <h1 className="truncate text-xl font-semibold text-foreground">
+                        <h1 className="truncate text-xl font-semibold text-foreground max-[850px]:text-base">
                             {mode === 'create' ? 'Ajouter un véhicule' : vehicle?.name}
                         </h1>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                         <Button variant="outline" nativeButton={false} render={<Link href="/admin/vehicules" />}>
                             <X className="size-4" />
-                            Annuler
+                            <span className="max-[850px]:sr-only">Annuler</span>
                         </Button>
                         <Button type="submit" className="gap-2 shadow-sm shadow-primary/30" disabled={pending}>
                             {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}

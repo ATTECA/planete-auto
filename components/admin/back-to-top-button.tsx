@@ -24,7 +24,7 @@ export default function BackToTopButton() {
             onClick={() => document.getElementById('admin-main')?.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Retour en haut"
             title="Retour en haut"
-            className="fixed bottom-8 right-8 z-30 flex size-11 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-transform hover:-translate-y-0.5"
+            className="fixed bottom-8 right-8 z-30 max-[850px]:bottom-20 max-[850px]:right-4 flex size-11 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-transform hover:-translate-y-0.5"
         >
             <ArrowUp className="size-5" />
         </button>

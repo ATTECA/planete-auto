@@ -31,7 +31,7 @@ export default function RecentActivity({ vehicles, limit = 6 }: { vehicles: Vehi
                 <p className="text-sm text-muted-foreground">Aucune activité pour le moment.</p>
             ) : (
                 <div className="overflow-hidden rounded-xl border border-border">
-                    <div className="grid grid-cols-[64px_minmax(0,1fr)_90px_140px_130px_110px] items-center gap-4 border-b border-border bg-muted/40 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <div className="grid grid-cols-[64px_minmax(0,1fr)_90px_140px_130px_110px] items-center gap-4 max-[850px]:hidden border-b border-border bg-muted/40 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         <div />
                         <div>Véhicule</div>
                         <div>Réf.</div>
@@ -48,14 +48,14 @@ export default function RecentActivity({ vehicles, limit = 6 }: { vehicles: Vehi
                             return (
                                 <div
                                     key={vehicle.id}
-                                    className="grid grid-cols-[64px_minmax(0,1fr)_90px_140px_130px_110px] items-center gap-4 px-4 py-2.5 transition-colors hover:bg-muted/40"
+                                    className="grid grid-cols-[64px_minmax(0,1fr)_90px_140px_130px_110px] items-center gap-4 px-4 py-2.5 transition-colors hover:bg-muted/40 max-[850px]:flex max-[850px]:flex-wrap max-[850px]:gap-x-3 max-[850px]:gap-y-1.5"
                                 >
-                                    <div className="relative size-12 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border">
+                                    <div className="relative size-12 overflow-hidden rounded-lg bg-muted shadow-sm ring-1 ring-border max-[850px]:shrink-0">
                                         <Image src={vehicle.image} alt="" fill className="object-cover" />
                                     </div>
                                     <Link
                                         href={`/admin/vehicules/${vehicle.id}`}
-                                        className="min-w-0 truncate font-semibold text-foreground hover:text-primary"
+                                        className="min-w-0 truncate font-semibold text-foreground hover:text-primary max-[850px]:flex-1 max-[850px]:basis-[calc(100%-60px)]"
                                     >
                                         {vehicle.name}
                                     </Link>

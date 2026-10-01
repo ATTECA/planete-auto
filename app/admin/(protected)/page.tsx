@@ -199,7 +199,7 @@ export default async function AdminDashboardPage() {
                 <h1 className="text-2xl font-semibold text-foreground">Tableau de bord</h1>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 max-[850px]:grid-cols-2 max-[850px]:gap-3">
                 {stats.map((stat) => (
                     <StatCard key={stat.label} {...stat} />
                 ))}
