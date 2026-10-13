@@ -75,9 +75,6 @@ body {
   font-size: 13px;
   line-height: 1.5;
 }
-.vehicle-description > div:first-child .eyebrow {
-  justify-content: flex-start;
-}
 .vehicle-description > div:last-child {
   text-align: left;
 }
@@ -255,21 +252,6 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.65);
   color: #fff;
-}
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  color: var(--red);
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.eyebrow-line {
-  width: 29px;
-  height: 2px;
-  background: currentColor;
 }
 .hero h1,
 .section-heading h2,
@@ -529,11 +511,8 @@ em {
 .carrosserie-section {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 40px 5vw 30px;
+  padding: 56px 5vw 0;
   background: var(--paper);
-}
-.carrosserie-section .section-heading {
-  align-items: center;
 }
 .carrosserie-grid {
   display: grid;
@@ -593,9 +572,11 @@ em {
   padding: 80px 5vw 50px;
   background: var(--paper);
 }
+.carrosserie-section .section-heading h2,
 .arrivals-section .section-heading h2 {
   font-size: clamp(32px, 3vw, 44px);
 }
+.carrosserie-section .section-heading p,
 .arrivals-section .section-heading p {
   max-width: none;
   white-space: nowrap;
@@ -1010,9 +991,6 @@ em {
   justify-content: center;
   text-align: center;
 }
-.centered .eyebrow {
-  justify-content: center;
-}
 .journey-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1192,9 +1170,6 @@ em {
   max-width: 1320px;
   margin: 0 auto;
   padding: 76px 8vw 0;
-}
-.about-hero-text .eyebrow {
-  margin-bottom: 22px;
 }
 .about-hero-text h1 {
   margin: 0 0 22px;
@@ -1401,33 +1376,73 @@ em {
 .workshop-strip {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 28px 5vw;
-  border-bottom: 1px solid var(--line);
+  padding: 32px 5vw 0;
   background: var(--paper);
 }
 .workshop-strip-items {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 32px 56px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
 }
-.workshop-strip-items span {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--black);
-  font-size: 15px;
-  font-weight: 700;
+.workshop-tile {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  background: var(--black);
 }
-.workshop-strip-items svg {
+.workshop-tile img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.workshop-tile:hover img {
+  transform: scale(1.04);
+}
+.workshop-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20, 18, 13, 0.88) 0%, rgba(20, 18, 13, 0.35) 55%, rgba(20, 18, 13, 0) 100%);
+}
+.workshop-tile-caption {
+  position: absolute;
+  z-index: 1;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #fff;
+}
+.workshop-tile-caption svg {
   flex: none;
   box-sizing: border-box;
-  width: 38px;
-  height: 38px;
-  padding: 9px;
+  width: 30px;
+  height: 30px;
+  padding: 7px;
   border-radius: 50%;
-  background: rgba(214, 27, 48, 0.1);
-  color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+.workshop-tile-caption h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.workshop-tile-caption p {
+  margin: 3px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  line-height: 1.3;
+}
+@media (max-width: 1100px) {
+  .workshop-strip-items {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 .occasion-section {
   background: var(--black);
@@ -3434,7 +3449,16 @@ em {
   font-weight: 600;
 }
 .vehicle-section-heading {
-  margin-bottom: 36px;
+  margin: 0 0 32px;
+  color: var(--black);
+  font-family: "BC Alphapipe";
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+.vehicle-description .vehicle-section-heading {
+  margin-bottom: 0;
 }
 .vehicle-body-with-finance {
   display: grid;
@@ -3999,7 +4023,7 @@ em {
     grid-template-columns: 1fr;
   }
   .carrosserie-section {
-    padding: 75px 5vw 60px;
+    padding: 48px 5vw 0;
   }
   .carrosserie-grid {
     grid-template-columns: none;
@@ -4486,7 +4510,6 @@ em {
 }
 
 /* Phone-only: body-type section with counts, tidier atelier strip. */
-.carrosserie-mobile-title,
 .carrosserie-count {
   display: none;
 }
@@ -4499,11 +4522,7 @@ em {
     gap: 18px;
     margin-bottom: 22px;
   }
-  .carrosserie-section .eyebrow {
-    display: none;
-  }
-  .carrosserie-section .section-heading h2.carrosserie-mobile-title {
-    display: block;
+  .carrosserie-section .section-heading h2 {
     margin: 0;
     font-size: 40px;
   }
@@ -4525,15 +4544,26 @@ em {
     font-size: 12px;
   }
   .workshop-strip {
-    padding: 22px 5vw;
+    padding: 22px 16px 0;
   }
   .workshop-strip-items {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px 12px;
+    gap: 10px;
+    padding-bottom: 22px;
   }
-  .workshop-strip-items span {
+  .workshop-tile-caption {
+    left: 10px;
+    right: 10px;
+    bottom: 9px;
+  }
+  .workshop-tile-caption svg {
+    display: none;
+  }
+  .workshop-tile-caption h3 {
     font-size: 14px;
+  }
+  .workshop-tile-caption p {
+    font-size: 11px;
   }
   .arrivals-section {
     padding-top: 12px;
@@ -4541,9 +4571,11 @@ em {
   .arrivals-section .section-heading h2 {
     font-size: 40px;
   }
+  .carrosserie-section .section-heading h2 br,
   .arrivals-section .section-heading h2 br {
     display: none;
   }
+  .carrosserie-section .section-heading p,
   .arrivals-section .section-heading p,
   .arrivals-section .inventory-card-icons {
     display: none;

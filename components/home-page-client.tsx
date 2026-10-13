@@ -12,6 +12,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  Cog,
   CreditCard,
   Disc,
   Droplets,
@@ -24,6 +25,7 @@ import {
   Menu,
   Search,
   ShieldCheck,
+  SprayCan,
   Star,
   Stethoscope,
   Tag,
@@ -40,6 +42,16 @@ import { vehicleSlug, type Vehicle } from "@/lib/vehicles";
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
 const ARRIVALS_PAGE_SIZE = 4;
 const ARRIVALS_PAGE_COUNT = 2;
+
+/** Workshop activities shown under the hero. Only mecanique.jpg is a real photo of the garage; the others are Unsplash stock photos until the client sends their own. */
+const WORKSHOP_SERVICES = [
+  { label: "Mécanique", detail: "Entretien et réparation", image: "/atelier/mecanique.jpg", icon: Wrench },
+  { label: "Carrosserie", detail: "Réparation et peinture", image: "/atelier/carrosserie.jpg", icon: SprayCan },
+  { label: "Pneumatique", detail: "Vente et montage", image: "/atelier/pneumatique.jpg", icon: Disc },
+  { label: "Pièces de rechange", detail: "Batteries, disques, plaquettes…", image: "/atelier/pieces.jpg", icon: Cog },
+  { label: "Diagnostic", detail: "Recherche de pannes", image: "/atelier/diagnostic.jpg", icon: Stethoscope },
+  { label: "Lavage", detail: "Nettoyage du véhicule", image: "/atelier/lavage.jpg", icon: Droplets },
+];
 
 const bodyTypes = [
   ["SUV", "suv"],
@@ -258,32 +270,32 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
       </section>
 
-      <div className="workshop-strip" aria-label="Notre atelier">
+      <section className="workshop-strip" aria-label="Notre atelier">
         <div className="workshop-strip-items">
-          <span>
-            <Wrench size={16} /> Mécanique
-          </span>
-          <span>
-            <Disc size={16} /> Pneumatique
-          </span>
-          <span>
-            <Stethoscope size={16} /> Diagnostic
-          </span>
-          <span>
-            <Droplets size={16} /> Lavage
-          </span>
+          {WORKSHOP_SERVICES.map(({ label, detail, image, icon: Icon }) => (
+            <article className="workshop-tile" key={label}>
+              <Image src={image} alt="" fill sizes="(max-width: 850px) 50vw, (max-width: 1100px) 33vw, 16vw" />
+              <div className="workshop-tile-caption">
+                <Icon size={16} aria-hidden="true" />
+                <div>
+                  <h3>{label}</h3>
+                  <p>{detail}</p>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-      </div>
+      </section>
 
-      <section className="carrosserie-section" aria-label="Recherchez par type de carrosserie">
+      <section className="carrosserie-section" aria-labelledby="carrosserie-title">
         <div className="section-heading">
           <div>
-            <div className="eyebrow">
-              <span className="eyebrow-line" /> Recherchez Par type de carrosserie
-            </div>
-            <h2 className="carrosserie-mobile-title">
-              Par <em>carrosserie</em>
+            <h2 id="carrosserie-title">
+              Quel type de{" "}
+              <br />
+              <em>véhicule&nbsp;?</em>
             </h2>
+            <p>SUV, berline, citadine… parcourez notre stock par type de carrosserie.</p>
           </div>
           <a className="text-link" href="/vehicules">
             Toutes les voitures <ArrowRight size={17} />
@@ -398,6 +410,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 className="arrivals-arrow arrivals-arrow-prev"
                 aria-label="Page précédente"
+                autoComplete="off"
                 disabled={arrivalsPage === 0}
                 onClick={() => goToArrivalsPage(Math.max(0, arrivalsPage - 1))}
               >
@@ -407,6 +420,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 className="arrivals-arrow arrivals-arrow-next"
                 aria-label="Page suivante"
+                autoComplete="off"
                 disabled={arrivalsPage === arrivalsPages.length - 1}
                 onClick={() => goToArrivalsPage(Math.min(arrivalsPages.length - 1, arrivalsPage + 1))}
               >

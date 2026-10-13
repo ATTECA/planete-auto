@@ -74,7 +74,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       <div className="vehicle-body-with-finance">
         <div className="vehicle-body-main">
           <section className="vehicle-facts">
-            <div className="vehicle-section-heading"><span className="eyebrow"><span className="eyebrow-line" /> Fiche technique</span></div>
+            <h2 className="vehicle-section-heading">Fiche technique</h2>
             <div className="facts-flat-columns">
               <div className="facts-grid">{factsLeft.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
               <div className="facts-grid">{factsRight.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
@@ -83,7 +83,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
           <section className="vehicle-description">
             <div>
-              <span className="eyebrow"><span className="eyebrow-line" /> Description</span>
+              <h2 className="vehicle-section-heading">Description</h2>
             </div>
             <div>
               <p className="vehicle-description-copy">
@@ -94,7 +94,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
           {vehicle.equipment && vehicle.equipment.length > 0 && (
             <section className="vehicle-equipment">
-              <div className="vehicle-section-heading"><span className="eyebrow"><span className="eyebrow-line" /> Équipements</span></div>
+              <h2 className="vehicle-section-heading">Équipements</h2>
               <div className="equipment-groups">
                 {vehicle.equipment.map((group) => (
                   <div className="equipment-group" key={group.category}>

@@ -170,16 +170,11 @@ export function SiteFooter() {
   );
 }
 
-export function PageShell({ eyebrow, title, intro, children }: { eyebrow?: string; title: ReactNode; intro: string; children?: ReactNode }) {
+export function PageShell({ title, intro, children }: { title: ReactNode; intro: string; children?: ReactNode }) {
   return (
     <main className="inner-shell">
       <SiteHeader />
       <section className="page-hero">
-        {eyebrow && (
-          <div className="eyebrow">
-            <span className="eyebrow-line" /> {eyebrow}
-          </div>
-        )}
         <h1>{title}</h1>
         <p>{intro}</p>
       </section>
@@ -781,9 +776,6 @@ export function VehicleShareButton({ title }: { title: string }) {
 export function ContactInfo() {
   return (
     <div className="info-panel">
-      <div className="eyebrow light">
-        <span className="eyebrow-line" /> Planète Auto
-      </div>
       <h2>
         Une équipe
         <br />
@@ -879,9 +871,6 @@ export function AboutPageContent() {
       <SiteHeader />
       <section className="about-hero">
         <div className="about-hero-text">
-          <div className="eyebrow">
-            <span className="eyebrow-line" /> À propos
-          </div>
           <h1>
             Bienvenue chez <em>Planète Auto</em>
           </h1>
