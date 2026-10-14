@@ -1,6 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 
-export type LeadType = 'contact' | 'offer' | 'reprise' | 'essai'
+export type LeadType = 'contact' | 'devis' | 'offer' | 'reprise' | 'essai'
 export type LeadStatus = 'Nouveau' | 'En cours' | 'Traité'
 export const LEAD_STATUSES: LeadStatus[] = ['Nouveau', 'En cours', 'Traité']
 

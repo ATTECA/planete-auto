@@ -259,9 +259,14 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
               </a>
             </form>
           </div>
-          <a className="hero-sell-cta" href="/reprise">
-            <Tag size={17} /> Vendre ma voiture <ArrowRight size={15} />
-          </a>
+          <div className="hero-actions">
+            <a className="hero-sell-cta" href="/reprise">
+              <Tag size={17} /> Vendre ma voiture <ArrowRight size={15} />
+            </a>
+            <Link className="hero-sell-cta" href="/contact">
+              Nous contacter <ArrowRight size={15} />
+            </Link>
+          </div>
         </div>
         <p className="hero-photo-intro">
           Découvrez nos véhicules toutes marques et bénéficiez d’un accompagnement simple pour l’achat, la reprise, le financement et les

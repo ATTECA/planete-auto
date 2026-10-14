@@ -1,5 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import FloatingQuoteCta from '@/components/floating-quote-cta'
 import RealtimeVehiclesRefresher from '@/components/realtime-vehicles-refresher'
 import './globals.css'
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="antialiased">
         <RealtimeVehiclesRefresher />
         {children}
+        <FloatingQuoteCta />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

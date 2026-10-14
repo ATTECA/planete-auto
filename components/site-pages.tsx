@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -252,6 +252,98 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
       )}
       <button className="button button-red" type="submit" disabled={sending}>
         {sending ? "Envoi en cours..." : "Envoyer ma demande"} <ArrowRight size={17} />
+      </button>
+    </form>
+  );
+}
+
+export function QuoteForm() {
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSending(true);
+    const form = new FormData(event.currentTarget);
+
+    try {
+      const response = await fetch("/api/devis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.get("name"),
+          phone: form.get("phone"),
+          email: form.get("email"),
+          vehicle: form.get("vehicle"),
+          service: form.get("service"),
+          message: form.get("message"),
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (sent) {
+    return (
+      <div className="form-success">
+        <Check size={30} />
+        <h3>Votre demande de devis est bien reçue.</h3>
+        <p>Notre équipe reviendra vers vous rapidement.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form className="standalone-form" onSubmit={submit}>
+      <div className="form-heading">
+        <span>DEVIS ATELIER</span>
+        <h3>Parlez-nous de votre véhicule</h3>
+      </div>
+      <p className="quote-form-intro">Décrivez le problème rencontré afin que notre équipe puisse étudier votre demande.</p>
+      <label>
+        Votre nom
+        <input name="name" required autoComplete="name" placeholder="Prénom Nom" />
+      </label>
+      <label>
+        Votre téléphone
+        <input name="phone" required type="tel" autoComplete="tel" placeholder="04 00 00 00 00" />
+      </label>
+      <label>
+        Votre adresse e-mail <span className="optional-field">(facultatif)</span>
+        <input name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" />
+      </label>
+      <label>
+        Votre véhicule
+        <input name="vehicle" required placeholder="Marque et modèle" />
+      </label>
+      <label>
+        Type de prestation
+        <select name="service" required defaultValue="">
+          <option value="" disabled>Choisissez une prestation</option>
+          <option value="Mécanique">Mécanique</option>
+          <option value="Carrosserie">Carrosserie</option>
+          <option value="Pneumatique">Pneumatique</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </label>
+      <label>
+        Décrivez le problème ou les travaux souhaités
+        <textarea name="message" required rows={5} placeholder="Décrivez les symptômes ou les réparations souhaitées..." />
+      </label>
+      <label className="consent">
+        <input type="checkbox" required /> J'accepte d'être recontacté au sujet de ma demande de devis.
+      </label>
+      {error && <p className="form-error" role="alert">{error}</p>}
+      <button className="button button-red" type="submit" disabled={sending}>
+        {sending ? "Envoi en cours..." : "Envoyer ma demande de devis"} <ArrowRight size={17} />
       </button>
     </form>
   );

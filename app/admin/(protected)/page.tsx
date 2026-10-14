@@ -73,7 +73,7 @@ export default async function AdminDashboardPage() {
     const [vehicles, allVehicles, messageLeads, repriseLeads] = await Promise.all([
         getVehicles(),
         getVehiclesAdmin(),
-        getLeads(['contact', 'offer', 'essai']),
+        getLeads(['contact', 'devis', 'offer', 'essai']),
         getLeads(['reprise']),
     ])
 
@@ -180,7 +180,7 @@ export default async function AdminDashboardPage() {
         },
     ]
 
-    const typeLabels: Record<string, string> = { contact: 'Contact', offer: 'Offre', essai: 'Essai', reprise: 'Reprise' }
+    const typeLabels: Record<string, string> = { contact: 'Contact', devis: 'Devis', offer: 'Offre', essai: 'Essai', reprise: 'Reprise' }
     const latestMessages: LatestMessageItem[] = [...messageLeads, ...repriseLeads]
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, 5)

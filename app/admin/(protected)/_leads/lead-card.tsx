@@ -7,6 +7,7 @@ import type { Lead } from '@/lib/leads'
 
 function typeLabel(lead: Lead): string {
     if (lead.type === 'reprise') return lead.details['Type de demande'] || 'Reprise / vente'
+    if (lead.type === 'devis') return 'Demande de devis'
     if (lead.type === 'offer') return 'Offre sur un véhicule'
     if (lead.type === 'essai') return "Demande d'essai"
     return 'Message de contact'
@@ -17,6 +18,7 @@ function typeTextClassName(label: string): string {
     if (label === 'Vente directe') return 'text-blue-600'
     if (label === 'Reprise avec achat') return 'text-purple-600'
     if (label === 'Offre sur un véhicule') return 'text-pink-600'
+    if (label === 'Demande de devis') return 'text-rose-600'
     if (label === "Demande d'essai") return 'text-teal-600'
     return 'text-gray-600'
 }

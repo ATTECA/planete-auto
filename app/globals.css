@@ -75,6 +75,41 @@ body {
   font-size: 13px;
   line-height: 1.5;
 }
+.floating-quote-cta {
+  position: fixed;
+  z-index: 50;
+  top: 50%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  min-width: 104px;
+  padding: 17px 13px;
+  border-radius: 10px 0 0 10px;
+  background: var(--red);
+  box-shadow: 0 6px 20px rgba(20, 18, 13, 0.2);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transform: translateY(-50%);
+  transition: background 0.2s;
+}
+.floating-quote-cta:hover,
+.floating-quote-cta:focus-visible {
+  background: #c9182a;
+  color: #fff;
+}
+.floating-quote-cta svg {
+  flex: none;
+}
+.floating-quote-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.25;
+  text-align: center;
+}
 .vehicle-description > div:last-child {
   text-align: left;
 }
@@ -474,6 +509,14 @@ em {
   font-weight: 700;
   transition: border-color 0.2s;
 }
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hero-actions .hero-sell-cta {
+  justify-content: center;
+}
 .hero-sell-cta:hover {
   border-color: rgba(255, 255, 255, 0.3);
 }
@@ -511,8 +554,15 @@ em {
 .carrosserie-section {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 56px 5vw 0;
+  padding: 36px 5vw 0;
   background: var(--paper);
+}
+.carrosserie-section::after {
+  display: block;
+  height: 1px;
+  margin-top: 40px;
+  background: var(--line);
+  content: "";
 }
 .carrosserie-grid {
   display: grid;
@@ -569,7 +619,7 @@ em {
 .arrivals-section {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 80px 5vw 50px;
+  padding: 40px 5vw 50px;
   background: var(--paper);
 }
 .carrosserie-section .section-heading h2,
@@ -1694,7 +1744,8 @@ em {
   letter-spacing: 0.08em;
 }
 .standalone-form input,
-.standalone-form textarea {
+.standalone-form textarea,
+.standalone-form select {
   resize: vertical;
   padding: 14px 0;
   outline: 0;
@@ -1708,8 +1759,25 @@ em {
   letter-spacing: 0;
 }
 .standalone-form input:focus,
-.standalone-form textarea:focus {
+.standalone-form textarea:focus,
+.standalone-form select:focus {
   border-color: var(--red);
+}
+.standalone-form select {
+  cursor: pointer;
+}
+.quote-form-intro {
+  margin: -20px 0 30px;
+  color: #6c6d70;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.optional-field {
+  color: var(--gray);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .standalone-form .consent {
   flex-direction: row;
@@ -1747,6 +1815,10 @@ em {
   margin: 0 auto;
   padding: 100px 6vw;
   gap: 60px;
+}
+.quote-page-grid {
+  grid-template-columns: minmax(0, 850px);
+  justify-content: center;
 }
 .info-panel {
   padding: 56px;
@@ -4323,8 +4395,7 @@ em {
     display: block;
     background: #f2f2f0;
   }
-  .hero-bg,
-  .hero-sell-cta {
+  .hero-bg {
     display: none;
   }
   .hero-photo-inner {
@@ -4433,6 +4504,21 @@ em {
   .hero-search-label {
     display: none;
   }
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 5vw 24px;
+  }
+  .hero-actions .hero-sell-cta {
+    min-width: 0;
+    padding: 13px 10px;
+    border-color: rgba(20, 18, 13, 0.12);
+    background: var(--black);
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+  }
   .hero-search-count {
     display: inline;
   }
@@ -4514,8 +4600,30 @@ em {
   display: none;
 }
 @media (max-width: 850px) {
+  .floating-quote-cta {
+    top: auto;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    left: 50%;
+    right: auto;
+    flex-direction: row;
+    gap: 8px;
+    min-width: 0;
+    padding: 13px 19px;
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(20, 18, 13, 0.24);
+    font-size: 14px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .floating-quote-label {
+    flex-direction: row;
+    gap: 0.3em;
+  }
   .carrosserie-section {
-    padding: 40px 5vw 32px;
+    padding: 30px 5vw 0;
+  }
+  .carrosserie-section::after {
+    margin-top: 20px;
   }
   .carrosserie-section .section-heading {
     align-items: flex-start;
@@ -4566,7 +4674,7 @@ em {
     font-size: 11px;
   }
   .arrivals-section {
-    padding-top: 12px;
+    padding-top: 20px;
   }
   .arrivals-section .section-heading h2 {
     font-size: 40px;

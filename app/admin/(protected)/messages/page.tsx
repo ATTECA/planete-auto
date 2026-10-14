@@ -3,15 +3,15 @@ import { Card, CardContent } from '@/components/ui/card'
 import LeadCard from '../_leads/lead-card'
 
 export default async function AdminMessagesPage() {
-    const leads = await getLeads(['contact', 'offer', 'essai'])
+    const leads = await getLeads(['contact', 'devis', 'offer', 'essai'])
 
     return (
         <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1">
                 <h1 className="text-2xl font-semibold">Messages</h1>
                 <p className="text-sm text-muted-foreground">
-                    Messages du formulaire de contact, offres et demandes d&apos;essai reçues sur les véhicules en
-                    stock. Un e-mail vous est aussi envoyé pour chacun.
+                    Messages de contact, demandes de devis, offres et demandes d&apos;essai reçus via le site. Un e-mail
+                    vous est aussi envoyé pour chacun.
                 </p>
             </div>
 

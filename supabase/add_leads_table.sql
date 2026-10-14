@@ -6,7 +6,7 @@
 create table if not exists leads (
   id bigint generated always as identity primary key,
   created_at timestamptz not null default now(),
-  type text not null, -- 'contact' | 'offer' | 'reprise'
+  type text not null, -- 'contact' | 'devis' | 'offer' | 'reprise' | 'essai'
   status text not null default 'Nouveau', -- 'Nouveau' | 'Traité'
   name text not null,
   email text,
