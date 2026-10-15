@@ -7,7 +7,7 @@ import { FileText } from "lucide-react";
 export default function FloatingQuoteCta() {
   const pathname = usePathname();
 
-  if (pathname === "/contact" || pathname === "/devis" || pathname.startsWith("/admin")) return null;
+  if (pathname !== "/") return null;
 
   return (
     <Link className="floating-quote-cta" href="/devis">

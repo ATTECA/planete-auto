@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer'
 import { createLead } from '@/lib/leads'
 import { renderEmailHtml } from '@/lib/email-template'
 
-const services = ['Mécanique', 'Carrosserie', 'Pneumatique', 'Autre'] as const
+const services = ['Mécanique', 'Carrosserie', 'Pneumatique', 'Pièces de rechange', 'Autre'] as const
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const email = typeof body.email === 'string' ? body.email.trim() : ''
     const vehicle = typeof body.vehicle === 'string' ? body.vehicle.trim() : ''
+    const plate = typeof body.plate === 'string' ? body.plate.trim().toUpperCase() : ''
     const service = services.find((candidate) => candidate === body.service)
     const message = typeof body.message === 'string' ? body.message.trim() : ''
 
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
       text: [
         `Type de prestation: ${service}`,
         `Véhicule: ${vehicle}`,
+        plate && `Immatriculation: ${plate}`,
         `Nom: ${name}`,
         `Téléphone: ${phone}`,
         email && `E-mail: ${email}`,
@@ -60,6 +62,7 @@ export async function POST(request: Request) {
         rows: [
           { label: 'Prestation', value: service },
           { label: 'Véhicule', value: vehicle },
+          ...(plate ? [{ label: 'Immatriculation', value: plate }] : []),
           { label: 'Nom', value: name },
           { label: 'Téléphone', value: phone },
           ...(email ? [{ label: 'E-mail', value: email }] : []),
@@ -75,7 +78,7 @@ export async function POST(request: Request) {
       phone,
       vehicleName: vehicle,
       message,
-      details: { 'Type de prestation': service },
+      details: { 'Type de prestation': service, ...(plate ? { Immatriculation: plate } : {}) },
     })
 
     return NextResponse.json({ ok: true })

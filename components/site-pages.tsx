@@ -57,6 +57,9 @@ export function SiteHeader() {
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise
           </a>
+          <a href="/devis" onClick={() => setMenuOpen(false)}>
+            Devis atelier
+          </a>
           <a href="/a-propos" onClick={() => setMenuOpen(false)}>
             À propos
           </a>
@@ -111,6 +114,7 @@ export function SiteFooter() {
           <a href="/">Accueil</a>
           <a href="/vehicules">Nos véhicules</a>
           <a href="/reprise">Vente & reprise</a>
+          <a href="/devis">Devis atelier</a>
           <a href="/a-propos">À propos</a>
           <a href="/contact">Nous contacter</a>
         </div>
@@ -277,6 +281,7 @@ export function QuoteForm() {
           phone: form.get("phone"),
           email: form.get("email"),
           vehicle: form.get("vehicle"),
+          plate: form.get("plate"),
           service: form.get("service"),
           message: form.get("message"),
         }),
@@ -307,7 +312,6 @@ export function QuoteForm() {
         <span>DEVIS ATELIER</span>
         <h3>Parlez-nous de votre véhicule</h3>
       </div>
-      <p className="quote-form-intro">Décrivez le problème rencontré afin que notre équipe puisse étudier votre demande.</p>
       <label>
         Votre nom
         <input name="name" required autoComplete="name" placeholder="Prénom Nom" />
@@ -317,12 +321,16 @@ export function QuoteForm() {
         <input name="phone" required type="tel" autoComplete="tel" placeholder="04 00 00 00 00" />
       </label>
       <label>
-        Votre adresse e-mail <span className="optional-field">(facultatif)</span>
+        <span>Votre adresse e-mail <span className="optional-field">(facultatif)</span></span>
         <input name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" />
       </label>
       <label>
         Votre véhicule
-        <input name="vehicle" required placeholder="Marque et modèle" />
+        <input name="vehicle" required placeholder="Ex. : Peugeot 208 1.2 PureTech 2019" />
+      </label>
+      <label>
+        <span>Immatriculation <span className="optional-field">(facultatif)</span></span>
+        <input name="plate" autoComplete="off" placeholder="AB-123-CD" />
       </label>
       <label>
         Type de prestation
@@ -331,15 +339,13 @@ export function QuoteForm() {
           <option value="Mécanique">Mécanique</option>
           <option value="Carrosserie">Carrosserie</option>
           <option value="Pneumatique">Pneumatique</option>
+          <option value="Pièces de rechange">Pièces de rechange</option>
           <option value="Autre">Autre</option>
         </select>
       </label>
       <label>
         Décrivez le problème ou les travaux souhaités
-        <textarea name="message" required rows={5} placeholder="Décrivez les symptômes ou les réparations souhaitées..." />
-      </label>
-      <label className="consent">
-        <input type="checkbox" required /> J'accepte d'être recontacté au sujet de ma demande de devis.
+        <textarea name="message" required rows={5} placeholder="Ex. : bruit au freinage, 4 pneus 205/55 R16, batterie à remplacer…" />
       </label>
       {error && <p className="form-error" role="alert">{error}</p>}
       <button className="button button-red" type="submit" disabled={sending}>

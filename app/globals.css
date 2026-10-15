@@ -83,22 +83,27 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9px;
-  min-width: 104px;
-  padding: 17px 13px;
-  border-radius: 10px 0 0 10px;
+  gap: 12px;
+  min-width: 96px;
+  padding: 26px 12px;
+  border-radius: 14px 0 0 14px;
   background: var(--red);
-  box-shadow: 0 6px 20px rgba(20, 18, 13, 0.2);
+  box-shadow: 0 10px 24px -6px rgba(230, 30, 50, 0.55), 0 2px 6px rgba(20, 18, 13, 0.18);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
   transform: translateY(-50%);
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .floating-quote-cta:hover,
 .floating-quote-cta:focus-visible {
   background: #c9182a;
   color: #fff;
+  transform: translateY(calc(-50% - 3px));
+  box-shadow: 0 14px 30px -6px rgba(230, 30, 50, 0.6), 0 3px 8px rgba(20, 18, 13, 0.2);
+}
+.floating-quote-cta:active {
+  transform: translateY(-50%);
 }
 .floating-quote-cta svg {
   flex: none;
@@ -1765,12 +1770,6 @@ em {
 }
 .standalone-form select {
   cursor: pointer;
-}
-.quote-form-intro {
-  margin: -20px 0 30px;
-  color: #6c6d70;
-  font-size: 15px;
-  line-height: 1.6;
 }
 .optional-field {
   color: var(--gray);
@@ -4615,6 +4614,11 @@ em {
     transform: translateX(-50%);
     white-space: nowrap;
   }
+  .floating-quote-cta:hover,
+  .floating-quote-cta:focus-visible,
+  .floating-quote-cta:active {
+    transform: translateX(-50%);
+  }
   .floating-quote-label {
     flex-direction: row;
     gap: 0.3em;
@@ -4923,5 +4927,62 @@ em {
   .tradein-field-group select {
     min-width: 0;
     text-overflow: ellipsis;
+  }
+}
+
+/* Header on mid-size screens: the centred nav overlaps the logo below ~1400px. */
+@media (max-width: 1400px) and (min-width: 1001px) {
+  .nav-links {
+    position: static;
+    transform: none;
+    margin-left: auto;
+    gap: 22px;
+  }
+  .navbar {
+    gap: 28px;
+  }
+}
+@media (max-width: 1200px) and (min-width: 1001px) {
+  .navbar .brand {
+    font-size: 36px;
+  }
+  .navbar .brand img {
+    height: 27px;
+  }
+  .nav-links {
+    gap: 18px;
+    font-size: 13px;
+  }
+  .nav-cta {
+    gap: 0;
+    padding: 13px;
+    font-size: 0;
+  }
+}
+@media (max-width: 1000px) and (min-width: 851px) {
+  .navbar {
+    justify-content: space-between;
+  }
+  .nav-cta {
+    display: none;
+  }
+  .menu-button {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 82px;
+    transform: none;
+    padding: 22px 5vw;
+    background: var(--paper);
+    flex-direction: column;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.is-open {
+    display: flex;
   }
 }

@@ -181,6 +181,9 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise
           </a>
+          <a href="/devis" onClick={() => setMenuOpen(false)}>
+            Devis atelier
+          </a>
           <a href="/a-propos" onClick={() => setMenuOpen(false)}>
             À propos
           </a>
@@ -241,10 +244,10 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                   <span>Budget maximum</span>
                   <select value={heroBudget} onChange={(event) => setHeroBudget(event.target.value)}>
                     <option value="">Tous les budgets</option>
+                    <option value="5000">Moins de 5 000 €</option>
+                    <option value="8000">Moins de 8 000 €</option>
                     <option value="10000">Moins de 10 000 €</option>
-                    <option value="16000">Moins de 16 000 €</option>
-                    <option value="22000">Moins de 22 000 €</option>
-                    <option value="30000">Moins de 30 000 €</option>
+                    <option value="15000">Moins de 15 000 €</option>
                   </select>
                 </label>
                 <button type="submit">
