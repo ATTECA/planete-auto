@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { LEAD_STATUSES, type Lead, type LeadStatus } from '@/lib/leads'
+import { useToast } from '@/components/admin/toast-provider'
 import LeadCard, { typeLabel, typeStyle } from './lead-card'
 
 /** Lowercase, accent-free and space-free, so "Héléne" matches "helene" and "06 12" matches "0612". */
@@ -30,7 +31,10 @@ function FilterChip({ active, onClick, children }: { active: boolean; onClick: (
     )
 }
 
-export default function LeadList({ leads, emptyText }: { leads: Lead[]; emptyText: string }) {
+export default function LeadList({ leads: allLeads, emptyText }: { leads: Lead[]; emptyText: string }) {
+    const { isPendingDelete } = useToast()
+    // Requests waiting out their "Annuler" delay are already hidden, counts included.
+    const leads = useMemo(() => allLeads.filter((lead) => !isPendingDelete(`lead-${lead.id}`)), [allLeads, isPendingDelete])
     const [query, setQuery] = useState('')
     const [type, setType] = useState<string | null>(null)
     const [status, setStatus] = useState<LeadStatus | null>(null)

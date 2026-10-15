@@ -5004,3 +5004,13 @@ em {
     display: flex;
   }
 }
+
+/* Admin toasts: shrinking bar showing how long "Annuler" stays available. */
+@keyframes toast-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

@@ -4,6 +4,7 @@ import { useTransition } from 'react'
 import { Menu } from '@base-ui/react/menu'
 import { Check, ChevronDown, Loader2 } from 'lucide-react'
 import { setLeadStatus } from '@/app/admin/(protected)/_leads/actions'
+import { useToast } from '@/components/admin/toast-provider'
 import { LEAD_STATUSES, type LeadStatus } from '@/lib/leads'
 
 /** Solid color per status, so the processing stage is readable at a glance. */
@@ -22,11 +23,17 @@ function statusDotClassName(status: LeadStatus): string {
 
 export default function LeadStatusButton({ id, status }: { id: number; status: LeadStatus }) {
     const [isPending, startTransition] = useTransition()
+    const { toast } = useToast()
 
     const handleChange = (next: LeadStatus) => {
         if (next === status) return
-        startTransition(() => {
-            setLeadStatus(id, next)
+        startTransition(async () => {
+            try {
+                await setLeadStatus(id, next)
+                toast(`Statut passé à « ${next} »`)
+            } catch {
+                toast('Le changement de statut a échoué. Réessayez.', { tone: 'error', duration: 5000 })
+            }
         })
     }
 

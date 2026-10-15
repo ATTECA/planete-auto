@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import { LeadCoverPhoto, LeadPhotoStrip } from './lead-photos'
 import LeadStatusButton from '@/components/admin/lead-status-button'
 import DeleteLeadButton from '@/components/admin/delete-lead-button'
 import { Euro, KeyRound, Mail, Phone, Repeat, Tag, Wrench, type LucideIcon } from 'lucide-react'
@@ -31,8 +31,6 @@ export default function LeadCard({ lead }: { lead: Lead }) {
     const otherDetails = Object.entries(lead.details).filter(([label]) => label !== 'Type de demande')
     const label = typeLabel(lead)
     const { className: typeClassName, icon: TypeIcon } = typeStyle(label)
-    const coverPhoto = lead.photos[0]
-    const extraPhotos = lead.photos.slice(1)
 
     const factLine = [
         lead.vehicleName ? { label: 'Véhicule', value: lead.vehicleName, href: lead.vehicleId ? `/vehicules/${lead.vehicleId}` : undefined } : null,
@@ -42,21 +40,7 @@ export default function LeadCard({ lead }: { lead: Lead }) {
 
     return (
         <article className={`flex gap-6 py-8 ${lead.status === 'Traité' ? 'opacity-50' : ''}`}>
-            {coverPhoto && (
-                <a
-                    href={coverPhoto}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative hidden size-32 shrink-0 overflow-hidden rounded-lg bg-muted sm:block"
-                >
-                    <Image src={coverPhoto} alt="" fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
-                    {extraPhotos.length > 0 && (
-                        <span className="absolute bottom-1.5 right-1.5 rounded-full bg-black/70 px-2 py-0.5 text-[11px] font-semibold text-white">
-                            +{extraPhotos.length}
-                        </span>
-                    )}
-                </a>
-            )}
+            {lead.photos.length > 0 && <LeadCoverPhoto photos={lead.photos} />}
 
             <div className="flex min-w-0 flex-1 flex-col gap-3">
                 <div className="flex flex-wrap items-start justify-between gap-4">
@@ -111,17 +95,8 @@ export default function LeadCard({ lead }: { lead: Lead }) {
                     </p>
                 )}
 
-                {lead.photos.length > 0 && (
-                    <div className={`flex flex-wrap gap-2 pt-1 ${coverPhoto ? 'sm:hidden' : ''}`}>
-                        {lead.photos.map((url) => (
-                            <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="group">
-                                <div className="relative size-20 overflow-hidden rounded-lg bg-muted transition-transform group-hover:scale-105">
-                                    <Image src={url} alt="" fill className="object-cover" />
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                )}
+                {/* Phones: the cover is hidden, so every photo gets its own thumbnail. */}
+                {lead.photos.length > 0 && <LeadPhotoStrip photos={lead.photos} className="sm:hidden" />}
             </div>
         </article>
     )

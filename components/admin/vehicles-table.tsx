@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, Pencil, Plus, Search, Car, CheckCircle2, Clock3
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import IconTooltip from '@/components/admin/icon-tooltip'
+import { useToast } from '@/components/admin/toast-provider'
 import DeleteVehicleButton from '@/components/admin/delete-vehicle-button'
 import ArchiveVehicleButton from '@/components/admin/archive-vehicle-button'
 import DuplicateVehicleButton from '@/components/admin/duplicate-vehicle-button'
@@ -30,7 +31,13 @@ function normalize(status: string) {
         .replace(/[̀-ͯ]/g, '')
 }
 
-export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
+export default function VehiclesTable({ vehicles: allVehicles }: { vehicles: Vehicle[] }) {
+    const { isPendingDelete } = useToast()
+    // Rows waiting out their "Annuler" delay are already hidden, counts included.
+    const vehicles = useMemo(
+        () => allVehicles.filter((vehicle) => !isPendingDelete(`vehicle-${vehicle.id}`)),
+        [allVehicles, isPendingDelete],
+    )
     const [query, setQuery] = useState('')
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
     const [dateSort, setDateSort] = useState<'newest' | 'oldest'>('newest')
@@ -183,8 +190,8 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                                 <span className="sr-only">Modifier</span>
                                             </Button>
                                         </IconTooltip>
-                                        <DuplicateVehicleButton id={vehicle.id} />
-                                        <ArchiveVehicleButton id={vehicle.id} archived={vehicle.archived} />
+                                        <DuplicateVehicleButton id={vehicle.id} name={vehicle.name} />
+                                        <ArchiveVehicleButton id={vehicle.id} name={vehicle.name} archived={vehicle.archived} />
                                         <DeleteVehicleButton id={vehicle.id} name={vehicle.name} />
                                     </div>
                                 </div>

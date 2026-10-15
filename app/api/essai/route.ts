@@ -1,17 +1,10 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
-import { createLead } from '@/lib/leads'
 import { renderEmailHtml } from '@/lib/email-template'
-
-function requiredEnv(name: string) {
-  const value = process.env[name]
-  if (!value) throw new Error(`Missing environment variable: ${name}`)
-  return value
-}
+import { formErrorResponse, readJsonBody, requireFields, requireValidEmail, saveLeadSafely, sendFormEmail } from '@/lib/form-api'
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
+    const body = await readJsonBody(request)
     const name = typeof body.name === 'string' ? body.name.trim() : ''
     const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
     const email = typeof body.email === 'string' ? body.email.trim() : ''
@@ -21,28 +14,15 @@ export async function POST(request: Request) {
     const vehicleId = typeof body.vehicleId === 'number' ? body.vehicleId : null
     const vehicleName = typeof body.vehicleName === 'string' ? body.vehicleName.trim() : ''
 
-    if (!name || !phone || !preferredDate || !vehicleName) {
-      return NextResponse.json({ error: 'Veuillez remplir tous les champs obligatoires.' }, { status: 400 })
-    }
-
-    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
-      return NextResponse.json({ error: 'Veuillez saisir une adresse e-mail valide.' }, { status: 400 })
-    }
-
-    const transporter = nodemailer.createTransport({
-      host: requiredEnv('SMTP_HOST'),
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: requiredEnv('SMTP_USER'),
-        pass: requiredEnv('SMTP_PASSWORD'),
-      },
+    requireFields({
+      'votre nom': name,
+      'votre téléphone': phone,
+      'la date souhaitée': preferredDate,
+      'le véhicule concerné (rechargez la page)': vehicleName,
     })
+    requireValidEmail(email)
 
-    const recipient = process.env.CONTACT_RECIPIENT ?? 'communication@att-eca.com'
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
-      to: recipient,
+    await sendFormEmail({
       replyTo: email || undefined,
       subject: `Planète Auto — Demande d'essai : ${vehicleName}`,
       text: [
@@ -69,7 +49,7 @@ export async function POST(request: Request) {
       }),
     })
 
-    await createLead({
+    await saveLeadSafely({
       type: 'essai',
       name,
       email,
@@ -85,7 +65,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true })
   } catch (error) {
-    console.error('Test drive form error:', error)
-    return NextResponse.json({ error: 'L’envoi a échoué. Veuillez réessayer ou nous appeler.' }, { status: 500 })
+    return formErrorResponse(error, 'Test drive form error')
   }
 }

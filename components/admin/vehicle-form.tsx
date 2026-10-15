@@ -18,6 +18,7 @@ import {
     X,
 } from 'lucide-react'
 import BackToTopButton from '@/components/admin/back-to-top-button'
+import { useToast } from '@/components/admin/toast-provider'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -120,17 +121,25 @@ const selectClassName =
 export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'; vehicle?: Vehicle }) {
     const action = mode === 'create' ? createVehicle : updateVehicle
     const [state, formAction, pending] = useActionState<VehicleFormState, FormData>(action, undefined)
-    const [toast, setToast] = useState<string | null>(null)
+    const { toast } = useToast()
+    const submittedRef = useRef(false)
+
+    const showError = (message: string) => toast(message, { tone: 'error', duration: 5000 })
 
     useEffect(() => {
-        if (state && 'error' in state) setToast(state.error)
-    }, [state])
+        if (state && 'error' in state) {
+            submittedRef.current = false
+            toast(state.error, { tone: 'error', duration: 5000 })
+        }
+    }, [state, toast])
 
+    // A successful save redirects to the list, which unmounts this form: that's the
+    // moment to confirm it (the toast lives in the admin layout, so it survives the redirect).
     useEffect(() => {
-        if (!toast) return
-        const timer = setTimeout(() => setToast(null), 5000)
-        return () => clearTimeout(timer)
-    }, [toast])
+        return () => {
+            if (submittedRef.current) toast(mode === 'create' ? 'Véhicule ajouté' : 'Modifications enregistrées')
+        }
+    }, [mode, toast])
 
     const [detailRows, setDetailRows] = useState<DetailRow[]>((vehicle?.details ?? []).map(toDetailRow))
     const [equipmentGroups, setEquipmentGroups] = useState<EquipmentGroupRow[]>(
@@ -212,25 +221,15 @@ export default function VehicleForm({ mode, vehicle }: { mode: 'create' | 'edit'
         <div className="flex flex-col gap-6 pb-16">
             <BackToTopButton />
 
-            {toast && (
-                <div
-                    role="alert"
-                    className="fixed top-5 left-1/2 z-50 flex max-w-lg -translate-x-1/2 items-center gap-3 rounded-xl border border-destructive/30 bg-card px-4 py-3 text-sm font-medium text-destructive shadow-lg"
-                >
-                    {toast}
-                    <button type="button" onClick={() => setToast(null)} className="text-muted-foreground hover:text-foreground">
-                        <X className="size-4" />
-                    </button>
-                </div>
-            )}
-
             <form
                 action={formAction}
                 onSubmit={(event) => {
                     if (photos.length === 0) {
                         event.preventDefault()
-                        setToast('Au moins une photo est obligatoire.')
+                        showError('Au moins une photo est obligatoire.')
+                        return
                     }
+                    submittedRef.current = true
                 }}
                 className="flex flex-col gap-6"
             >

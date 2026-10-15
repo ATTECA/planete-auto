@@ -3,15 +3,22 @@
 import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import IconTooltip from '@/components/admin/icon-tooltip'
+import { useToast } from '@/components/admin/toast-provider'
 import { Archive, ArchiveRestore } from 'lucide-react'
 import { setVehicleArchived } from '@/app/admin/(protected)/vehicules/actions'
 
-export default function ArchiveVehicleButton({ id, archived }: { id: number; archived: boolean }) {
+export default function ArchiveVehicleButton({ id, name, archived }: { id: number; name: string; archived: boolean }) {
     const [isPending, startTransition] = useTransition()
+    const { toast } = useToast()
 
     const handleToggle = () => {
-        startTransition(() => {
-            setVehicleArchived(id, !archived)
+        startTransition(async () => {
+            try {
+                await setVehicleArchived(id, !archived)
+                toast(archived ? `« ${name} » est de nouveau en ligne` : `« ${name} » a été archivé`)
+            } catch {
+                toast("L'archivage a échoué. Réessayez.", { tone: 'error', duration: 5000 })
+            }
         })
     }
 

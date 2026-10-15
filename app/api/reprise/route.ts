@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
 import { renderEmailHtml } from '@/lib/email-template'
-import { createLead } from '@/lib/leads'
+import {
+  FormError,
+  formErrorResponse,
+  readFormDataBody,
+  requireFields,
+  requireValidEmail,
+  saveLeadSafely,
+  sendFormEmail,
+} from '@/lib/form-api'
 import { getSupabaseAdmin } from '@/lib/supabase'
-
-function requiredEnv(name: string) {
-  const value = process.env[name]
-  if (!value) throw new Error(`Missing environment variable: ${name}`)
-  return value
-}
 
 const MAX_PHOTOS = 8
 const MAX_PHOTO_SIZE = 8 * 1024 * 1024
@@ -38,7 +39,7 @@ async function uploadLeadPhotos(photos: File[]): Promise<string[]> {
 
 export async function POST(request: Request) {
   try {
-    const form = await request.formData()
+    const form = await readFormDataBody(request)
 
     const intent = form.get('intent') === 'vente' ? 'Vente directe' : 'Reprise avec achat'
     const name = String(form.get('name') ?? '').trim()
@@ -54,21 +55,26 @@ export async function POST(request: Request) {
     const condition = String(form.get('condition') ?? '').trim()
     const message = String(form.get('message') ?? '').trim()
 
-    if (!name || !email || !phone || !brand || !model) {
-      return NextResponse.json({ error: 'Veuillez remplir tous les champs obligatoires.' }, { status: 400 })
-    }
-
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      return NextResponse.json({ error: 'Veuillez saisir une adresse e-mail valide.' }, { status: 400 })
-    }
+    requireFields({
+      'la marque du véhicule': brand,
+      'le modèle du véhicule': model,
+      'votre nom': name,
+      'votre e-mail': email,
+      'votre téléphone': phone,
+    })
+    requireValidEmail(email)
 
     const photos = form.getAll('photos').filter((entry): entry is File => entry instanceof File && entry.size > 0)
     if (photos.length > MAX_PHOTOS) {
-      return NextResponse.json({ error: `Vous pouvez ajouter au maximum ${MAX_PHOTOS} photos.` }, { status: 400 })
+      throw new FormError(`Vous avez ajouté ${photos.length} photos : le maximum est de ${MAX_PHOTOS}. Retirez-en ${photos.length - MAX_PHOTOS}.`)
     }
     for (const photo of photos) {
+      if (photo.type && !photo.type.startsWith('image/')) {
+        throw new FormError(`Le fichier « ${photo.name} » n’est pas une image. Seules les photos sont acceptées.`)
+      }
       if (photo.size > MAX_PHOTO_SIZE) {
-        return NextResponse.json({ error: 'Chaque photo doit faire moins de 8 Mo.' }, { status: 400 })
+        const sizeMb = (photo.size / 1024 / 1024).toFixed(1).replace('.', ',')
+        throw new FormError(`La photo « ${photo.name} » fait ${sizeMb} Mo : la limite est de 8 Mo par photo.`)
       }
     }
 
@@ -80,20 +86,7 @@ export async function POST(request: Request) {
       }))
     )
 
-    const transporter = nodemailer.createTransport({
-      host: requiredEnv('SMTP_HOST'),
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: requiredEnv('SMTP_USER'),
-        pass: requiredEnv('SMTP_PASSWORD'),
-      },
-    })
-
-    const recipient = process.env.CONTACT_RECIPIENT ?? 'communication@att-eca.com'
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
-      to: recipient,
+    await sendFormEmail({
       replyTo: email,
       subject: `Planète Auto — ${intent} : ${brand} ${model}`,
       text: [
@@ -133,7 +126,7 @@ export async function POST(request: Request) {
 
     const photoUrls = await uploadLeadPhotos(photos)
 
-    await createLead({
+    await saveLeadSafely({
       type: 'reprise',
       name,
       email,
@@ -154,7 +147,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ ok: true })
   } catch (error) {
-    console.error('Reprise form error:', error)
-    return NextResponse.json({ error: 'L’envoi a échoué. Veuillez réessayer ou nous appeler.' }, { status: 500 })
+    return formErrorResponse(error, 'Reprise form error')
   }
 }

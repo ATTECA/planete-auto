@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { compressImage } from "@/lib/compress-image";
+import { postForm } from "@/lib/post-form";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -198,17 +200,11 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
     setSending(true);
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.get("name"),
-          email: form.get("email"),
-          message: [form.get("phone") && `Téléphone : ${form.get("phone")}`, form.get("message")].filter(Boolean).join("\n\n"),
-        }),
+      await postForm("/api/contact", {
+        name: form.get("name"),
+        email: form.get("email"),
+        message: [form.get("phone") && `Téléphone : ${form.get("phone")}`, form.get("message")].filter(Boolean).join("\n\n"),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
@@ -273,21 +269,15 @@ export function QuoteForm() {
     const form = new FormData(event.currentTarget);
 
     try {
-      const response = await fetch("/api/devis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.get("name"),
-          phone: form.get("phone"),
-          email: form.get("email"),
-          vehicle: form.get("vehicle"),
-          plate: form.get("plate"),
-          service: form.get("service"),
-          message: form.get("message"),
-        }),
+      await postForm("/api/devis", {
+        name: form.get("name"),
+        phone: form.get("phone"),
+        email: form.get("email"),
+        vehicle: form.get("vehicle"),
+        plate: form.get("plate"),
+        service: form.get("service"),
+        message: form.get("message"),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
@@ -373,6 +363,8 @@ const TRADEIN_BRANDS = [
 const TRADEIN_YEARS = Array.from({ length: 50 }, (_, i) => String(2026 - i));
 const TRADEIN_CONDITIONS = ["Excellent état", "Bon état", "État correct", "À réviser"];
 const MAX_TRADEIN_PHOTOS = 8;
+// Vercel rejects requests over 4.5 MB; this leaves room for the text fields.
+const MAX_TRADEIN_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 const initialTradeInVehicle = { brand: "", model: "", year: "", mileage: "", gearbox: "", fuel: "", color: "", condition: "" };
 const initialTradeInContact = { name: "", email: "", phone: "", message: "" };
@@ -409,11 +401,18 @@ export function TradeInForm() {
     form.set("intent", intent);
     Object.entries(vehicle).forEach(([key, value]) => form.set(key, value));
     Object.entries(contact).forEach(([key, value]) => form.set(key, value));
-    photos.forEach((photo) => form.append("photos", photo));
     try {
-      const response = await fetch("/api/reprise", { method: "POST", body: form });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      const compressed = await Promise.all(photos.map(compressImage));
+      const totalSize = compressed.reduce((sum, photo) => sum + photo.size, 0);
+      if (totalSize > MAX_TRADEIN_UPLOAD_BYTES) {
+        const toMb = (bytes: number) => (bytes / 1024 / 1024).toFixed(1).replace(".", ",");
+        throw new Error(
+          `Vos photos pèsent ${toMb(totalSize)} Mo au total : la limite est de ${toMb(MAX_TRADEIN_UPLOAD_BYTES)} Mo. Retirez-en quelques-unes et réessayez.`,
+        );
+      }
+      compressed.forEach((photo) => form.append("photos", photo));
+
+      await postForm("/api/reprise", form);
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
@@ -656,13 +655,7 @@ export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { veh
     setError("");
     setSending(true);
     try {
-      const response = await fetch("/api/offer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, offer, vehicleId, vehicleName, vehiclePrice }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      await postForm("/api/offer", { name, phone, email, offer, vehicleId, vehicleName, vehiclePrice });
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");
@@ -735,13 +728,7 @@ export function VehicleTestDriveForm({ vehicleId, vehicleName }: { vehicleId: nu
     setError("");
     setSending(true);
     try {
-      const response = await fetch("/api/essai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, preferredDate, preferredTime, message, vehicleId, vehicleName }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      await postForm("/api/essai", { name, phone, email, preferredDate, preferredTime, message, vehicleId, vehicleName });
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "L’envoi a échoué. Veuillez réessayer.");

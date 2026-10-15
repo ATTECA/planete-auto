@@ -1,19 +1,19 @@
 'use client'
 
-import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/admin/toast-provider'
 import { Trash2 } from 'lucide-react'
 import { deleteLead } from '@/app/admin/(protected)/_leads/actions'
 
 export default function DeleteLeadButton({ id, name }: { id: number; name: string }) {
-    const [isPending, startTransition] = useTransition()
+    const { scheduleDelete } = useToast()
 
     const handleDelete = () => {
-        if (!confirm(`Supprimer définitivement la demande de "${name}" ? Cette action est irréversible.`)) {
-            return
-        }
-        startTransition(() => {
-            deleteLead(id)
+        scheduleDelete({
+            key: `lead-${id}`,
+            pendingMessage: `La demande de « ${name} » va être supprimée`,
+            doneMessage: `La demande de « ${name} » a été supprimée`,
+            run: () => deleteLead(id),
         })
     }
 
@@ -21,7 +21,6 @@ export default function DeleteLeadButton({ id, name }: { id: number; name: strin
         <Button
             variant="ghost"
             size="icon-sm"
-            disabled={isPending}
             onClick={handleDelete}
             className="text-muted-foreground hover:text-destructive"
         >
