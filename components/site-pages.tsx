@@ -10,6 +10,7 @@ import {
   Calendar,
   CarFront,
   Check,
+  CircleAlert,
   Clock3,
   Fuel,
   Gauge,
@@ -190,6 +191,15 @@ export function PageShell({ title, intro, children }: { title: ReactNode; intro:
   );
 }
 
+function FormErrorMessage({ message }: { message: string }) {
+  return (
+    <div className="form-error" role="alert">
+      <CircleAlert size={20} aria-hidden />
+      <p>{message}</p>
+    </div>
+  );
+}
+
 export function ContactForm({ subject = "votre projet" }: { subject?: string }) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -245,11 +255,7 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
       <label className="consent">
         <input type="checkbox" required /> J'accepte d'être recontacté au sujet de ma demande.
       </label>
-      {error && (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <FormErrorMessage message={error} />}
       <button className="button button-red" type="submit" disabled={sending}>
         {sending ? "Envoi en cours..." : "Envoyer ma demande"} <ArrowRight size={17} />
       </button>
@@ -337,7 +343,7 @@ export function QuoteForm() {
         Décrivez le problème ou les travaux souhaités
         <textarea name="message" required rows={5} placeholder="Ex. : bruit au freinage, 4 pneus 205/55 R16, batterie à remplacer…" />
       </label>
-      {error && <p className="form-error" role="alert">{error}</p>}
+      {error && <FormErrorMessage message={error} />}
       <button className="button button-red" type="submit" disabled={sending}>
         {sending ? "Envoi en cours..." : "Envoyer ma demande de devis"} <ArrowRight size={17} />
       </button>
@@ -621,11 +627,7 @@ export function TradeInForm() {
                 </select>
               </label>
             </div>
-            {error && (
-              <p className="form-error" role="alert">
-                {error}
-              </p>
-            )}
+            {error && <FormErrorMessage message={error} />}
             <div className="tradein-actions">
               <button type="button" className="button button-ghost" onClick={() => setStep(1)}>
                 Retour
@@ -700,11 +702,7 @@ export function VehicleOfferForm({ vehicleId, vehicleName, vehiclePrice }: { veh
         E-mail (facultatif)
         <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" placeholder="vous@exemple.fr" />
       </label>
-      {error && (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <FormErrorMessage message={error} />}
       <button className="button button-red" type="submit" disabled={sending}>
         {sending ? "Envoi en cours..." : "Envoyer une offre"} <ArrowRight size={17} />
       </button>
@@ -782,11 +780,7 @@ export function VehicleTestDriveForm({ vehicleId, vehicleName }: { vehicleId: nu
         Message (facultatif)
         <input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Une précision à ajouter ?" />
       </label>
-      {error && (
-        <p className="form-error" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <FormErrorMessage message={error} />}
       <button className="button button-red" type="submit" disabled={sending}>
         {sending ? "Envoi en cours..." : "Envoyer la demande"} <ArrowRight size={17} />
       </button>

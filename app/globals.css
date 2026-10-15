@@ -69,11 +69,32 @@ body {
     max-width: 360px;
   }
 }
+/* Solid light card so the message stays readable on both the grey and white forms. */
 .form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   margin: 0 0 16px;
-  color: var(--red);
-  font-size: 13px;
+  padding: 14px 16px;
+  border: 1px solid #f3b4b4;
+  border-left: 4px solid #c81e1e;
+  border-radius: 10px;
+  background: #fdecec;
+  color: #7f1d1d;
+  font-size: 15px;
+  font-weight: 500;
   line-height: 1.5;
+  text-align: left;
+}
+.form-error svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #c81e1e;
+}
+.form-error p {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
 }
 .floating-quote-cta {
   position: fixed;

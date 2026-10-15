@@ -49,7 +49,10 @@ type MailOptions = Omit<SendMailOptions, 'from' | 'to'>
 export async function sendFormEmail(options: MailOptions) {
   const { SMTP_HOST, SMTP_USER, SMTP_PASSWORD } = process.env
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
-    console.error('Form email: missing SMTP_HOST, SMTP_USER or SMTP_PASSWORD')
+    const missing = Object.entries({ SMTP_HOST, SMTP_USER, SMTP_PASSWORD })
+      .filter(([, value]) => !value)
+      .map(([name]) => name)
+    console.error(`Form email: missing environment variable(s) ${missing.join(', ')} (VERCEL_ENV=${process.env.VERCEL_ENV ?? 'none'})`)
     throw new FormError(
       `Le formulaire est temporairement indisponible. Appelez-nous au ${GARAGE_PHONE}, nous traiterons votre demande directement.`,
       503,
