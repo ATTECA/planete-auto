@@ -1,6 +1,5 @@
 import { getLeads } from '@/lib/leads'
-import { Card, CardContent } from '@/components/ui/card'
-import LeadCard from '../_leads/lead-card'
+import LeadList from '../_leads/lead-list'
 
 export default async function AdminMessagesPage() {
     const leads = await getLeads(['contact', 'devis', 'offer', 'essai'])
@@ -15,19 +14,7 @@ export default async function AdminMessagesPage() {
                 </p>
             </div>
 
-            {leads.length === 0 ? (
-                <Card>
-                    <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                        Aucun message pour le moment.
-                    </CardContent>
-                </Card>
-            ) : (
-                <div className="divide-y divide-border rounded-2xl border border-border bg-card px-6">
-                    {leads.map((lead) => (
-                        <LeadCard key={lead.id} lead={lead} />
-                    ))}
-                </div>
-            )}
+            <LeadList leads={leads} emptyText="Aucun message pour le moment." />
         </div>
     )
 }

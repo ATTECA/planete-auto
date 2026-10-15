@@ -175,7 +175,7 @@ export default function VehiclesTable({ vehicles }: { vehicles: Vehicle[] }) {
                                         <span className={cn('size-1.5 shrink-0 rounded-full', dotClass)} />
                                         {vehicle.status}
                                     </div>
-                                    <div className="text-sm text-muted-foreground">{new Date(vehicle.createdAt).toLocaleDateString('fr-FR')}</div>
+                                    <div className="text-sm text-muted-foreground">{new Date(vehicle.createdAt).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}</div>
                                     <div className="mx-auto flex w-fit items-center gap-1 rounded-lg bg-muted/60 p-1 max-[850px]:ml-auto max-[850px]:mr-0">
                                         <IconTooltip label="Modifier">
                                             <Button variant="ghost" size="icon-sm" nativeButton={false} render={<Link href={`/admin/vehicules/${vehicle.id}`} />}>

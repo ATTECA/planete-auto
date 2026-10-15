@@ -2,10 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import LeadStatusButton from '@/components/admin/lead-status-button'
 import DeleteLeadButton from '@/components/admin/delete-lead-button'
-import { Mail, Phone } from 'lucide-react'
+import { Euro, KeyRound, Mail, Phone, Repeat, Tag, Wrench, type LucideIcon } from 'lucide-react'
 import type { Lead } from '@/lib/leads'
 
-function typeLabel(lead: Lead): string {
+export function typeLabel(lead: Lead): string {
     if (lead.type === 'reprise') return lead.details['Type de demande'] || 'Reprise / vente'
     if (lead.type === 'devis') return 'Demande de devis'
     if (lead.type === 'offer') return 'Offre sur un véhicule'
@@ -13,20 +13,24 @@ function typeLabel(lead: Lead): string {
     return 'Message de contact'
 }
 
-/** Solid, distinct color per request type/intent, so they're easy to tell apart at a glance. */
-function typeTextClassName(label: string): string {
-    if (label === 'Vente directe') return 'text-blue-600'
-    if (label === 'Reprise avec achat') return 'text-purple-600'
-    if (label === 'Offre sur un véhicule') return 'text-pink-600'
-    if (label === 'Demande de devis') return 'text-rose-600'
-    if (label === "Demande d'essai") return 'text-teal-600'
-    return 'text-gray-600'
+/**
+ * Pill color + icon per request type, so they're easy to tell apart at a glance.
+ * Avoids blue, orange and green, which the status button already uses.
+ */
+export function typeStyle(label: string): { className: string; icon: LucideIcon } {
+    if (label === 'Vente directe') return { className: 'bg-fuchsia-100 text-fuchsia-800', icon: Tag }
+    if (label === 'Reprise avec achat') return { className: 'bg-indigo-100 text-indigo-800', icon: Repeat }
+    if (label === 'Offre sur un véhicule') return { className: 'bg-rose-100 text-rose-800', icon: Euro }
+    if (label === 'Demande de devis') return { className: 'bg-violet-100 text-violet-800', icon: Wrench }
+    if (label === "Demande d'essai") return { className: 'bg-amber-100 text-amber-800', icon: KeyRound }
+    return { className: 'bg-slate-100 text-slate-700', icon: Mail }
 }
 
 export default function LeadCard({ lead }: { lead: Lead }) {
     // "Type de demande" is already shown above, no need to repeat it in the details list.
     const otherDetails = Object.entries(lead.details).filter(([label]) => label !== 'Type de demande')
     const label = typeLabel(lead)
+    const { className: typeClassName, icon: TypeIcon } = typeStyle(label)
     const coverPhoto = lead.photos[0]
     const extraPhotos = lead.photos.slice(1)
 
@@ -57,9 +61,12 @@ export default function LeadCard({ lead }: { lead: Lead }) {
             <div className="flex min-w-0 flex-1 flex-col gap-3">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
-                        <p className={`text-xs font-bold uppercase tracking-wider ${typeTextClassName(label)}`}>{label}</p>
+                        <span className={`mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${typeClassName}`}>
+                            <TypeIcon className="size-3.5" aria-hidden />
+                            {label}
+                        </span>
                         <h3 className="text-2xl font-semibold leading-tight text-foreground">{lead.name}</h3>
-                        <p className="mt-0.5 text-sm text-muted-foreground">{new Date(lead.createdAt).toLocaleString('fr-FR')}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{new Date(lead.createdAt).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}</p>
                     </div>
                     <div className="flex items-center gap-1.5">
                         <LeadStatusButton id={lead.id} status={lead.status} />

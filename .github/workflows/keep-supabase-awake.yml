@@ -1,0 +1,22 @@
+name: Keep Supabase awake
+
+# Supabase's free plan pauses a project after about a week without activity.
+# A tiny read query twice a week keeps it active.
+on:
+  schedule:
+    - cron: '0 7 * * 1,4' # Monday and Thursday, 07:00 UTC
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query one vehicle
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          curl --fail --silent --show-error \
+            "$SUPABASE_URL/rest/v1/vehicles?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY"

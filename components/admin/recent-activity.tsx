@@ -69,7 +69,7 @@ export default function RecentActivity({ vehicles, limit = 6 }: { vehicles: Vehi
                                         {vehicle.status}
                                     </div>
                                     <div className="text-sm text-muted-foreground">
-                                        {new Date(vehicle.updatedAt).toLocaleDateString('fr-FR')}
+                                        {new Date(vehicle.updatedAt).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}
                                     </div>
                                 </div>
                             )

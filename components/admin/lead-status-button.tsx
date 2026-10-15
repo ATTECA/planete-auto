@@ -1,7 +1,8 @@
 'use client'
 
 import { useTransition } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Menu } from '@base-ui/react/menu'
+import { Check, ChevronDown, Loader2 } from 'lucide-react'
 import { setLeadStatus } from '@/app/admin/(protected)/_leads/actions'
 import { LEAD_STATUSES, type LeadStatus } from '@/lib/leads'
 
@@ -12,40 +13,54 @@ function statusClassName(status: LeadStatus): string {
     return 'bg-green-600 text-white'
 }
 
+/** Small colored dot matching each status, shown in the dropdown list. */
+function statusDotClassName(status: LeadStatus): string {
+    if (status === 'Nouveau') return 'bg-blue-600'
+    if (status === 'En cours') return 'bg-orange-400'
+    return 'bg-green-600'
+}
+
 export default function LeadStatusButton({ id, status }: { id: number; status: LeadStatus }) {
     const [isPending, startTransition] = useTransition()
 
     const handleChange = (next: LeadStatus) => {
+        if (next === status) return
         startTransition(() => {
             setLeadStatus(id, next)
         })
     }
 
     return (
-        <div className="relative">
-            <select
-                value={status}
+        <Menu.Root>
+            <Menu.Trigger
                 disabled={isPending}
-                onChange={(e) => handleChange(e.target.value as LeadStatus)}
-                className={`h-9 cursor-pointer appearance-none rounded-full border-0 py-0 pl-3.5 pr-8 text-sm font-semibold outline-none ring-offset-2 transition-opacity focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 ${statusClassName(status)}`}
+                className={`inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full pl-3.5 pr-2.5 text-sm font-semibold outline-none ring-offset-2 transition-opacity focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 ${statusClassName(status)}`}
             >
-                {LEAD_STATUSES.map((s) => (
-                    <option key={s} value={s} className="bg-background text-foreground">
-                        {s}
-                    </option>
-                ))}
-            </select>
-            {isPending ? (
-                <Loader2 className="pointer-events-none absolute right-2.5 top-1/2 size-3.5 -translate-y-1/2 animate-spin text-white" />
-            ) : (
-                <svg
-                    className="pointer-events-none absolute right-2.5 top-1/2 size-3 -translate-y-1/2 text-white"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                >
-                    <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-            )}
-        </div>
+                {status}
+                {isPending ? <Loader2 className="size-3.5 animate-spin" /> : <ChevronDown className="size-3.5" />}
+            </Menu.Trigger>
+            <Menu.Portal>
+                <Menu.Positioner sideOffset={6} align="end" className="z-50">
+                    <Menu.Popup className="min-w-40 rounded-xl font-sans border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-none">
+                        <Menu.RadioGroup value={status} onValueChange={(value) => handleChange(value as LeadStatus)}>
+                            {LEAD_STATUSES.map((value) => (
+                                <Menu.RadioItem
+                                    key={value}
+                                    value={value}
+                                    closeOnClick
+                                    className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium outline-none select-none data-highlighted:bg-muted"
+                                >
+                                    <span className={`size-2 rounded-full ${statusDotClassName(value)}`} />
+                                    <span className="flex-1">{value}</span>
+                                    <Menu.RadioItemIndicator>
+                                        <Check className="size-3.5 text-muted-foreground" />
+                                    </Menu.RadioItemIndicator>
+                                </Menu.RadioItem>
+                            ))}
+                        </Menu.RadioGroup>
+                    </Menu.Popup>
+                </Menu.Positioner>
+            </Menu.Portal>
+        </Menu.Root>
     )
 }

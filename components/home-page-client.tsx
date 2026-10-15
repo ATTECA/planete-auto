@@ -418,7 +418,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 className="arrivals-arrow arrivals-arrow-prev"
                 aria-label="Page précédente"
-                autoComplete="off"
+                {...{ autoComplete: "off" }}
                 disabled={arrivalsPage === 0}
                 onClick={() => goToArrivalsPage(Math.max(0, arrivalsPage - 1))}
               >
@@ -428,7 +428,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 className="arrivals-arrow arrivals-arrow-next"
                 aria-label="Page suivante"
-                autoComplete="off"
+                {...{ autoComplete: "off" }}
                 disabled={arrivalsPage === arrivalsPages.length - 1}
                 onClick={() => goToArrivalsPage(Math.min(arrivalsPages.length - 1, arrivalsPage + 1))}
               >
