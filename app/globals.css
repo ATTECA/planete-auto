@@ -2647,7 +2647,8 @@ em {
   fill: currentColor;
   stroke: none;
 }
-.social-facebook svg {
+.social-facebook svg,
+.social-tiktok svg {
   fill: currentColor;
   stroke: none;
 }
