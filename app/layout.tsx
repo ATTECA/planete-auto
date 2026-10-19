@@ -4,10 +4,11 @@ import FloatingQuoteCta from '@/components/floating-quote-cta'
 import RealtimeVehiclesRefresher from '@/components/realtime-vehicles-refresher'
 import { garageJsonLd, serializeJsonLd } from '@/lib/structured-data'
 import './globals.css'
+import { SITE_URL } from '@/lib/site-url'
 
 export const metadata: Metadata = {
   // Share previews (WhatsApp, Facebook…) need absolute URLs; relative image paths are resolved against this.
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://planete-auto.vercel.app'),
+    metadataBase: new URL(SITE_URL),
   // Default preview card for pages that don't set their own (vehicle pages do).
   openGraph: {
     siteName: 'Planète Auto',

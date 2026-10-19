@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { getVehicles, vehicleSlug } from '@/lib/vehicles'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://planete-auto.vercel.app'
+import { SITE_URL } from '@/lib/site-url'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const vehicles = await getVehicles()

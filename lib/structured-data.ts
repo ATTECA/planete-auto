@@ -1,4 +1,5 @@
 import { vehicleSlug, vehicleStatusCategory, type Vehicle } from '@/lib/vehicles'
+import { SITE_URL } from '@/lib/site-url'
 
 /**
  * Google structured data (JSON-LD, schema.org): machine-readable facts that let Google show
@@ -6,7 +7,6 @@ import { vehicleSlug, vehicleStatusCategory, type Vehicle } from '@/lib/vehicles
  * Check the output with https://search.google.com/test/rich-results after deploying.
  */
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://planete-auto.vercel.app'
 const GARAGE_ID = `${SITE_URL}/#garage`
 
 type JsonLd = Record<string, unknown>

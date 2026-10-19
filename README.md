@@ -48,7 +48,7 @@ Chaque formulaire du site (contact, devis atelier, offre, essai, reprise) envoie
 
 Autre variable :
 
-- `NEXT_PUBLIC_SITE_URL` — URL publique du site (ex. `https://www.mondomaine.fr`), utilisée par `sitemap.xml` et `robots.txt`. Par défaut : `https://planete-auto.vercel.app`.
+- `NEXT_PUBLIC_SITE_URL` — URL publique du site (ex. `https://www.mondomaine.fr`), utilisée par `sitemap.xml` et `robots.txt`. Par défaut : `https://www.planeteauto34.fr`.
 
 ## Tests
 
