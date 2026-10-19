@@ -669,15 +669,23 @@ em {
   overflow-x: hidden;
   overflow-y: visible;
 }
+/* Two stacked rows; each slides one card at a time (see ArrivalsRow in home-page-client.tsx). */
+.arrivals-carousel + .arrivals-carousel {
+  margin-top: 34px;
+}
 .arrivals-track {
+  /* Cards visible at once; keep in sync with useArrivalsVisibleCount(). */
+  --arrivals-visible: 4;
+  --arrivals-gap: 22px;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
+  gap: var(--arrivals-gap);
+  transform: translateX(calc(var(--arrivals-position, 0) * -1 * (100% + var(--arrivals-gap)) / var(--arrivals-visible)));
   transition: transform 0.5s ease;
 }
-.arrivals-page.arrivals-page {
-  flex: 0 0 100%;
+.arrivals-track .inventory-card {
+  flex: 0 0 calc((100% - (var(--arrivals-visible) - 1) * var(--arrivals-gap)) / var(--arrivals-visible));
   min-width: 0;
-  grid-template-columns: repeat(4, 1fr);
 }
 .arrivals-arrow {
   position: absolute;
@@ -714,7 +722,7 @@ em {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 40px;
+  margin-top: 18px;
 }
 .arrivals-dots button {
   width: 8px;
@@ -730,8 +738,8 @@ em {
   background: var(--red);
 }
 @media (max-width: 1300px) and (min-width: 851px) {
-  .arrivals-page.arrivals-page {
-    grid-template-columns: repeat(2, 1fr);
+  .arrivals-track {
+    --arrivals-visible: 2;
   }
 }
 @media (max-width: 850px) {
@@ -752,8 +760,8 @@ em {
     padding-left: 5vw;
     padding-right: 5vw;
   }
-  .arrivals-page.arrivals-page {
-    display: contents;
+  .arrivals-carousel + .arrivals-carousel {
+    margin-top: 24px;
   }
   .arrivals-track .inventory-card {
     flex: 0 0 82vw;

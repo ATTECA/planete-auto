@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -40,8 +40,11 @@ import { googleReviews, GOOGLE_REVIEWS_COUNT, GOOGLE_REVIEWS_SCORE, GOOGLE_REVIE
 import { vehicleSlug, type Vehicle } from "@/lib/vehicles";
 
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
-const ARRIVALS_PAGE_SIZE = 4;
-const ARRIVALS_PAGE_COUNT = 2;
+const ARRIVALS_MAX = 16;
+// Up to this many cars, one row is enough (it fills a large screen without needing to move).
+const ARRIVALS_SINGLE_ROW_MAX = 4;
+const ARRIVALS_INTERVAL_MS = 5000;
+const ARRIVALS_RESUME_AFTER_CLICK_MS = 8000;
 
 /** Workshop activities shown under the hero. Only mecanique.jpg is a real photo of the garage; the others are Unsplash stock photos until the client sends their own. */
 const WORKSHOP_SERVICES = [
@@ -95,29 +98,14 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
   const [heroBudget, setHeroBudget] = useState("");
 
   const { isFavorite, toggle: toggleFavorite } = useFavorites();
-  const [arrivalsPage, setArrivalsPage] = useState(0);
-  const [arrivalsPaused, setArrivalsPaused] = useState(false);
-  const arrivalsPauseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const arrivals = useMemo(() => [...vehicles].sort((a, b) => b.id - a.id).slice(0, ARRIVALS_PAGE_SIZE * ARRIVALS_PAGE_COUNT), [vehicles]);
-  const arrivalsPages = useMemo(() => {
-    const pages: Vehicle[][] = [];
-    for (let i = 0; i < arrivals.length; i += ARRIVALS_PAGE_SIZE) pages.push(arrivals.slice(i, i + ARRIVALS_PAGE_SIZE));
-    return pages;
-  }, [arrivals]);
-
-  useEffect(() => {
-    if (arrivalsPaused || arrivalsPages.length < 2) return;
-    const interval = setInterval(() => setArrivalsPage((page) => (page + 1) % arrivalsPages.length), 5000);
-    return () => clearInterval(interval);
-  }, [arrivalsPaused, arrivalsPages.length]);
-
-  const goToArrivalsPage = (page: number) => {
-    setArrivalsPage(page);
-    setArrivalsPaused(true);
-    if (arrivalsPauseTimeout.current) clearTimeout(arrivalsPauseTimeout.current);
-    arrivalsPauseTimeout.current = setTimeout(() => setArrivalsPaused(false), 8000);
-  };
+  // Newest cars split over two rows: row 1 gets the first half (rounded up), row 2 the rest.
+  const arrivalRows = useMemo(() => {
+    const newest = [...vehicles].sort((a, b) => b.id - a.id).slice(0, ARRIVALS_MAX);
+    if (newest.length <= ARRIVALS_SINGLE_ROW_MAX) return [newest];
+    const half = Math.ceil(newest.length / 2);
+    return [newest.slice(0, half), newest.slice(half)];
+  }, [vehicles]);
 
   const heroBrandOptions = useMemo(() => [...new Set(vehicles.map((vehicle) => getDetail(vehicle, "Marque")))].filter(Boolean), [vehicles]);
   const heroModelOptions = useMemo(
@@ -343,111 +331,17 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
             Voir tout le stock <ArrowRight size={17} />
           </Link>
         </div>
-        <div className="arrivals-carousel" onMouseEnter={() => setArrivalsPaused(true)} onMouseLeave={() => setArrivalsPaused(false)}>
-          <div className="arrivals-viewport">
-          <div className="arrivals-track" style={{ transform: `translateX(-${arrivalsPage * 100}%)` }}>
-            {arrivalsPages.map((page, pageIndex) => (
-              <div className="inventory-grid arrivals-page" key={pageIndex}>
-                {page.map((vehicle, index) => {
-                  const favorite = isFavorite(vehicle.id);
-                  const icons = getFeatureIcons(vehicle);
-                  const visibleIcons = icons.slice(0, 6);
-                  const extraCount = icons.length - visibleIcons.length;
-                  return (
-                    <article className="inventory-card" key={vehicle.id}>
-                      <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-image">
-                        <Image
-                          src={vehicle.image}
-                          alt={`${vehicle.name} ${vehicle.meta}`}
-                          fill
-                          sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 25vw"
-                          priority={pageIndex === 0 && index < 2}
-                        />
-                        <span className={`inventory-card-tag ${/bon plan|baisse|promo/i.test(vehicle.tag) ? "is-deal" : ""}`}>{vehicle.tag}</span>
-                        <button
-                          type="button"
-                          className={`inventory-favorite ${favorite ? "is-favorite" : ""}`}
-                          aria-label={`${favorite ? "Retirer" : "Ajouter"} ${vehicle.name} des favoris`}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            toggleFavorite(vehicle.id);
-                          }}
-                        >
-                          <Heart fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
-                        </button>
-                      </Link>
-                      <div className="inventory-card-body">
-                        <p className="inventory-card-year">
-                          {vehicle.year} · {vehicle.km}
-                        </p>
-                        <div className="inventory-card-top">
-                          <div>
-                            <h3>{vehicle.name}</h3>
-                            <p>{vehicle.meta}</p>
-                          </div>
-                          <strong>{vehicle.price}</strong>
-                        </div>
-                        {visibleIcons.length > 0 && (
-                          <div className="inventory-card-icons">
-                            {visibleIcons.map(({ key, label, icon: Icon }) => (
-                              <span key={key} title={label} aria-label={label}>
-                                <Icon size={16} aria-hidden />
-                              </span>
-                            ))}
-                            {extraCount > 0 && <span className="inventory-card-icons-more">+{extraCount}</span>}
-                          </div>
-                        )}
-                        <div className="inventory-card-bottom">
-                          <span>{vehicle.fuel}</span>
-                          <span>{vehicle.gearbox}</span>
-                        </div>
-                      </div>
-                      <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-cta">
-                        Voir le véhicule <ArrowUpRight aria-hidden="true" />
-                      </Link>
-                    </article>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          </div>
-          {arrivalsPages.length > 1 && (
-            <>
-              <button
-                type="button"
-                className="arrivals-arrow arrivals-arrow-prev"
-                aria-label="Page précédente"
-                {...{ autoComplete: "off" }}
-                disabled={arrivalsPage === 0}
-                onClick={() => goToArrivalsPage(Math.max(0, arrivalsPage - 1))}
-              >
-                <ChevronLeft />
-              </button>
-              <button
-                type="button"
-                className="arrivals-arrow arrivals-arrow-next"
-                aria-label="Page suivante"
-                {...{ autoComplete: "off" }}
-                disabled={arrivalsPage === arrivalsPages.length - 1}
-                onClick={() => goToArrivalsPage(Math.min(arrivalsPages.length - 1, arrivalsPage + 1))}
-              >
-                <ChevronRight />
-              </button>
-              <div className="arrivals-dots">
-                {arrivalsPages.map((_, pageIndex) => (
-                  <button
-                    type="button"
-                    key={pageIndex}
-                    className={pageIndex === arrivalsPage ? "is-active" : ""}
-                    aria-label={`Page ${pageIndex + 1}`}
-                    onClick={() => goToArrivalsPage(pageIndex)}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        {arrivalRows.map((rowVehicles, rowIndex) => (
+          <ArrivalsRow
+            key={rowIndex}
+            vehicles={rowVehicles}
+            label={rowIndex === 0 ? "Derniers arrivages" : "Arrivages précédents"}
+            startDelayMs={rowIndex * (ARRIVALS_INTERVAL_MS / 2)}
+            priorityImages={rowIndex === 0}
+            isFavorite={isFavorite}
+            toggleFavorite={toggleFavorite}
+          />
+        ))}
       </section>
 
       <section className="brands-section" aria-labelledby="brands-title">
@@ -606,5 +500,178 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
         <ArrowUp size={20} />
       </a>
     </main>
+  );
+}
+
+/**
+ * How many arrival cards fit side by side. Must match the .arrivals-track breakpoints in globals.css.
+ * 0 means phone: the row is a native swipe list and doesn't move on its own.
+ */
+function useArrivalsVisibleCount() {
+  const [count, setCount] = useState(4);
+  useEffect(() => {
+    const phone = window.matchMedia("(max-width: 850px)");
+    const medium = window.matchMedia("(max-width: 1300px)");
+    const update = () => setCount(phone.matches ? 0 : medium.matches ? 2 : 4);
+    update();
+    phone.addEventListener("change", update);
+    medium.addEventListener("change", update);
+    return () => {
+      phone.removeEventListener("change", update);
+      medium.removeEventListener("change", update);
+    };
+  }, []);
+  return count;
+}
+
+/** One row of the "Nouveaux arrivages" section: slides one car at a time and loops back to the start. */
+function ArrivalsRow({
+  vehicles,
+  label,
+  startDelayMs,
+  priorityImages,
+  isFavorite,
+  toggleFavorite,
+}: {
+  vehicles: Vehicle[];
+  label: string;
+  /** Offsets this row's timing so stacked rows never slide at the same moment. */
+  startDelayMs: number;
+  priorityImages: boolean;
+  isFavorite: (id: number) => boolean;
+  toggleFavorite: (id: number) => void;
+}) {
+  const visibleCount = useArrivalsVisibleCount();
+  const lastPosition = visibleCount > 0 ? Math.max(0, vehicles.length - visibleCount) : 0;
+  const canMove = lastPosition > 0;
+  const [position, setPosition] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [clickPaused, setClickPaused] = useState(false);
+  const resumeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const current = Math.min(position, lastPosition);
+
+  useEffect(() => {
+    if (!canMove || hovered || clickPaused) return;
+    let timer: ReturnType<typeof setTimeout>;
+    // Moves on a fixed clock (every 5 s, shifted by startDelayMs) rather than "5 s after the last move",
+    // so the two rows stay out of step even after one of them was paused.
+    const scheduleNext = () => {
+      let wait = ARRIVALS_INTERVAL_MS - ((Date.now() - startDelayMs) % ARRIVALS_INTERVAL_MS);
+      if (wait < 1500) wait += ARRIVALS_INTERVAL_MS;
+      timer = setTimeout(() => {
+        setPosition((value) => (value >= lastPosition ? 0 : value + 1));
+        scheduleNext();
+      }, wait);
+    };
+    scheduleNext();
+    return () => clearTimeout(timer);
+  }, [canMove, hovered, clickPaused, lastPosition, startDelayMs]);
+
+  useEffect(() => () => {
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+  }, []);
+
+  const goTo = (target: number) => {
+    setPosition(target < 0 ? lastPosition : target > lastPosition ? 0 : target);
+    setClickPaused(true);
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+    resumeTimeout.current = setTimeout(() => setClickPaused(false), ARRIVALS_RESUME_AFTER_CLICK_MS);
+  };
+
+  return (
+    <div
+      className="arrivals-carousel"
+      role="region"
+      aria-roledescription="carrousel"
+      aria-label={label}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="arrivals-viewport">
+        <div className="arrivals-track" style={{ "--arrivals-position": current } as CSSProperties}>
+          {vehicles.map((vehicle, index) => {
+            const favorite = isFavorite(vehicle.id);
+            const icons = getFeatureIcons(vehicle);
+            const visibleIcons = icons.slice(0, 6);
+            const extraCount = icons.length - visibleIcons.length;
+            return (
+              <article className="inventory-card" key={vehicle.id}>
+                <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-image">
+                  <Image
+                    src={vehicle.image}
+                    alt={`${vehicle.name} ${vehicle.meta}`}
+                    fill
+                    sizes="(max-width: 720px) 100vw, (max-width: 1300px) 50vw, 25vw"
+                    priority={priorityImages && index < 2}
+                  />
+                  <span className={`inventory-card-tag ${/bon plan|baisse|promo/i.test(vehicle.tag) ? "is-deal" : ""}`}>{vehicle.tag}</span>
+                  <button
+                    type="button"
+                    className={`inventory-favorite ${favorite ? "is-favorite" : ""}`}
+                    aria-label={`${favorite ? "Retirer" : "Ajouter"} ${vehicle.name} des favoris`}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      toggleFavorite(vehicle.id);
+                    }}
+                  >
+                    <Heart fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
+                  </button>
+                </Link>
+                <div className="inventory-card-body">
+                  <p className="inventory-card-year">
+                    {vehicle.year} · {vehicle.km}
+                  </p>
+                  <div className="inventory-card-top">
+                    <div>
+                      <h3>{vehicle.name}</h3>
+                      <p>{vehicle.meta}</p>
+                    </div>
+                    <strong>{vehicle.price}</strong>
+                  </div>
+                  {visibleIcons.length > 0 && (
+                    <div className="inventory-card-icons">
+                      {visibleIcons.map(({ key, label: iconLabel, icon: Icon }) => (
+                        <span key={key} title={iconLabel} aria-label={iconLabel}>
+                          <Icon size={16} aria-hidden />
+                        </span>
+                      ))}
+                      {extraCount > 0 && <span className="inventory-card-icons-more">+{extraCount}</span>}
+                    </div>
+                  )}
+                  <div className="inventory-card-bottom">
+                    <span>{vehicle.fuel}</span>
+                    <span>{vehicle.gearbox}</span>
+                  </div>
+                </div>
+                <Link href={`/vehicules/${vehicleSlug(vehicle)}`} className="inventory-card-cta">
+                  Voir le véhicule <ArrowUpRight aria-hidden="true" />
+                </Link>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+      {canMove && (
+        <>
+          <button type="button" className="arrivals-arrow arrivals-arrow-prev" aria-label="Véhicule précédent" onClick={() => goTo(current - 1)}>
+            <ChevronLeft />
+          </button>
+          <button type="button" className="arrivals-arrow arrivals-arrow-next" aria-label="Véhicule suivant" onClick={() => goTo(current + 1)}>
+            <ChevronRight />
+          </button>
+          <div className="arrivals-dots">
+            {Array.from({ length: lastPosition + 1 }, (_, dotIndex) => (
+              <button
+                type="button"
+                key={dotIndex}
+                className={dotIndex === current ? "is-active" : ""}
+                aria-label={`Position ${dotIndex + 1}`}
+                onClick={() => goTo(dotIndex)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
