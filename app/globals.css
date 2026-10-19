@@ -1483,6 +1483,8 @@ em {
   border-bottom: 1px solid var(--line);
 }
 .workshop-tile {
+  display: block;
+  color: inherit;
   position: relative;
   overflow: hidden;
   aspect-ratio: 4 / 3;
@@ -1538,6 +1540,193 @@ em {
 @media (max-width: 1100px) {
   .workshop-strip-items {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* /prestations: quick links, then one block per service with photo and text alternating sides. */
+.services-jump {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 44px 6vw 0;
+}
+.services-jump a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+.services-jump a svg {
+  color: var(--red);
+}
+.services-jump a:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 90px;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 70px 5vw 110px;
+}
+.service-block {
+  display: grid;
+  /* The photo gets more room than the text. */
+  grid-template-columns: 1.35fr 1fr;
+  align-items: center;
+  gap: 64px;
+  scroll-margin-top: 30px;
+}
+.service-block:nth-child(even) {
+  grid-template-columns: 1fr 1.35fr;
+}
+.service-block:nth-child(even) .service-block-photo {
+  order: 2;
+}
+.service-block-photo {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--black);
+  box-shadow: 0 10px 30px rgba(20, 18, 13, 0.1);
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease;
+}
+.service-block-photo img {
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+/* A little life on hover: the photo lifts and slowly zooms in. */
+.service-block:hover .service-block-photo {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 45px rgba(20, 18, 13, 0.18);
+}
+.service-block:hover .service-block-photo img {
+  transform: scale(1.06);
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-block-photo,
+  .service-block-photo img {
+    transition: none;
+  }
+  .service-block:hover .service-block-photo,
+  .service-block:hover .service-block-photo img {
+    transform: none;
+  }
+}
+.service-block-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+}
+.service-block-text h2 {
+  margin: 16px 0 12px;
+  font-size: clamp(30px, 3vw, 42px);
+}
+.service-block-text > p {
+  margin: 0;
+  color: #66676b;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.service-block-text ul {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0 30px;
+  padding: 0;
+  list-style: none;
+}
+.service-block-text li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.service-block-text li svg {
+  flex: none;
+  color: var(--red);
+}
+.service-block-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.service-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+.service-button:hover {
+  transform: translateY(-2px);
+}
+.service-button-dark {
+  background: var(--black);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(20, 18, 13, 0.22);
+}
+.service-button-dark:hover {
+  background: #2c2c2a;
+  box-shadow: 0 10px 22px rgba(20, 18, 13, 0.28);
+}
+/* Same light red as the "Voir nos véhicules" button of the "why" section on hover. */
+.service-button-soft {
+  background: #fbdde0;
+  color: var(--black);
+}
+.service-button-soft svg {
+  color: var(--red);
+}
+.service-button-soft:hover {
+  background: #f8cdd2;
+}
+@media (max-width: 900px) {
+  .services-jump {
+    justify-content: flex-start;
+    padding-top: 32px;
+  }
+  .services-list {
+    gap: 56px;
+    padding: 44px 5vw 80px;
+  }
+  .service-block,
+  .service-block:nth-child(even) {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .service-block:nth-child(even) .service-block-photo {
+    order: 0;
+  }
+  .service-button {
+    flex: 1 1 auto;
   }
 }
 .occasion-section {

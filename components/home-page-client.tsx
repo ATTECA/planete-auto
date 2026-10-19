@@ -12,10 +12,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Cog,
   CreditCard,
-  Disc,
-  Droplets,
   Euro,
   FileText,
   Heart,
@@ -25,12 +22,9 @@ import {
   Menu,
   Search,
   ShieldCheck,
-  SprayCan,
   Star,
-  Stethoscope,
   Tag,
   TrendingDown,
-  Wrench,
   X,
 } from "lucide-react";
 import { SiteFooter } from "@/components/site-pages";
@@ -38,6 +32,7 @@ import { useFavorites } from "@/lib/use-favorites";
 import { getFeatureIcons } from "@/lib/vehicle-features";
 import { googleReviews, GOOGLE_REVIEWS_COUNT, GOOGLE_REVIEWS_SCORE, GOOGLE_REVIEWS_URL } from "@/lib/reviews";
 import { vehicleSlug, type Vehicle } from "@/lib/vehicles";
+import { WORKSHOP_SERVICES } from "@/lib/workshop-services";
 
 const getDetail = (vehicle: Vehicle, label: string) => vehicle.details.find(([key]) => key === label)?.[1] ?? "";
 const ARRIVALS_MAX = 16;
@@ -46,15 +41,6 @@ const ARRIVALS_SINGLE_ROW_MAX = 4;
 const ARRIVALS_INTERVAL_MS = 5000;
 const ARRIVALS_RESUME_AFTER_CLICK_MS = 8000;
 
-/** Workshop activities shown under the hero. Only mecanique.jpg is a real photo of the garage; the others are Unsplash stock photos until the client sends their own. */
-const WORKSHOP_SERVICES = [
-  { label: "Mécanique", detail: "Entretien et réparation", image: "/atelier/mecanique.jpg", icon: Wrench },
-  { label: "Carrosserie", detail: "Réparation et peinture", image: "/atelier/carrosserie.jpg", icon: SprayCan },
-  { label: "Pneumatique", detail: "Vente et montage", image: "/atelier/pneumatique.jpg", icon: Disc },
-  { label: "Pièces de rechange", detail: "Batteries, disques, plaquettes…", image: "/atelier/pieces.jpg", icon: Cog },
-  { label: "Diagnostic", detail: "Recherche de pannes", image: "/atelier/diagnostic.jpg", icon: Stethoscope },
-  { label: "Lavage", detail: "Nettoyage du véhicule", image: "/atelier/lavage.jpg", icon: Droplets },
-];
 
 const bodyTypes = [
   ["SUV", "suv"],
@@ -169,6 +155,9 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise
           </a>
+          <a href="/prestations" onClick={() => setMenuOpen(false)}>
+            Nos prestations
+          </a>
           <a href="/devis" onClick={() => setMenuOpen(false)}>
             Devis atelier
           </a>
@@ -268,8 +257,8 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
 
       <section className="workshop-strip" aria-label="Notre atelier">
         <div className="workshop-strip-items">
-          {WORKSHOP_SERVICES.map(({ label, detail, image, icon: Icon }) => (
-            <article className="workshop-tile" key={label}>
+          {WORKSHOP_SERVICES.map(({ slug, label, detail, image, icon: Icon }) => (
+            <Link className="workshop-tile" key={slug} href={`/prestations#${slug}`}>
               <Image src={image} alt="" fill sizes="(max-width: 850px) 50vw, (max-width: 1100px) 33vw, 16vw" />
               <div className="workshop-tile-caption">
                 <Icon size={16} aria-hidden="true" />
@@ -278,7 +267,7 @@ export default function HomePageClient({ vehicles }: { vehicles: Vehicle[] }) {
                   <p>{detail}</p>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>

@@ -34,6 +34,19 @@ test('the workshop strip shows service photos without the separate quote callout
   await expect(page.locator('.workshop-strip .workshop-quote-cta')).toHaveCount(0)
 })
 
+test('a workshop tile opens its section on the services page, and its quote link pre-selects the service', async ({ page }) => {
+  await page.goto('/')
+
+  await page.locator('.workshop-strip .workshop-tile', { hasText: 'Pneumatique' }).click()
+  await expect(page).toHaveURL(/\/prestations#pneumatique$/)
+  const section = page.locator('#pneumatique')
+  await expect(section).toBeInViewport()
+
+  await section.getByRole('link', { name: 'Demander un devis' }).click()
+  await expect(page).toHaveURL(/\/devis\?prestation=Pneumatique$/)
+  await expect(page.getByLabel('Type de prestation')).toHaveValue('Pneumatique')
+})
+
 test('a visitor can request a quote from the sticky homepage button', async ({ page }) => {
   await page.goto('/')
 

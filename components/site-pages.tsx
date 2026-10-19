@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { compressImage } from "@/lib/compress-image";
 import { postForm } from "@/lib/post-form";
+import { QUOTE_SERVICES, type QuoteService } from "@/lib/workshop-services";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -59,6 +60,9 @@ export function SiteHeader() {
           </a>
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise
+          </a>
+          <a href="/prestations" onClick={() => setMenuOpen(false)}>
+            Nos prestations
           </a>
           <a href="/devis" onClick={() => setMenuOpen(false)}>
             Devis atelier
@@ -117,6 +121,7 @@ export function SiteFooter() {
           <a href="/">Accueil</a>
           <a href="/vehicules">Nos véhicules</a>
           <a href="/reprise">Vente & reprise</a>
+          <a href="/prestations">Nos prestations</a>
           <a href="/devis">Devis atelier</a>
           <a href="/a-propos">À propos</a>
           <a href="/contact">Nous contacter</a>
@@ -263,7 +268,7 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
   );
 }
 
-export function QuoteForm() {
+export function QuoteForm({ defaultService }: { defaultService?: QuoteService }) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
@@ -330,13 +335,13 @@ export function QuoteForm() {
       </label>
       <label>
         Type de prestation
-        <select name="service" required defaultValue="">
+        <select name="service" required defaultValue={defaultService ?? ""}>
           <option value="" disabled>Choisissez une prestation</option>
-          <option value="Mécanique">Mécanique</option>
-          <option value="Carrosserie">Carrosserie</option>
-          <option value="Pneumatique">Pneumatique</option>
-          <option value="Pièces de rechange">Pièces de rechange</option>
-          <option value="Autre">Autre</option>
+          {QUOTE_SERVICES.map((service) => (
+            <option key={service} value={service}>
+              {service}
+            </option>
+          ))}
         </select>
       </label>
       <label>
