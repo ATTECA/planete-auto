@@ -1300,6 +1300,18 @@ em {
 .about-hero-cta {
   align-self: flex-start;
   margin-top: 28px;
+  /* Pill, like the "Demander un devis" buttons on /prestations. */
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  box-shadow: 0 6px 16px rgba(20, 18, 13, 0.22);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+.about-hero-cta:hover {
+  box-shadow: 0 10px 22px rgba(20, 18, 13, 0.28);
 }
 .about-hero-photo {
   position: relative;
@@ -1328,6 +1340,30 @@ em {
 }
 .about-filmstrip-photo:nth-child(2) {
   margin-top: 56px;
+}
+/* Hover: a small jump (slight overshoot) that holds while hovered, then a smooth landing. No zoom. */
+.about-hero-photo,
+.about-filmstrip-photo {
+  transition:
+    transform 0.35s ease-out,
+    box-shadow 0.35s ease-out;
+}
+.about-hero-photo:hover,
+.about-filmstrip-photo:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 48px 70px -26px rgba(0, 0, 0, 0.42);
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.45s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-hero-photo,
+  .about-filmstrip-photo,
+  .about-hero-photo:hover,
+  .about-filmstrip-photo:hover {
+    transform: none;
+    transition: none;
+  }
 }
 .about-faq {
   max-width: 900px;
