@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { SiteHeader, SiteFooter, TradeInForm } from '@/components/site-pages'
 
 export const metadata: Metadata = {
-	title: 'Vente et reprise de voiture à Saint-Jean-de-Védas | Planète Auto',
+	title: 'Vente et reprise de voiture à Saint-Jean-de-Védas',
 	description: 'Vendez votre voiture ou faites-la reprendre par Planète Auto : décrivez votre véhicule, ajoutez des photos et recevez une réponse rapide.',
 }
 

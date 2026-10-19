@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PageShell, QuoteForm } from '@/components/site-pages'
 
 export const metadata: Metadata = {
-  title: 'Demander un devis atelier | Planète Auto',
+  title: 'Demander un devis atelier',
   description: 'Demandez un devis pour une prestation de mécanique, carrosserie ou pneumatique chez Planète Auto à Saint-Jean-de-Védas.',
 }
 

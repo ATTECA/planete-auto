@@ -8,14 +8,33 @@ import { DEFAULT_EQUIPMENT_ITEM_ICON, EQUIPMENT_ITEM_ICONS } from '@/lib/equipme
 import { SiteFooter, SiteHeader, VehicleRequestPanel, VehicleShareButton } from '@/components/site-pages'
 import { VehicleGallery } from '@/components/vehicle-gallery'
 import { FinanceCalculator } from '@/components/finance-calculator'
+import { serializeJsonLd, vehicleJsonLd } from '@/lib/structured-data'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const id = parseVehicleIdParam((await params).id)
   const vehicle = id ? await getVehicle(id) : undefined
   if (!vehicle) return { title: 'Véhicule introuvable' }
+
+  const title = `${vehicle.name} ${vehicle.meta}`
+  const url = `/vehicules/${vehicleSlug(vehicle)}`
+  const photo = vehicle.gallery[0] ?? vehicle.image
+  // Price first: it's what people look at in a WhatsApp or Facebook preview.
+  const shareDescription = [vehicle.price, vehicle.year, vehicle.km, vehicle.fuel, vehicle.gearbox].filter(Boolean).join(' · ')
+
   return {
-    title: `${vehicle.name} ${vehicle.meta}`,
+    title,
     description: `${vehicle.name} ${vehicle.meta}, ${vehicle.year}, ${vehicle.km}, ${vehicle.fuel} et ${vehicle.gearbox}. Consultez la fiche et contactez Planète Auto à Saint-Jean-de-Védas.`,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${title} | Planète Auto`,
+      description: shareDescription,
+      url,
+      siteName: 'Planète Auto',
+      locale: 'fr_FR',
+      type: 'website',
+      images: photo ? [{ url: photo, alt: title }] : undefined,
+    },
+    twitter: { card: 'summary_large_image', title: `${title} | Planète Auto`, description: shareDescription },
   }
 }
 
@@ -48,6 +67,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const factsRight = facts.slice(factsHalf)
 
   return <main className="vehicle-detail-page"><SiteHeader />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(vehicleJsonLd(vehicle)) }} />
     <div className="vehicle-detail-shell">
       <div className="vehicle-breadcrumb"><Link href="/vehicules"><ArrowLeft /> Retour au stock</Link><span>Planète Auto <b>/</b> {vehicle.name} <b>/</b> Réf. {reference}</span></div>
 

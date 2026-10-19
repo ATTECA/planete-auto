@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ContactForm, ContactInfo, PageShell } from '@/components/site-pages'
 
 export const metadata: Metadata = {
-	title: 'Contact | Planète Auto',
+	title: 'Contact',
 	description: 'Contactez Planète Auto à Saint-Jean-de-Védas pour toute question sur nos véhicules et nos services.',
 }
 
