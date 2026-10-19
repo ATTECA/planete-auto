@@ -20,7 +20,7 @@ export function garageJsonLd(): JsonLd {
     name: 'Planète Auto',
     url: SITE_URL,
     logo: `${SITE_URL}/planete-auto-logo.png`,
-    image: `${SITE_URL}/og-default.jpg`,
+    image: `${SITE_URL}/og-cover.jpg`,
     telephone: '+33467825412',
     email: 'planeteauto34@gmail.com',
     address: {
