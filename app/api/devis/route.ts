@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { renderEmailHtml } from '@/lib/email-template'
+import { QUOTE_SERVICES } from '@/lib/workshop-services'
 import { formErrorResponse, readJsonBody, requireFields, requireValidEmail, saveLeadSafely, sendFormEmail } from '@/lib/form-api'
-
-const services = ['Mécanique', 'Carrosserie', 'Pneumatique', 'Pièces de rechange', 'Autre'] as const
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +11,7 @@ export async function POST(request: Request) {
     const email = typeof body.email === 'string' ? body.email.trim() : ''
     const vehicle = typeof body.vehicle === 'string' ? body.vehicle.trim() : ''
     const plate = typeof body.plate === 'string' ? body.plate.trim().toUpperCase() : ''
-    const service = services.find((candidate) => candidate === body.service)
+    const service = QUOTE_SERVICES.find((candidate) => candidate === body.service)
     const message = typeof body.message === 'string' ? body.message.trim() : ''
 
     requireFields({

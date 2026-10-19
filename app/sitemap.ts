@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // No lastModified here: a date that is always "now" teaches Google to ignore the field.
-  const staticRoutes = ['/reprise', '/devis', '/contact', '/a-propos', '/mentions-legales'].map((path) => ({
+  const staticRoutes = ['/reprise', '/prestations', '/devis', '/contact', '/a-propos', '/mentions-legales'].map((path) => ({
     url: `${SITE_URL}${path}`,
   }))
 

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { compressImage } from "@/lib/compress-image";
 import { postForm } from "@/lib/post-form";
+import { QUOTE_SERVICES, type QuoteService } from "@/lib/workshop-services";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -60,6 +61,9 @@ export function SiteHeader() {
           <a href="/reprise" onClick={() => setMenuOpen(false)}>
             Vente & reprise
           </a>
+          <a href="/prestations" onClick={() => setMenuOpen(false)}>
+            Nos prestations
+          </a>
           <a href="/devis" onClick={() => setMenuOpen(false)}>
             Devis atelier
           </a>
@@ -110,6 +114,12 @@ export function SiteFooter() {
                 <path d="M13.7 20v-7h2.35l.35-2.75h-2.7V8.5c0-.8.23-1.35 1.4-1.35h1.45V4.7c-.25-.04-1.08-.1-2.08-.1-2.07 0-3.47 1.26-3.47 3.58v2.07H8.65V13H11v7h2.7Z" />
               </svg>
             </a>
+            {/* TODO: replace "#" with the TikTok profile URL once the client sends it. */}
+            <a href="#" aria-label="TikTok" className="social-link social-tiktok">
+              <svg viewBox="-4 -4 32 32" aria-hidden="true">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+              </svg>
+            </a>
           </nav>
         </div>
         <div className="footer-column footer-nav">
@@ -117,6 +127,7 @@ export function SiteFooter() {
           <a href="/">Accueil</a>
           <a href="/vehicules">Nos véhicules</a>
           <a href="/reprise">Vente & reprise</a>
+          <a href="/prestations">Nos prestations</a>
           <a href="/devis">Devis atelier</a>
           <a href="/a-propos">À propos</a>
           <a href="/contact">Nous contacter</a>
@@ -263,7 +274,7 @@ export function ContactForm({ subject = "votre projet" }: { subject?: string }) 
   );
 }
 
-export function QuoteForm() {
+export function QuoteForm({ defaultService }: { defaultService?: QuoteService }) {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
@@ -330,13 +341,13 @@ export function QuoteForm() {
       </label>
       <label>
         Type de prestation
-        <select name="service" required defaultValue="">
+        <select name="service" required defaultValue={defaultService ?? ""}>
           <option value="" disabled>Choisissez une prestation</option>
-          <option value="Mécanique">Mécanique</option>
-          <option value="Carrosserie">Carrosserie</option>
-          <option value="Pneumatique">Pneumatique</option>
-          <option value="Pièces de rechange">Pièces de rechange</option>
-          <option value="Autre">Autre</option>
+          {QUOTE_SERVICES.map((service) => (
+            <option key={service} value={service}>
+              {service}
+            </option>
+          ))}
         </select>
       </label>
       <label>
