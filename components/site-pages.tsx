@@ -98,8 +98,6 @@ export function SiteFooter() {
           <p>Véhicules d’occasion toutes marques, achat, vente et reprise.</p>
           <span>
             SIREN : 799 787 262
-            <br />
-            SIRET : 799 787 262 00010
           </span>
           <nav className="socials" aria-label="Réseaux sociaux">
             <a href="#" aria-label="Instagram" className="social-link social-instagram">
@@ -144,9 +142,9 @@ export function SiteFooter() {
             <Phone size={15} />
             +33 4 67 82 54 12
           </a>
-          <a href="mailto:planeteauto34@gmail.com">
+          <a href="mailto:contact@planeteauto34.fr">
             <Mail size={15} />
-            planeteauto34@gmail.com
+            contact@planeteauto34.fr
           </a>
           <a
             className="footer-map-link"
@@ -181,7 +179,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <img src="/footer-bottom-icon.png" alt="Planète Auto logo" />
-        <span>Planète Auto © 2026 · SIRET 799 787 262 00010</span>
+        <span>Planète Auto © 2026 · SIREN 799 787 262</span>
         <a href="/mentions-legales">Mentions légales</a>
       </div>
     </footer>
@@ -889,7 +887,7 @@ export function ContactInfo() {
         <div>
           <Mail size={18} />
           <span>
-            <strong>planeteauto34@gmail.com</strong>
+            <strong>contact@planeteauto34.fr</strong>
           </span>
         </div>
         <div>
