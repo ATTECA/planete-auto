@@ -22,7 +22,7 @@ export function garageJsonLd(): JsonLd {
     logo: `${SITE_URL}/planete-auto-logo.png`,
     image: `${SITE_URL}/og-cover.jpg`,
     telephone: '+33467825412',
-    email: 'planeteauto34@gmail.com',
+    email: 'contact@planeteauto34.fr',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '2371 Route de Lavérune',

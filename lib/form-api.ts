@@ -70,7 +70,7 @@ export async function sendFormEmail(options: MailOptions) {
     await transporter.sendMail({
       ...options,
       from: process.env.SMTP_FROM ?? SMTP_USER,
-      to: process.env.CONTACT_RECIPIENT ?? 'communication@att-eca.com',
+      to: process.env.CONTACT_RECIPIENT ?? 'contact@planeteauto34.fr',
     })
   } catch (error) {
     console.error('Form email: sendMail failed:', error)

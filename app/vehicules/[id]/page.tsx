@@ -136,7 +136,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
       </div>
 
       <section className="vehicle-closing">
-        <div><h2>Intéressé par ce véhicule&nbsp;?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> +33 4 67 82 54 12</a><a href="mailto:planeteauto34@gmail.com"><Mail size={16} /> planeteauto34@gmail.com</a></div></div>
+        <div><h2>Intéressé par ce véhicule&nbsp;?</h2><p>Contactez-nous pour organiser une visite, poser vos questions ou étudier une reprise.</p><div className="vehicle-closing-contacts"><a href="tel:+33467825412"><Phone size={16} /> +33 4 67 82 54 12</a><a href="mailto:contact@planeteauto34.fr"><Mail size={16} /> contact@planeteauto34.fr</a></div></div>
         <div id="offre"><VehicleRequestPanel vehicleId={vehicle.id} vehicleName={vehicle.name} vehiclePrice={vehicle.price} /></div>
       </section>
     </div>
