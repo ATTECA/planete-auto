@@ -42,6 +42,18 @@ export function garageJsonLd(): JsonLd {
   }
 }
 
+/** Tells Google the site's name, so results show "Planète Auto" instead of the bare domain. */
+export function websiteJsonLd(): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Planète Auto',
+    alternateName: 'Planète Auto 34',
+    url: `${SITE_URL}/`,
+    publisher: { '@id': GARAGE_ID },
+  }
+}
+
 /** "7 990 €" → 7990, "272 694 km" → 272694. Returns undefined when there is no number. */
 export function parseNumber(text: string | undefined): number | undefined {
   const digits = (text ?? '').replace(/[^\d]/g, '')

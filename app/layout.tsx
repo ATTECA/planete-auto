@@ -2,7 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import FloatingQuoteCta from '@/components/floating-quote-cta'
 import RealtimeVehiclesRefresher from '@/components/realtime-vehicles-refresher'
-import { garageJsonLd, serializeJsonLd } from '@/lib/structured-data'
+import { garageJsonLd, serializeJsonLd, websiteJsonLd } from '@/lib/structured-data'
 import './globals.css'
 import { SITE_URL } from '@/lib/site-url'
 
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon.png', type: 'image/png', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png', sizes: '192x192' },
     ],
     apple: '/favicon.png',
   },
@@ -50,6 +50,7 @@ export default function RootLayout({
       <body className="antialiased">
         {/* Garage facts for Google (address, phone, hours), on every page. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(garageJsonLd()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd()) }} />
         <RealtimeVehiclesRefresher />
         {children}
         <FloatingQuoteCta />
