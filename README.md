@@ -78,6 +78,21 @@ Secrets requis dans **Settings > Secrets and variables > Actions** du dépôt Gi
 - `VERCEL_PROJECT_ID`
 - `SUPABASE_URL` et `SUPABASE_ANON_KEY` — mêmes valeurs que `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY`, utilisées par `keep-supabase-awake.yml`
 
+## Sécurité et mises à jour
+
+Les **Dependabot alerts** sont activées sur le dépôt GitHub : un e-mail est envoyé quand une dépendance a une faille connue.
+
+Mise à jour des dépendances (une fois par mois) :
+
+```bash
+pnpm update   # versions mineures/correctifs
+pnpm build    # vérifier que le site compile
+```
+
+`next` est fixé à une version exacte dans `package.json` : `pnpm update` ne le modifie pas. Le mettre à jour explicitement avec `pnpm add next@<version>`.
+
+En cas d'alerte de sécurité : installer la version corrigée indiquée dans l'alerte, `pnpm build`, puis push sur `main`. Si la faille permettait d'exécuter du code sur le serveur, renouveler aussi les secrets (`SUPABASE_SERVICE_ROLE_KEY`, `SMTP_PASSWORD`) dans `.env.local` et dans Vercel.
+
 ## Pages du site
 
 - `/` — accueil (recherche, bande « atelier », types de véhicules, nouveaux arrivages, bouton flottant « Demander un devis »)
