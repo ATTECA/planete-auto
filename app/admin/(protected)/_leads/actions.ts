@@ -1,6 +1,7 @@
 'use server'
 
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/require-admin'
 import { revalidatePath } from 'next/cache'
 import type { LeadStatus } from '@/lib/leads'
 
@@ -11,6 +12,7 @@ function revalidateLeadPaths() {
 }
 
 export async function setLeadStatus(id: number, status: LeadStatus) {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     const { error } = await supabaseAdmin.from('leads').update({ status }).eq('id', id)
@@ -23,6 +25,7 @@ export async function setLeadStatus(id: number, status: LeadStatus) {
 }
 
 export async function deleteLead(id: number) {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     const { error } = await supabaseAdmin.from('leads').delete().eq('id', id)

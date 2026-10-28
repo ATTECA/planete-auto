@@ -1,6 +1,7 @@
 'use server'
 
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/require-admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isArchivedStatus, type EquipmentGroup } from '@/lib/vehicles'
@@ -135,6 +136,7 @@ function readVehicleFields(formData: FormData) {
 }
 
 export async function createVehicle(_prevState: VehicleFormState, formData: FormData): Promise<VehicleFormState> {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     try {
@@ -167,6 +169,7 @@ export async function createVehicle(_prevState: VehicleFormState, formData: Form
 }
 
 export async function updateVehicle(_prevState: VehicleFormState, formData: FormData): Promise<VehicleFormState> {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     const id = Number(formData.get('id'))
@@ -204,6 +207,7 @@ export async function updateVehicle(_prevState: VehicleFormState, formData: Form
 }
 
 export async function deleteVehicle(id: number) {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     const { error } = await supabaseAdmin.from('vehicles').delete().eq('id', id)
@@ -220,6 +224,7 @@ export async function deleteVehicle(id: number) {
 }
 
 export async function duplicateVehicle(id: number) {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     const { data, error: fetchError } = await supabaseAdmin.from('vehicles').select('*').eq('id', id).maybeSingle()
@@ -246,6 +251,7 @@ export async function duplicateVehicle(id: number) {
 }
 
 export async function setVehicleArchived(id: number, archived: boolean) {
+    await requireAdmin()
     const supabaseAdmin = getSupabaseAdmin()
 
     // Keeps the Statut dropdown in sync with this quick toggle: archiving sets it to
