@@ -686,6 +686,7 @@ em {
 .arrivals-track .inventory-card {
   flex: 0 0 calc((100% - (var(--arrivals-visible) - 1) * var(--arrivals-gap)) / var(--arrivals-visible));
   min-width: 0;
+  height: auto;
 }
 .arrivals-arrow {
   position: absolute;
